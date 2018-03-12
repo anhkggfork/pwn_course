@@ -1,6 +1,6 @@
 #!/bin/sh
 
-compose_files=`find ../ -name "docker-compose.yml"|grep -v "./site"`
+compose_files=`find ./ -name "docker-compose.yml"|grep -v "./site"`
 for com_file in $compose_files
 do
     echo $com_file
