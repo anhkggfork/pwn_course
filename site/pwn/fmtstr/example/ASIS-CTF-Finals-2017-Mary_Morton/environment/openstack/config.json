@@ -1,0 +1,40 @@
+{
+    "scene": {
+        "desc": "pwn",
+        "name": "mary_morton",
+        "tag": [
+            "pwn"
+        ],
+        "tools": [],
+        "vulns": []
+    },
+    "servers": [
+        {
+            "accessMode": [
+                {
+                    "port": 9999,
+                    "protocol": "nc"
+                }
+            ],
+            "accessUser": [],
+            "checker": {
+                "installScript": "",
+                "runner": {},
+                "script": ""
+            },
+            "cleanScript": "",
+            "flavor": "m2.1c-1g-10g",
+            "id": "mary_morton",
+            "image": "ubuntu14-64-pwn",
+            "imageType": "linux",
+            "initScript": "openstack_env/install.sh {FLAG[0]}",
+            "installScript": "",
+            "name": "mary_morton Target Server", 
+            "net": [
+                "openstack"
+            ],
+            "pushFlagScript": "",
+            "role": "target"
+        }
+    ]
+}

