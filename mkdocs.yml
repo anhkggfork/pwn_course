@@ -1,0 +1,117 @@
+# Project Information
+site_name: 二进制漏洞挖掘与利用
+
+# Labs
+labs:
+  - pwn/stackoverflow/stack_intro.md: pwn/stackoverflow/example/stackoverflow_intro/docker_env/
+  - pwn/fmtstr/example/picoctf-2014-guess/Write-up_cn.md: pwn/fmtstr/example/picoctf-2014-guess/docker_env/
+
+# Contents
+pages:
+  - 简介:
+    - 简介: index.md
+  - 栈溢出:
+    - 栈介绍: pwn/stackoverflow/stack_intro.md
+    - 栈溢出原理: pwn/stackoverflow/stackoverflow_basic.md
+    - 基本 ROP: pwn/stackoverflow/basic_rop.md
+    - 花式栈溢出技巧: pwn/stackoverflow/others.md
+    - 中级 ROP: pwn/stackoverflow/medium_rop.md
+    - 高级 ROP: pwn/stackoverflow/advanced_rop.md
+  - 格式化字符串漏洞:
+    - 格式化字符串漏洞原理介绍: pwn/fmtstr/fmtstr_intro.md
+    - 格式化字符串漏洞利用: pwn/fmtstr/fmtstr_exploit.md
+    - 格式化字符串漏洞例子: pwn/fmtstr/fmtstr_example.md
+    - 格式化字符串漏洞检测: pwn/fmtstr/fmtstr_detect.md
+    - 实验:
+      - picoctf-2014 guess: pwn/fmtstr/example/picoctf-2014-guess/Write-up_cn.md
+  - 堆利用:
+    - 堆利用简介: pwn/heap/introduction.md
+    - 堆概述: pwn/heap/heap_overview.md
+    - 堆相关数据结构: pwn/heap/heap_structure.md
+    - 深入理解堆的实现: pwn/heap/heap_implementation_details.md
+    - 堆溢出: pwn/heap/heapoverflow_basic.md
+    - 堆中的 Off-By-One: pwn/heap/off_by_one.md
+    - Unlink: pwn/heap/unlink.md
+    - Use After Free: pwn/heap/use_after_free.md
+    - Fastbin Attack: pwn/heap/fastbin_attack.md
+    - Chunk Extend / Shrink: pwn/heap/chunk_extend_shrink.md
+    - House Of Einherjar: pwn/heap/house_of_einherjar.md
+    - House of Lore: pwn/heap/house_of_lore.md
+    - House Of Force: pwn/heap/house_of_force.md
+    - Unsorted Bin Attack: pwn/heap/unsorted_bin_attack.md
+    - House of Orange: pwn/heap/house_of_orange.md
+  - IO_FILE 利用:
+    - FILE 文件结构介绍: pwn/io_file/introduction.md
+    - 伪造 vtable 劫持程序流程: pwn/io_file/fake-vtable-exploit.md
+    - FSOP: pwn/io_file/fsop.md
+    - 新版本 libc 下 IO_FILE 的利用: pwn/io_file/exploit-in-libc2.24.md
+  - 条件竞争:
+    - 条件竞争介绍: pwn/race-condition/introduction.md
+    - 例题: pwn/race-condition/problem.md
+  - 练习:
+    - HCTF2016 brop: pwn/lab/6.1.1_pwn_hctf2016_brop.md
+    - NJCTF2017 pingme: pwn/lab/6.1.2_pwn_njctf2017_pingme.md
+    - XDCTF2015 pwn200: pwn/lab/6.1.3_pwn_xdctf2015_pwn200.md
+    - BackdoorCTF2017 Fun-Signals: pwn/lab/6.1.4_pwn_backdoorctf2017_fun_signals.md
+    - GreHackCTF2017 beerfighter: pwn/lab/6.1.5_pwn_grehackctf2017_beerfighter.md
+    - DefconCTF2015 fuckup: pwn/lab/6.1.6_pwn_defconctf2015_fuckup.md
+    - 0CTF2015 freenote: pwn/lab/6.1.7_pwn_0ctf2015_freenote.md
+    - DCTF2017 Flex: pwn/lab/6.1.8_pwn_dctf2017_flex.md
+    - RHme3 Exploitation: pwn/lab/6.1.9_rhme3_exploitation.md
+    - 0CTF2017 BabyHeap2017: pwn/lab/6.1.10_0ctf2017_babyheap2017.md
+    - 9447CTF2015 Search-Engine: pwn/lab/6.1.11_9447ctf2015_search_engine.md
+
+
+# Theme
+theme:
+  name: 'material'
+  # custom_dir: 'theme'
+  language: 'zh'
+  palette:
+    primary: 'white'
+    accent: 'red'
+  logo:
+    icon: 'school'
+  feature:
+    tabs: true
+  font:
+    text: 'Fira Sans'
+    code: 'Fira Mono'
+
+# Customization
+extra:
+  search:
+    language: 'jp'
+
+extra_javascript:
+  - '_static/js/extra.js'
+  - 'https://cdn.bootcss.com/mathjax/2.7.2/MathJax.js?config=TeX-MML-AM_CHTML'
+
+extra_css:
+  - '_static/css/extra.css'
+
+# Extensions
+markdown_extensions:
+  - admonition
+  - codehilite:
+      guess_lang: false
+  - def_list
+  - footnotes
+  - meta
+  - toc:
+      permalink: true
+  - pymdownx.arithmatex
+  - pymdownx.caret
+  - pymdownx.critic
+  - pymdownx.details
+  - pymdownx.emoji:
+      emoji_generator: !!python/name:pymdownx.emoji.to_svg
+  - pymdownx.inlinehilite
+  - pymdownx.keys
+  - pymdownx.magiclink
+  - pymdownx.mark
+  - pymdownx.smartsymbols
+  - pymdownx.superfences
+  - pymdownx.tasklist:
+      custom_checkbox: true
+  - pymdownx.tilde

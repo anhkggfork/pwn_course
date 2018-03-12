@@ -1,0 +1,41 @@
+{
+    "scene": {
+        "desc": "pwn", 
+        "name": "pico2", 
+        "tag": [
+            "pwn"
+        ], 
+        "tools": [], 
+        "vulns": []
+    }, 
+    "servers": [
+        {
+            "accessMode": [
+                {
+                    "port": 22, 
+                    "protocol": "ssh"
+                }
+            ], 
+            "accessUser": [], 
+            "checker": {
+                "installScript": "", 
+                "runner": {}, 
+                "script": ""
+            }, 
+            "cleanScript": "", 
+            "flavor": "m2.1c-1g-10g", 
+            "id": "shell_293", 
+            "image": "ubuntu14-64-pwn", 
+            "imageType": "linux", 
+            "initScript": "openstack_env/install.sh {FLAG[0]}", 
+            "installScript": "", 
+            "name": "shell Target Server", 
+            "net": [
+                "openstack"
+            ], 
+			"accessUser":[{"username":"xctf","password":"xctf"}],
+            "pushFlagScript": "", 
+            "role": "target"
+        }
+    ]
+}

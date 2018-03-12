@@ -1,0 +1,8 @@
+version: "3"
+services:
+  guess:
+    build: .
+    image: 10.10.83.201:5001/guess
+    restart: unless-stopped
+    ports:
+      - "9999:9999"
