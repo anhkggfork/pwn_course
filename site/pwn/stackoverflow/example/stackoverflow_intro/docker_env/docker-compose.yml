@@ -1,8 +1,0 @@
-version: "3"
-services:
-  stack_example01:
-    build: .
-    image: 10.10.83.201:5001/stack_example01
-    restart: unless-stopped
-    ports:
-      - "9999:9999"
