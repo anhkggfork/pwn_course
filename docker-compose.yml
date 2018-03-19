@@ -1,9 +1,9 @@
 version: "2"
 
 services:
-    ctf-pwn:
+    pwn:
         build: .
-        image: 10.10.83.201:5001/ctf_pwn
+        image: 10.10.83.201:5001/pwn
         restart: unless-stopped
         ports:
-            - 10001:80
+            - 10019:80

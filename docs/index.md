@@ -1,11 +1,17 @@
-# 课程模板（例子）
+# Welcome to MkDocs
 
-## 关键文档
+For full documentation visit [mkdocs.org](http://mkdocs.org).
 
--   mkdocs.yml
--   Jenkinsfile
--   Dockerfile
--   docker-compose.yml
--   scripts/
-    -   docker_build_push.sh
-    -   deploy.sh（待完善）
+## Commands
+
+* `mkdocs new [dir-name]` - Create a new project.
+* `mkdocs serve` - Start the live-reloading docs server.
+* `mkdocs build` - Build the documentation site.
+* `mkdocs help` - Print this help message.
+
+## Project layout
+
+    mkdocs.yml    # The configuration file.
+    docs/
+        index.md  # The documentation homepage.
+        ...       # Other markdown pages, images and other files.
