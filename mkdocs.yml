@@ -3,6 +3,61 @@ site_name: My Docs
 
 pages: 
   - 课程:
+    - Index: index.md
     - 缓冲区溢出漏洞: 
       - overflow1: buffer_overflow/funcation.md
       - rop: buffer_overflow/rop.md
+
+# Theme
+theme:
+  name: 'material'
+  # custom_dir: 'theme'
+  language: 'zh'
+  palette:
+    primary: 'white'
+    accent: 'red'
+  logo:
+    icon: 'school'
+  feature:
+    tabs: true
+  font:
+    text: 'Fira Sans'
+    code: 'Fira Mono'
+
+# Customization
+extra:
+  search:
+    language: 'jp'
+
+extra_javascript:
+  - '_static/js/extra.js'
+  - 'https://cdn.bootcss.com/mathjax/2.7.2/MathJax.js?config=TeX-MML-AM_CHTML'
+
+extra_css:
+  - '_static/css/extra.css'
+
+# Extensions
+markdown_extensions:
+  - admonition
+  - codehilite:
+      guess_lang: false
+  - def_list
+  - footnotes
+  - meta
+  - toc:
+      permalink: true
+  - pymdownx.arithmatex
+  - pymdownx.caret
+  - pymdownx.critic
+  - pymdownx.details
+  - pymdownx.emoji:
+      emoji_generator: !!python/name:pymdownx.emoji.to_svg
+  - pymdownx.inlinehilite
+  - pymdownx.keys
+  - pymdownx.magiclink
+  - pymdownx.mark
+  - pymdownx.smartsymbols
+  - pymdownx.superfences
+  - pymdownx.tasklist:
+      custom_checkbox: true
+  - pymdownx.tilde
