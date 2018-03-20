@@ -1,0 +1,624 @@
+/* yep, this file does nothing *//**
+ * Solarized Light theme for reveal.js.
+ * Author: Achim Staebler
+ */
+@import url(../../lib/font/league-gothic/league-gothic.css);
+@import url(https://fonts.googleapis.com/css?family=Lato:400,700,400italic,700italic);
+/* Local Fonts */
+@font-face {
+  font-family: 'Open Sans';
+  font-style: normal;
+  font-weight: 300;
+  src: url('/_static/mume/styles/revealjs_theme/fonts/opensans/300.woff2') format('woff2'),
+       url('/_static/mume/styles/revealjs_theme/fonts/opensans/300.woff') format('woff');
+}
+
+@font-face {
+  font-family: 'Open Sans';
+  font-style: normal;
+  font-weight: 400;
+  src: url('/_static/mume/styles/revealjs_theme/fonts/opensans/400.woff2') format('woff2'),
+       url('/_static/mume/styles/revealjs_theme/fonts/opensans/400.woff') format('woff');
+}
+
+@font-face {
+  font-family: 'Open Sans';
+  font-style: normal;
+  font-weight: 600;
+  src: url('/_static/mume/styles/revealjs_theme/fonts/opensans/600.woff2') format('woff2'),
+       url('/_static/mume/styles/revealjs_theme/fonts/opensans/600.woff') format('woff');
+}
+
+@font-face {
+  font-family: 'Open Sans';
+  font-style: normal;
+  font-weight: 700;
+  src: url('/_static/mume/styles/revealjs_theme/fonts/opensans/700.woff2') format('woff2'),
+       url('/_static/mume/styles/revealjs_theme/fonts/opensans/700.woff') format('woff');
+}
+
+@font-face {
+  font-family: 'Open Sans';
+  font-style: normal;
+  font-weight: 800;
+  src: url('/_static/mume/styles/revealjs_theme/fonts/opensans/800.woff2') format('woff2'),
+       url('/_static/mume/styles/revealjs_theme/fonts/opensans/800.woff') format('woff');
+}
+
+@font-face {
+  font-family: 'Open Sans';
+  font-style: italic;
+  font-weight: 300;
+  src: url('/_static/mume/styles/revealjs_theme/fonts/opensans/300i.woff2') format('woff2'),
+       url('/_static/mume/styles/revealjs_theme/fonts/opensans/300i.woff') format('woff');
+}
+
+@font-face {
+  font-family: 'Open Sans';
+  font-style: italic;
+  font-weight: 400;
+  src: url('/_static/mume/styles/revealjs_theme/fonts/opensans/400i.woff2') format('woff2'),
+       url('/_static/mume/styles/revealjs_theme/fonts/opensans/400i.woff') format('woff');
+}
+
+@font-face {
+  font-family: 'Open Sans';
+  font-style: italic;
+  font-weight: 600;
+  src: url('/_static/mume/styles/revealjs_theme/fonts/opensans/600i.woff2') format('woff2'),
+       url('/_static/mume/styles/revealjs_theme/fonts/opensans/600i.woff') format('woff');
+}
+
+@font-face {
+  font-family: 'Open Sans';
+  font-style: italic;
+  font-weight: 700;
+  src: url('/_static/mume/styles/revealjs_theme/fonts/opensans/700i.woff2') format('woff2'),
+       url('/_static/mume/styles/revealjs_theme/fonts/opensans/700i.woff') format('woff');
+}
+
+@font-face {
+  font-family: 'Open Sans';
+  font-style: italic;
+  font-weight: 800;
+  src: url('/_static/mume/styles/revealjs_theme/fonts/opensans/800i.woff2') format('woff2'),
+       url('/_static/mume/styles/revealjs_theme/fonts/opensans/800i.woff') format('woff');
+}
+
+@font-face {
+  font-family: 'Merriweather';
+  font-style: normal;
+  font-weight: 400;
+  src: url('/_static/mume/styles/revealjs_theme/fonts/merriweather/400.woff2') format('woff2'),
+       url('/_static/mume/styles/revealjs_theme/fonts/merriweather/400.woff') format('woff');
+}
+
+@font-face {
+  font-family: 'Merriweather';
+  font-style: normal;
+  font-weight: 700;
+  src: url('/_static/mume/styles/revealjs_theme/fonts/merriweather/700.woff2') format('woff2'),
+       url('/_static/mume/styles/revealjs_theme/fonts/merriweather/700.woff') format('woff');
+}
+
+@font-face {
+  font-family: 'Merriweather';
+  font-style: normal;
+  font-weight: 900;
+  src: url('/_static/mume/styles/revealjs_theme/fonts/merriweather/900.woff2') format('woff2'),
+       url('/_static/mume/styles/revealjs_theme/fonts/merriweather/900.woff') format('woff');
+}
+
+@font-face {
+  font-family: 'Merriweather';
+  font-style: italic;
+  font-weight: 400;
+  src: url('/_static/mume/styles/revealjs_theme/fonts/merriweather/400i.woff2') format('woff2'),
+       url('/_static/mume/styles/revealjs_theme/fonts/merriweather/400i.woff') format('woff');
+}
+
+@font-face {
+  font-family: 'Merriweather';
+  font-style: italic;
+  font-weight: 700;
+  src: url('/_static/mume/styles/revealjs_theme/fonts/merriweather/700i.woff2') format('woff2'),
+       url('/_static/mume/styles/revealjs_theme/fonts/merriweather/700i.woff') format('woff');
+}
+
+@font-face {
+  font-family: 'Merriweather';
+  font-style: italic;
+  font-weight: 900;
+  src: url('/_static/mume/styles/revealjs_theme/fonts/merriweather/900i.woff2') format('woff2'),
+       url('/_static/mume/styles/revealjs_theme/fonts/merriweather/900i.woff') format('woff');
+}
+
+@font-face {
+  font-family: 'Fira Mono';
+  font-style: normal;
+  font-weight: 400;
+  src: url('/_static/mume/styles/revealjs_theme/fonts/fira/400.woff2') format('woff2'),
+       url('/_static/mume/styles/revealjs_theme/fonts/fira/400.woff') format('woff');
+}
+
+@font-face {
+  font-family: 'Fira Mono';
+  font-style: normal;
+  font-weight: 500;
+  src: url('/_static/mume/styles/revealjs_theme/fonts/fira/500.woff2') format('woff2'),
+       url('/_static/mume/styles/revealjs_theme/fonts/fira/500.woff') format('woff');
+}
+
+@font-face {
+  font-family: 'Fira Mono';
+  font-style: normal;
+  font-weight: 700;
+  src: url('/_static/mume/styles/revealjs_theme/fonts/fira/700.woff2') format('woff2'),
+       url('/_static/mume/styles/revealjs_theme/fonts/fira/700.woff') format('woff');
+}
+
+
+
+/**
+ * Solarized colors by Ethan Schoonover
+ */
+html * {
+  color-profile: sRGB;
+  rendering-intent: auto; }
+
+/*********************************************
+ * GLOBAL STYLES
+ *********************************************/
+/* Theme Styles */
+body {
+  font-family: "Fira Mono", sans-serif;
+  font-size: 100%;
+  color: #191919;
+  background-color: #fafafa;
+}
+/* body {
+  background: #ffffff;
+  background-color: #ffffff; } */
+
+.reveal {
+  font-family: "Open Sans", sans-serif;
+  font-size: 40px;
+  font-weight: 400;
+  color: 536dfe;
+}
+  /* color: #657b83; } */
+
+
+
+::selection {
+  color: #fff;
+  background: #d33682;
+  text-shadow: none; }
+
+::-moz-selection {
+  color: #fff;
+  background: #d33682;
+  text-shadow: none; }
+
+.reveal .slides > section,
+.reveal .slides > section > section {
+  line-height: 1.5;
+  font-weight: inherit; }
+
+/*********************************************
+ * HEADERS
+ *********************************************/
+.reveal h1,
+.reveal h2,
+.reveal h3,
+.reveal h4,
+.reveal h5,
+.reveal h6 {
+  margin: 0 0 20px 0;
+  /* color: #586e75; */
+	/* color: rgba(0, 0, 0, .26) */
+  /* color:#666666; */
+  font-family: "Fira Sans","Helvetica Neue",Helvetica,Arial,sans-serif;
+  font-weight: 400;
+  line-height: 1.2;
+  letter-spacing: -.01em;
+  text-shadow: none;
+  word-wrap: break-word; }
+
+
+.reveal h1 {
+  margin: 0 0 4rem;
+  line-height: 1.3;
+  font-size: 3.44em;
+  font-weight: 300;
+  color: rgba(0, 0, 0, 0.5)
+}
+
+.reveal h2 {
+  font-size: 2.11em;
+  font-family: "Fira Sans","Helvetica Neue",Helvetica,Arial,sans-serif;
+  font-weight: 300;
+  color: rgba(0, 0, 0, .26);
+  border-bottom: 2px ridge #191919;
+}
+
+.reveal h3 {
+  font-size: 1.55em; }
+
+.reveal h4 {
+  font-size: 1em; }
+
+.reveal h1 {
+  text-shadow: none; }
+
+/*********************************************
+ * OTHER
+ *********************************************/
+.reveal p {
+  margin: 20px 0;
+  line-height: 1.5; }
+
+/* Ensure certain elements are never larger than the slide itself */
+.reveal img,
+.reveal video,
+.reveal iframe {
+  max-width: 95%;
+  max-height: 95%; }
+
+.reveal strong,
+.reveal b {
+  font-weight: bold; }
+
+.reveal em {
+  font-style: italic; }
+
+.reveal ol,
+.reveal dl,
+.reveal ul {
+  display: inline-block;
+  text-align: left;
+  margin: 0 0 0 1em; }
+
+.reveal ol {
+  list-style-type: decimal; }
+
+.reveal ul {
+  list-style-type: disc; }
+
+.reveal ul ul {
+  list-style-type: square; }
+
+.reveal ul ul ul {
+  list-style-type: circle; }
+
+.reveal ul ul,
+.reveal ul ol,
+.reveal ol ol,
+.reveal ol ul {
+  display: block;
+  margin-left: 40px; }
+
+.reveal dt {
+  font-weight: bold; }
+
+.reveal dd {
+  margin-left: 40px; }
+
+.reveal q,
+.reveal blockquote {
+  font-style: normal;
+  font-size: 0.8em;
+  font-family: "Fira Mono", Impact, sans-serif;
+  padding-left: 20px;
+  margin-left: 0;
+  background: #efefef;
+  border-left: 5px solid #272822;
+  border-radius: 0 3px 3px 0;
+  quotes: none; }
+
+.reveal blockquote p {
+  padding: .5em;
+  color: #272822;
+}
+
+/* .reveal blockquote {
+    display: block;
+    position: relative;
+    width: 100%;
+    margin: 20px auto;
+    padding: 5px;
+    font-style: normal;
+    font-size: 0.8em;
+    font-family: "Fira Mono", Impact, sans-serif;
+    background: rgba(150, 150, 150, 0.1);
+    box-shadow: 0px 0px 10px rgba(0, 0, 0, 0.5); } */
+
+
+.reveal blockquote p:first-child,
+.reveal blockquote p:last-child {
+  display: inline-block; }
+
+.reveal q {
+  font-style: italic; }
+
+.reveal pre {
+  /* display: block;
+  position: relative;
+  width: 97%;
+  margin: 20px auto;
+  text-align: left;
+  font-size: 0.55em;
+  font-family: "Fira Mono","Courier New",Courier,monospace;
+  line-height: 1.2em;
+  word-wrap: break-word;
+  box-shadow: 0px 0px 3px rgba(0, 0, 0, 0.3); */
+
+  display: block;
+  width: 97%;
+  word-wrap: normal;
+  font-size: 0.55em;
+  font-family: "Fira Mono","Courier New",Courier,monospace;
+  position: relative;
+  margin: 1em 0;
+  border-radius: .2rem;
+  line-height: 1.4;
+  -webkit-overflow-scrolling: touch;
+  overflow: auto
+}
+
+.reveal code {
+  font-family: "Fira Mono","Courier New",Courier,monospace;
+  padding: .1em .35em;
+  color: #272822;
+  background-color: #efefef;
+  border-radius: 3px;
+}
+
+.reveal pre code {
+  /* font-family: "Fira Mono","Courier New",Courier,monospace;
+  display: block;
+  padding: 0px;
+  overflow: auto;
+  max-height: 400px;
+  word-wrap: normal; */
+
+  display: inline-block;
+	margin: 0;
+	padding: 1.05rem 1.2rem;
+	background-color: transparent;
+	font-size: inherit;
+	box-shadow: none;
+	-webkit-box-decoration-break: none;
+	box-decoration-break: none;
+  overflow-x: normal;
+  white-space: pre;
+  max-height: 400px;
+}
+
+
+.reveal kbd {
+	padding: 0 .29412em;
+	border: .1rem solid #c9c9c9;
+	border-radius: .3rem;
+	border-bottom-color: #bcbcbc;
+	background-color: #fcfcfc;
+	color: #555;
+	font-size: 85%;
+	box-shadow: 0 .1rem 0 #b0b0b0;
+	word-break: break-word
+}
+
+
+.reveal pre>code::-webkit-scrollbar {
+	width: .4rem;
+	height: .4rem
+}
+
+.reveal pre>code::-webkit-scrollbar-thumb {
+	background-color: rgba(0, 0, 0, .26)
+}
+
+.reveal pre>code::-webkit-scrollbar-thumb:hover {
+	background-color: #536dfe
+}
+
+
+.reveal table:not([class]) {
+	box-shadow: 0 2px 2px 0 rgba(0, 0, 0, .14), 0 1px 5px 0 rgba(0, 0, 0, .12), 0 3px 1px -2px rgba(0, 0, 0, .2);
+	display: inline-block;
+	max-width: 100%;
+	border-radius: .2rem;
+	font-size: 1.28rem;
+	overflow: auto;
+	-webkit-overflow-scrolling: touch
+}
+
+.reveal table:not([class])+* {
+	margin-top: 1.5em
+}
+
+.reveal table:not([class]) td:not([align]), .reveal table:not([class]) th:not([align]) {
+	text-align: left
+}
+
+[dir=rtl] .reveal table:not([class]) td:not([align]), [dir=rtl] .reveal table:not([class]) th:not([align]) {
+	text-align: right
+}
+
+.reveal table:not([class]) th {
+	min-width: 10rem;
+	padding: 1.2rem 1.6rem;
+	background-color: rgba(0, 0, 0, .54);
+	color: #fff;
+	vertical-align: top
+}
+
+.reveal table:not([class]) td {
+	padding: 1.2rem 1.6rem;
+	border-top: .1rem solid rgba(0, 0, 0, .07);
+	vertical-align: top
+}
+
+.reveal table:not([class]) tr:first-child td {
+	border-top: 0
+}
+
+.reveal table:not([class]) a {
+	word-break: normal
+}
+
+.reveal sup {
+  vertical-align: super; }
+
+.reveal sub {
+  vertical-align: sub; }
+
+.reveal small {
+  display: inline-block;
+  font-size: 0.6em;
+  line-height: 1.2em;
+  vertical-align: top; }
+
+.reveal small * {
+  vertical-align: top; }
+
+/*********************************************
+ * LINKS
+ *********************************************/
+.reveal a {
+  color: #268bd2;
+  text-decoration: none;
+  -webkit-transition: color .15s ease;
+  -moz-transition: color .15s ease;
+  transition: color .15s ease; }
+
+.reveal a:hover {
+  color: #78b9e6;
+  text-shadow: none;
+  color: #1db4d0;
+  border-bottom: 1px solid #1db4d0;
+
+}
+
+.reveal .roll span:after {
+  color: #fff;
+  background: #1a6091; }
+
+/*********************************************
+ * IMAGES
+ *********************************************/
+.reveal section img {
+  margin: 15px 0px;
+  background: rgba(255, 255, 255, 0.12);
+  border: 0px solid #666666;
+  box-shadow: 0 0 10px rgba(0, 0, 0, 0); }
+
+.reveal section img.plain {
+  border: 0;
+  box-shadow: none; }
+
+.reveal a img {
+  -webkit-transition: all .15s linear;
+  -moz-transition: all .15s linear;
+  transition: all .15s linear; }
+
+.reveal a:hover img {
+  background: rgba(255, 255, 255, 0.2);
+  border-color: #268bd2;
+  box-shadow: 0 0 20px rgba(0, 0, 0, 0.55); }
+
+/*********************************************
+ * NAVIGATION CONTROLS
+ *********************************************/
+.reveal .controls .navigate-left,
+.reveal .controls .navigate-left.enabled {
+  border-right-color: #268bd2; }
+
+.reveal .controls .navigate-right,
+.reveal .controls .navigate-right.enabled {
+  border-left-color: #268bd2; }
+
+.reveal .controls .navigate-up,
+.reveal .controls .navigate-up.enabled {
+  border-bottom-color: #268bd2; }
+
+.reveal .controls .navigate-down,
+.reveal .controls .navigate-down.enabled {
+  border-top-color: #268bd2; }
+
+.reveal .controls .navigate-left.enabled:hover {
+  border-right-color: #78b9e6; }
+
+.reveal .controls .navigate-right.enabled:hover {
+  border-left-color: #78b9e6; }
+
+.reveal .controls .navigate-up.enabled:hover {
+  border-bottom-color: #78b9e6; }
+
+.reveal .controls .navigate-down.enabled:hover {
+  border-top-color: #78b9e6; }
+
+/*********************************************
+ * PROGRESS BAR
+ *********************************************/
+.reveal .progress {
+  background: rgba(0, 0, 0, 0.2); }
+
+.reveal .progress span {
+  background: #268bd2;
+  -webkit-transition: width 800ms cubic-bezier(0.26, 0.86, 0.44, 0.985);
+  -moz-transition: width 800ms cubic-bezier(0.26, 0.86, 0.44, 0.985);
+  transition: width 800ms cubic-bezier(0.26, 0.86, 0.44, 0.985); }
+
+.left {
+  text-align: left;
+  float: left;
+  z-index:-10;
+  width:100%;
+}
+
+.middle {
+  text-align: center;
+  float: center;
+  z-index:0;
+  width:100%;
+}
+
+#left {
+  left:-8.33%;
+  text-align: left;
+  float: left;
+  width:48%;
+  z-index:-10;
+}
+
+#right {
+  left:31.25%;
+  top: 75px;
+  float: right;
+  text-align: right;
+  z-index:-10;
+  width:48%;
+}
+
+.slides > section:nth-child(1) {
+  // 修改 `第 1 个幻灯片`
+  color: #fafafa;
+  text-shadow: 1px 2px 4px #191919;
+  text-align: center;
+}
+
+.slides {
+    // 修改所有幻灯片
+
+    text-align: left;
+    float: left;
+    z-index:-10;
+    width:100%;
+    // 添加了背景logo
+    background-image: url(data:image/png;base64,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);
+    background-repeat: no-repeat;
+    background-size: 300px;
+    background-position: right top;
+
+}
