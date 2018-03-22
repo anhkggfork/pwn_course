@@ -8,8 +8,22 @@ pages:
       - forward: buffer_overflow/forward.md
       - stack: buffer_overflow/funcation.md
       - rop: buffer_overflow/rop.md
+      - rop2: none.md
+      - rop3: none.md
       - heap: buffer_overflow/heap.md
       - heap2: buffer_overflow/heap2.md
+      - heap3: none.md
+    - 其他漏洞:
+      - format: none.md
+      - format2: none.md
+      - format3: none.md
+      - intflow: none.md
+      - 业务逻辑: none.md
+      - 条件竞争: none.md
+      - io_elf: none.md
+      - io_elf2: none.md
+    - fuzzing:
+  - 实验:
 
 
 # Theme

@@ -1,17 +1,18 @@
-# Welcome to MkDocs
+二进制漏洞挖掘与利用
 
-For full documentation visit [mkdocs.org](http://mkdocs.org).
-
-## Commands
-
-* `mkdocs new [dir-name]` - Create a new project.
-* `mkdocs serve` - Start the live-reloading docs server.
-* `mkdocs build` - Build the documentation site.
-* `mkdocs help` - Print this help message.
-
-## Project layout
-
-    mkdocs.yml    # The configuration file.
-    docs/
-        index.md  # The documentation homepage.
-        ...       # Other markdown pages, images and other files.
+1. 缓冲区溢出漏洞（8课时）
+（1）函数调用栈
+（2）栈溢出的概念和各类保护机制
+（3）rop，srop，brop
+（4）堆的实现
+（5）unlink，hof，堆喷，uaf，fastbin
+2. 其他漏洞（8课时）
+（1）格式化字符串
+（2）整数溢出
+（3）业务逻辑漏洞
+（4）条件竞争
+3. 漏洞挖掘（8课时）
+（1）静态分析
+（2）普通fuzz
+（3）符号执行fuzz
+（4）智能fuzz
