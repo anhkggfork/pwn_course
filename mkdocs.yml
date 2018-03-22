@@ -5,9 +5,12 @@ pages:
   - 课程:
     - Index: index.md
     - 缓冲区溢出漏洞: 
+      - forward: buffer_overflow/forward.md
       - stack: buffer_overflow/funcation.md
       - rop: buffer_overflow/rop.md
       - heap: buffer_overflow/heap.md
+      - heap2: buffer_overflow/heap2.md
+
 
 # Theme
 theme:

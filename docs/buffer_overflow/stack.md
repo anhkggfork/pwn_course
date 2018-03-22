@@ -9,8 +9,9 @@ presentation:
   theme: none.css
 ---
 
-<!-- slide data-notes="
-" -->
+<!-- slide data-notes="" -->
+# 缓冲区溢出
+<!-- slide data-notes="" -->
 ## 缓冲区溢出漏洞原理
 ### 什么是缓冲区
 缓冲区是程序在执行过程中用于存放数据的地方，它通常是内存上的一段连续的地址，由程序或系统分配。

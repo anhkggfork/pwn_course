@@ -15,7 +15,7 @@ presentation:
 <!-- slide data-notes="" -->
 ##堆的结构
 堆的基本单位是一个一个chunk块，chunk的结构如下：
-```c
+```c#
 struct malloc_chunk {
     INTERNAL_SIZE_T    prev_size;  /* Size of previous chunk (if free).  */
     INTERNAL_SIZE_T    size;     /* Size in bytes, including overhead. */
@@ -26,6 +26,8 @@ struct malloc_chunk {
     struct malloc_chunk* bk_nextsize;
  };
 ```
+![](chunk.png)
+<!-- slide data-notes="" -->
 如果前面的chunk是空闲状态，prev_size则记录前面chunk的大小
 其中，size不同于pre_size的是，size中的低三位作为flag。
 - 最低位:前一个 chunk 是否正在使用
@@ -121,16 +123,16 @@ if ((unsigned long) (size) >= (unsigned long) (nb + MINSIZE))
 执行slide code时程序不会做任何事情。
 > 比如我们在栈溢出实验中，有经典的payload：buffer+ret+shellcode。如果我们并不能精确定位shellcode的地址，那么溢出攻击就会失败，这个时候不妨把payload改为buffer+ret+nop*n+shellcode。Nop是一个汇编指令，它的机器码为0x90（x86），程序执行nop不会做任何有效操作。当我们用大量的nop覆盖于ret和shellcode之间时，即使ret地址不够准确，但它有大概率会落在nop指令上（毕竟我们用的是大量nop指令）。如此，即使我们没有精准定位shellcode，程序依旧会在执行完nop后继续执行shellcode，达到getshell。
 <!-- slide data-notes="" -->
-既然我们可以在栈上这样布置，那么在堆上也可以同理。向堆上大量写入 nop*n+shellcode，再通过任意地址写的漏洞劫持eip到堆上的地址。因为是大量写入，大部分的堆空间都被写满了nop*n+shellcode，并且，nop*n的长度显著大于shellcode的长度，造成的结果是只要我们跳转到堆上的地址，有很大概率命中nop，这样shellcode就会执行。
+既然我们可以在栈上这样布置，那么在堆上也可以同理。向堆上大量写入 `nop*n+shellcode`，再通过任意地址写的漏洞劫持eip到堆上的地址。因为是大量写入，大部分的堆空间都被写满了`nop*n+shellcode`，并且，`nop*n`的长度显著大于shellcode的长度，造成的结果是只要我们跳转到堆上的地址，有很大概率命中nop，这样shellcode就会执行。
 <!-- slide data-notes="" -->
 ### 0x0c0c0c0c
 这个地址常用于精准实现堆喷。从汇编上来讲，0C 0C   即OR AL,0C，所以它可以跟nop一样可以作为slidecode。其次0x0c0c0c0c很容易被堆覆盖0x0c0c0c0c = 202116108 ，202116108字节(b)=192.7529411兆字节(mb)
-即大概200m的堆喷就可以保证能覆盖到它。假设用0c*n+shellcode堆喷，很容易就会在0xc0c0c0c0上写到“0xc0c0c0c0“，这时我们用任意地址写的漏洞，覆盖某个函数地址的值为‘0xc0c0c0c0’，eip经过几次跳转，仍然会跳转到0xc0c0c0c0上执行“0xc0c0c0c0“机器码，从而滑到shellcode上。
+即大概200m的堆喷就可以保证能覆盖到它。假设用`0c*n+shellcode`堆喷，很容易就会在0xc0c0c0c0上写到“0xc0c0c0c0“，这时我们用任意地址写的漏洞，覆盖某个函数地址的值为‘0xc0c0c0c0’，eip经过几次跳转，仍然会跳转到0xc0c0c0c0上执行“0xc0c0c0c0“机器码，从而滑到shellcode上。
 
 <!-- slide data-notes="" -->
 <!-- slide data-notes="" -->
 <!-- slide data-notes="" -->
 <!-- slide data-notes="" -->
 <!-- slide data-notes="" -->
-<!-- slide data-notes="" -->
+
 
