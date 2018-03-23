@@ -4,6 +4,7 @@ pipeline {
         stage('Build') {
             steps {
                 echo "[*] Building..."
+                sh 'sh ./scripts/convert2ppt.sh'
                 sh 'mkdocs build'
                 echo "[+] Build Done!"
             }

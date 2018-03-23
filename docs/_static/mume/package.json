@@ -1,0 +1,97 @@
+{
+  "_from": "@shd101wyy/mume",
+  "_id": "@shd101wyy/mume@0.3.1",
+  "_inBundle": false,
+  "_integrity": "sha512-UithqJvxY+JXxvYQjgTH2TLMX7klV5at42o/7CdxTquoPatI09tRpA4oznJB87HhwoDKVkAfiHcanjr6iwCPaw==",
+  "_location": "/@shd101wyy/mume",
+  "_phantomChildren": {},
+  "_requested": {
+    "type": "tag",
+    "registry": true,
+    "raw": "@shd101wyy/mume",
+    "name": "@shd101wyy/mume",
+    "escapedName": "@shd101wyy%2fmume",
+    "scope": "@shd101wyy",
+    "rawSpec": "",
+    "saveSpec": null,
+    "fetchSpec": "latest"
+  },
+  "_requiredBy": [
+    "#USER",
+    "/"
+  ],
+  "_resolved": "https://registry.npmjs.org/@shd101wyy/mume/-/mume-0.3.1.tgz",
+  "_shasum": "0edcf9a692cdeec2fb9acda59bdb8beeccaaa5f7",
+  "_spec": "@shd101wyy/mume",
+  "_where": "/Users/lieanu/cyberpeace/2018新内容体系/develop",
+  "bugs": {
+    "url": "https://github.com/shd101wyy/mume/issues"
+  },
+  "bundleDependencies": false,
+  "contributors": [
+    {
+      "name": "shd101wyy"
+    },
+    {
+      "name": "kachkaev"
+    }
+  ],
+  "dependencies": {
+    "babyparse": "^0.4.6",
+    "cheerio": "0.15.0",
+    "fs-extra": "^5.0.0",
+    "gray-matter": "^3.0.7",
+    "less": "^2.7.2",
+    "lodash": "^4.17.5",
+    "mkdirp": "^0.5.1",
+    "qiniu": "=7.1.1",
+    "request": "^2.81.0",
+    "temp": "^0.8.3",
+    "uslug": "^1.0.4",
+    "yamljs": "^0.3.0"
+  },
+  "deprecated": false,
+  "description": "A powerful markdown tool",
+  "devDependencies": {
+    "@types/cheerio": "^0.22.7",
+    "@types/jest": "^22.1.3",
+    "@types/jquery": "^3.2.6",
+    "@types/markdown-it": "0.0.4",
+    "@types/node": "^8.0.10",
+    "jest": "^22.4.0",
+    "prettier": "^1.10.2",
+    "prettier-check": "^2.0.0",
+    "ts-jest": "^22.0.2",
+    "tslint": "^5.9.1",
+    "tslint-config-prettier": "^1.8.0",
+    "typescript": "^2.7.2"
+  },
+  "files": [
+    "dependencies",
+    "docs",
+    "out",
+    "styles"
+  ],
+  "homepage": "https://github.com/shd101wyy/mume#readme",
+  "keywords": [
+    "markdown"
+  ],
+  "license": "NCSA",
+  "main": "out/src/mume.js",
+  "name": "@shd101wyy/mume",
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/shd101wyy/mume.git"
+  },
+  "scripts": {
+    "build": "tsc --project .",
+    "build:watch": "tsc --project . --watch",
+    "format": "prettier --write --ignore-path .gitignore \"{.,src/**,test/**}/{*.{j,t}s,*.md,ts*.json}\"",
+    "lint": "tsc --project . --noEmit && tslint --project . && prettier-check --ignore-path .gitignore \"{.,src/**,test/**}/{*.{j,t}s,*.md,ts*.json}\"",
+    "prepare": "npm run build",
+    "test": "jest --no-coverage",
+    "test:coverage": "jest"
+  },
+  "typings": "out/src/mume.d.ts",
+  "version": "0.3.1"
+}
