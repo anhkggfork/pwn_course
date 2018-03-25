@@ -1,4 +1,4 @@
----https://pastebin.com/i8J7j2VG
+---
 presentation:
   width: 1600
   height: 900
@@ -40,7 +40,7 @@ F5大法
 ![](ida_pro2.png)
 <!-- slide data-notes="" -->
 ## 前置技能
-- 汇编语言：基本指令，函数调用栈
+- 汇编语言：基本指令（intel,arm,mips），函数调用栈
 - 编译，链接，装载，库，执行
 - windows：pe文件结构  linux：ELF文件结构
 - 。。。
@@ -105,6 +105,7 @@ Type "help", "copyright", "credits" or "license" for more information.
 - 物联网安全：工业控制，智能汽车，智能家居
 - window office
 - 浏览器安全
+- 。。。
 <!-- slide data-notes="" -->
 ### CVE-2015-3036
 linux内核模块KCodes NetUSB的漏洞，在函数run_init_sbus()下有栈溢出漏洞，远程攻击者通过tcp端口20005上发送较长的计算机名即发生栈溢出，执行任意代码。

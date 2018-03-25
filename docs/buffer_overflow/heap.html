@@ -1,7 +1,7 @@
 <!DOCTYPE html>
   <html>
     <head>
-      <title>rop</title>
+      <title>heap</title>
       <meta charset="utf-8">
       <meta name="viewport" content="width=device-width, initial-scale=1.0">
       
@@ -2175,132 +2175,145 @@ body {
     <div class="reveal">
       <div class="slides">
         <section data-notes="" lineNo="11" class="slide " data-line="11" data-h="0" data-v="0">
-<h1 class="mume-header" id="rop">rop</h1>
+<h1 class="mume-header" id="%E5%A0%86%E6%BA%A2%E5%87%BA%E6%94%BB%E5%87%BB">堆溢出攻击</h1>
 
-<p>NX/DEP保护，即数据段不可执行保护，是针对栈溢出攻击而产生的一项防护措施。简单的来说，当开启这种保护时，堆栈上的指令将没有执行权限。所以，上面提到的简单的栈溢出攻击将会失效。<br>
-面向返回编程（英语：Return-Oriented Programming，缩写：ROP）是计算机安全漏洞利用技术，该技术允许攻击者在安全防御的情况下执行代码，如不可执行的内存和代码签名。攻击者控制堆栈调用以劫持程序控制流并执行针对性的机器语言指令序列（称为Gadgets）。 每一段gadget通常结束于return指令，并位于共享库代码中的子程序。系列调用这些代码，攻击者可以在拥有更简单攻击防范的程序内执行任意操作。（维基百科）</p>
-</section><section data-notes="" lineNo="15" class="slide " data-line="15" data-h="1" data-v="0">
-<h3 class="mume-header" id="%E5%BA%94%E5%AF%B9%E6%96%B9%E6%B3%95">应对方法</h3>
+<p>与栈相对的，堆是由低地址向高地址增长的。类似于栈，堆也是现代操作系统常用的缓冲区，堆一般在程序运行时由系统动态分配，使用后由系统动态回收，当遇到危险函数时，堆的数据也可能会发生溢出。同时我们可以注意到，因为堆上不会保存eip这类的寄存器数据，我们无法通过堆溢出直接控制程序的执行，所以堆溢出攻击相对于栈溢出攻击更为复杂和抽象。</p>
+</section><section data-notes="" lineNo="14" class="slide " data-line="14" data-h="1" data-v="0">
+<h2 class="mume-header" id="%E5%A0%86%E7%9A%84%E7%BB%93%E6%9E%84">堆的结构</h2>
 
-<p>不利用自己注入的代码，而用系统已有的代码来构造攻击</p>
-<h3 class="mume-header" id="gadgets%E7%89%B9%E7%82%B9">gadgets特点</h3>
+<p>堆的基本单位是一个一个chunk块，chunk的结构如下：</p>
+<pre data-role="codeBlock" data-info="c#" class="language-c#"><code>struct malloc_chunk {
+    INTERNAL_SIZE_T    prev_size;  /* Size of previous chunk (if free).  */
+    INTERNAL_SIZE_T    size;     /* Size in bytes, including overhead. */
+    struct malloc_chunk* fd;       /* double links -- used only if free. */
+    struct malloc_chunk* bk;
+    /* Only used for large blocks: pointer to next larger size.  */
+    struct malloc_chunk* fd_nextsize; /* double links -- used only if free. */
+    struct malloc_chunk* bk_nextsize;
+ };
+</code></pre><p><img src="chunk.png" alt=""></p>
+</section><section data-notes="" lineNo="29" class="slide " data-line="29" data-h="2" data-v="0">
+<p>如果前面的chunk是空闲状态，prev_size则记录前面chunk的大小<br>
+其中，size不同于pre_size的是，size中的低三位作为flag。</p>
+<ul>
+<li>最低位:前一个 chunk 是否正在使用</li>
+<li>倒数第二位:当前 chunk 是否是通过 mmap 方式产生的</li>
+<li>倒数第三位:这个 chunk 是否属于一个线程的 arena</li>
+</ul>
+</section><section data-notes="" lineNo="35" class="slide " data-line="35" data-h="3" data-v="0">
+<h2 class="mume-header" id="unlink">unlink</h2>
+
+<p>unlink时free（）函数实现时所用到的一个宏，用于将当前free的chunk块相邻的chunk连接起来<br>
+<img src="unlink.png" alt=""></p>
+</section><section data-notes="" lineNo="39" class="slide " data-line="39" data-h="4" data-v="0">
+<h3 class="mume-header" id="unlink-%E4%BB%A3%E7%A0%81">unlink 代码</h3>
+
+<pre data-role="codeBlock" data-info="c#" class="language-c#"><code>#define unlink( P, BK, FD ) 
+{ 
+BK = P-&gt;bk; 
+FD = P-&gt;fd; 
+FD-&gt;bk = BK; 
+BK-&gt;fd = FD;
+}
+</code></pre><p>假设由两个连续分配的chunk，在堆上，它们的位置也是连续的。当对第一个chunk进行输入时，若发生溢出，溢出的数据是可以覆盖到第二个chunk的</p>
+</section><section data-notes="" lineNo="52" class="slide " data-line="52" data-h="5" data-v="0">
+<h3 class="mume-header" id="%E6%94%BB%E5%87%BB%E6%96%B9%E5%BC%8F">攻击方式</h3>
+
+<p>若在溢出时将第二个chunk覆盖成如下：<br>
+Pre_size = 偶数值<br>
+Size = -4<br>
+fd = address – 12<br>
+bk = value<br>
+其中，-4的最低位为0，即表示前一个chunk正在被使用。</p>
+</section><section data-notes="" lineNo="60" class="slide " data-line="60" data-h="6" data-v="0">
+<h3 class="mume-header" id="free%E7%9A%84%E8%BF%87%E7%A8%8B">free()的过程</h3>
+
+<p>此时若有free（）函数来free第一个chunk的话，free（）会有以下步骤：</p>
+<ol>
+<li>尝试向上一个chunk合并，由于它是第一个chunk，所以这里不会合并。</li>
+<li>尝试向下一个chunk合并，要判断下一个chunk是否可以，free（）的做法是通过第三个chunk的size中的flag位来判断。Free（）要定位第三个chunk的size的位置，是通过第二个chunk+size来定位的，因为我们这里通过溢出把第二个chunk的size设置为了-4，所以free（）会把第二个chunk的pre_size误认为是第三个chunk的size，又因为我们这里把pre_size设置成偶数，即最低位为0，所以free（）会误以为第三个chunk的size最低位为0，进而认为第二个chunk是空闲状态，从而确认将第一个chunk和第二个chunk进行合并。（使第一个chunk也为free状态）</li>
+</ol>
+</section><section data-notes="" lineNo="66" class="slide " data-line="66" data-h="7" data-v="0">
+<h3 class="mume-header" id="%E6%94%BB%E5%87%BB%E5%90%8E%E7%9A%84unlink">攻击后的unlink</h3>
+
+<p>对应的，要完成合并，其中就会对第二个chunk进行unlink操作</p>
+<ol>
+<li>FD = P-&gt;fd = address – 12</li>
+<li>BK = P-&gt;bk = value</li>
+<li>FD-&gt;bk =BK , 即 *(address-12+12) = BK = value（bk相对于chunk的偏移就是12，所以这里会有+12，下面同理）</li>
+<li>BK-&gt;fd =FD , 即 *(except value + 8) = FD = addr – 12</li>
+</ol>
+</section><section data-notes="" lineNo="74" class="slide " data-line="74" data-h="8" data-v="0">
+<h3 class="mume-header" id="%E4%BB%BB%E6%84%8F%E5%9C%B0%E5%9D%80%E5%86%99">任意地址写</h3>
+
+<p>不难看到，通过unlink操作后，我们在address上写了value，实现了任意地址写。如果我们同时泄露了下面将用到的某个函数的got地址，将其值改写为shellcode的地址，当unlink完成并在接下来程序运行到那个函数时，就会跳转到shellcode运行，实现getshell。<br>
+实际上，堆溢出攻击大多都是通过实现任意地址写，覆盖got.plt表来达到攻击目的。</p>
+</section><section data-notes="" lineNo="78" class="slide " data-line="78" data-h="9" data-v="0">
+<h2 class="mume-header" id="house-of-force">house of force</h2>
+
+<p>house of force 是关于top chunk的堆溢出攻击技术。top chunk是位于空闲内存最高处的一块内存，分配内存时系统会先从fastbin，small bins，large bins中寻找合适大小的chunk，如果都不能满足分配请求，ptmalloc就会从top chunk中割一块内存。</p>
+<h3 class="mume-header" id="%E5%88%A9%E7%94%A8%E6%9D%A1%E4%BB%B6">利用条件</h3>
 
 <ul>
-<li>通常指向系统共享库的代码 -&gt; 执行不受nx/dep影响</li>
-<li>以ret（pop eip）结尾</li>
+<li>可通过堆溢出覆盖top chunk 的size</li>
+<li>可以控制请求的堆块大小</li>
+<li>可以对请求的堆块写数据</li>
 </ul>
-<h3 class="mume-header" id="%E6%BA%A2%E5%87%BA%E5%BD%A2%E5%BC%8F">溢出形式</h3>
+</section><section data-notes="" lineNo="85" class="slide " data-line="85" data-h="10" data-v="0">
+<h3 class="mume-header" id="%E5%88%A9%E7%94%A8%E6%96%B9%E6%B3%95">利用方法</h3>
 
-<p>buffer + gadget * n</p>
-<h3 class="mume-header" id="%E4%B8%BB%E8%A6%81%E7%9A%84gadget">主要的gadget</h3>
+<p>控制请求的堆块大小，使分配的堆块地址为想要写的地址。<br>
+即计算当前top chunk与目标地址的长度，使请求的堆块长度为: target_address - top_chunk_address - len(chunk_head)</p>
+</section><section data-notes="" lineNo="90" class="slide " data-line="90" data-h="11" data-v="0">
+<p>其中，通过堆溢出使top chunk的size为最大FFFFFFFFFFFFFFFF，让系统认为top chunk总是足够大到可以完成分配。</p>
+<pre data-role="codeBlock" data-info="c#" class="language-c#"><code>
+victim = av-&gt;top;
+size   = chunksize(victim);
 
-<ul>
-<li>传参（pop xxx,ret）</li>
-<li>系统调用函数（system（），exce（））</li>
-</ul>
-</section><section data-notes="" lineNo="26" class="slide " data-line="26" data-h="2" data-v="0">
-<h3 class="mume-header" id="alsr%E4%BF%9D%E6%8A%A4">alsr保护</h3>
+if ((unsigned long) (size) &gt;= (unsigned long) (nb + MINSIZE))
+{
+    remainder_size = size - nb;
+    remainder      = chunk_at_offset(victim, nb);
+    av-&gt;top        = remainder;
+    set_head(victim, nb | PREV_INUSE |
+            (av != &amp;main_arena ? NON_MAIN_ARENA : 0));
+    set_head(remainder, remainder_size | PREV_INUSE);
+ 
+    check_malloced_chunk(av, victim, nb);
+    void *p = chunk2mem(victim);
+    alloc_perturb(p, bytes);
+    return p;
+}
+</code></pre></section><section data-notes="" lineNo="112" class="slide " data-line="112" data-h="12" data-v="0">
+<h2 class="mume-header" id="%E5%A0%86%E5%96%B7">堆喷</h2>
 
-<p>位址空间配置随机载入（英语：Address space layout randomization，缩写ASLR，又称位址空间配置随机化、位址空间布局随机化）是一种防范内存损坏漏洞被利用的计算机安全技术。位址空间配置随机载入利用随机方式配置资料定址空间，使某些敏感资料（例如作业系统内核）配置到一个恶意程式无法事先获知的位址，令攻击者难以进行攻击。（维基百科）</p>
-</section><section data-notes="&amp;#x5373;&amp;#x4F7F;&amp;#x5F00;&amp;#x542F;&amp;#x5730;&amp;#x5740;&amp;#x968F;&amp;#x673A;&amp;#x5316;&amp;#xFF0C;&amp;#x4E5F;&amp;#x4E0D;&amp;#x662F;&amp;#x5168;&amp;#x968F;&amp;#x673A;&amp;#x7684;&amp;#x3002;&amp;#x5BF9;&amp;#x4E8E;linux&amp;#x6765;&amp;#x8BF4;&amp;#xFF0C;&amp;#x5F00;&amp;#x542F;ASLR&amp;#xFF0C;libc&amp;#x7684;&amp;#x57FA;&amp;#x5730;&amp;#x5740;&amp;#x5728;&amp;#x6BCF;&amp;#x4E00;&amp;#x6B21;&amp;#x542F;&amp;#x52A8;&amp;#x65F6;&amp;#x90FD;&amp;#x4F1A;&amp;#x53D8;&amp;#x5316;&amp;#xFF0C;&amp;#x4F46;&amp;#x662F;libc&amp;#x672C;&amp;#x8EAB;&amp;#x662F;&amp;#x6574;&amp;#x5757;&amp;#x5B58;&amp;#x5165;&amp;#x5185;&amp;#x5B58;&amp;#x7684;&amp;#x3002;&amp;#x5373;libc&amp;#x4E2D;&amp;#x6307;&amp;#x4EE4;&amp;#x76F8;&amp;#x5BF9;&amp;#x4E8E;&amp;#x5176;&amp;#x57FA;&amp;#x5730;&amp;#x5740;&amp;#x7684;&amp;#x504F;&amp;#x79FB;&amp;#x662F;&amp;#x4E0D;&amp;#x4F1A;&amp;#x53D8;&amp;#x5316;&amp;#x7684;&amp;#x3002;&amp;#x800C;libc&amp;#x672C;&amp;#x8EAB;&amp;#x7684;&amp;#x6307;&amp;#x4EE4;&amp;#x662F;&amp;#x8DB3;&amp;#x591F;getshell&amp;#x7684;&amp;#xFF0C;&amp;#x6240;&amp;#x4EE5;&amp;#x8981;&amp;#x5BF9;&amp;#x6297;ASLR&amp;#xFF0C;&amp;#x53EF;&amp;#x4EE5;&amp;#x4ECE;&amp;#x6CC4;&amp;#x9732;libc&amp;#x57FA;&amp;#x5730;&amp;#x5740;&amp;#x4E0B;&amp;#x624B;&amp;#x3002;" lineNo="29" class="slide " data-line="29" data-h="3" data-v="0">
-<h3 class="mume-header" id="%E5%BD%B1%E5%93%8D">影响</h3>
+<p>堆喷即heap spray，当我们可以向堆上不断写我们想要的东西时，可以尝试使用堆喷。需要注意的是，堆喷仅仅是一种写payload的手法，而不是一个漏洞。</p>
+<h3 class="mume-header" id="%E5%88%A9%E7%94%A8%E6%9D%A1%E4%BB%B6-1">利用条件</h3>
 
-<ul>
-<li>libc基地址变动</li>
-<li>gadgets的地址难以确认。</li>
-</ul>
-<h3 class="mume-header" id="%E5%BA%94%E5%AF%B9%E6%96%B9%E6%B3%95-1">应对方法</h3>
+<ol>
+<li>能够向堆上申请大段的内存，能够控制堆上的数据。</li>
+<li>没有开启nx保护</li>
+<li>有一个可供利用的任意地址写的漏洞，比如上面说的hof，unlink。</li>
+</ol>
+</section><section data-notes="" lineNo="120" class="slide " data-line="120" data-h="13" data-v="0">
+<h3 class="mume-header" id="slide-code">slide code</h3>
 
-<ul>
-<li>泄露libc地址</li>
-</ul>
-</section><section data-notes="" lineNo="35" class="slide " data-line="35" data-h="4" data-v="0">
-<h2 class="mume-header" id="srop-sigreturn-oriented-programming">srop (Sigreturn Oriented Programming)</h2>
-
-<p><img src="signal.jpg" alt=""><br>
-signal机制是一套被广泛应用于unix的机制，它通常用于系统在用户态和内核态切换，执行如杀死进程，设置进程定时器等功能。<br>
-如图所示，内核向进程发起signal。进程挂起，进入内核（1），内核为进程保存上下文，跳到signal handler，之后又返回内核态，上下文恢复，最后返回最初的进程。</p>
-</section><section data-notes="" lineNo="40" class="slide " data-line="40" data-h="5" data-v="0">
-<p>重点在第二步和第三步上，我们可以把signal handler理解为一个特殊的函数，这个函数返回地址是rt_sigreturn，在执行完signal handler，会返回到rt_sigretrun，而rt_sigreturn会将上下文参数恢复。下图是linux系统保存在栈上的上下文信息。<br>
-<img src="srop_frame.jpg" alt=""></p>
-</section><section data-notes="" lineNo="43" class="slide " data-line="43" data-h="6" data-v="0">
-<p>可以看到，寄存器的值作为上下文信息的一部分被保存在了栈上，而在rt_sigreturn 执行时又会把寄存器的值从栈上复制到寄存器中，从而恢复用户进程挂起之前的状态。其中，内核为用户恢复上下文时不会对栈上的上下文信息进行检查。意即，我们完全可以通过栈溢出伪造一个存储上下文信息的栈，通过rt_sigreturn将栈上的数据放到寄存器中。如下图<br>
-<img src="fake_frame.jpg" alt=""><br>
-那么此时当rt_sigreturn 执行完毕后，随后就会执行rip指向的 syscall（），并且以rax和rdi为参数。明显的，这个函数调用会弹出一个shell，攻击完成。</p>
-</section><section data-notes="" lineNo="47" class="slide " data-line="47" data-h="7" data-v="0">
-<h2 class="mume-header" id="bropblind-rop">brop(blind rop)</h2>
-
-<p>Brop与其说是rop技巧，更不如说是寻找gadget的技巧，它的特长在于，可以在没有源程序的情况下寻找有效的gadget，是一种适用于远程攻击的rop，针对的是64位系统。</p>
-<h3 class="mume-header" id="%E6%94%BB%E5%87%BB%E6%9D%A1%E4%BB%B6">攻击条件</h3>
-
-<p>在前面我们提到了aslr保护，也就是地址随机化保护，在远程服务器中，服务器端的程序进程崩溃之后会自动重新启动。而对于大部分服务器应用来说，崩溃后重启的地址与崩溃前一样，也就是说虽然服务器端开启了额aslr保护，但只会在第一次启动时生效，崩溃后的重启并不会再次启用aslr随机化。当我们遇到这种远程程序的时候，可以反复进行崩溃尝试而不必担心aslr的影响。</p>
-</section><section data-notes="" lineNo="52" class="slide " data-line="52" data-h="8" data-v="0">
-<h3 class="mume-header" id="stack-reading">stack reading</h3>
-
-<p>用于绕过canary保护</p>
+<p>执行slide code时程序不会做任何事情。</p>
 <blockquote>
-<p>canary（金丝雀）<br>
-过去由于缺少气体环境的检测工具，煤矿工人会带着金丝雀下矿洞，金丝雀对于周围气体非常敏感，如果金丝雀死亡，则说明有大量的危险气体，这时矿工就会撤离。<br>
-在现代操作系统中，canary是一种防止栈溢出的保护机制，在开辟函数栈时，会先在fs块内存中的某个地方读取值并存到栈上，当函数运行到返回之前，会先检查当前栈上的数据与一开始从fs块上读取的值是否相同（通常是一个异或比较），若不同，则认为程序被栈溢出攻击，直接崩溃。狭义的来说，栈上一开始保存的数据，被我们称为canary。需要注意的是，canary的最低一位一般为“/x00”，这是为了防止canary被一些可以打印栈上数据的漏洞泄露。</p>
+<p>比如我们在栈溢出实验中，有经典的payload：buffer+ret+shellcode。如果我们并不能精确定位shellcode的地址，那么溢出攻击就会失败，这个时候不妨把payload改为buffer+ret+nop*n+shellcode。Nop是一个汇编指令，它的机器码为0x90（x86），程序执行nop不会做任何有效操作。当我们用大量的nop覆盖于ret和shellcode之间时，即使ret地址不够准确，但它有大概率会落在nop指令上（毕竟我们用的是大量nop指令）。如此，即使我们没有精准定位shellcode，程序依旧会在执行完nop后继续执行shellcode，达到getshell。</p>
 </blockquote>
-<h4 class="mume-header" id="%E5%BF%85%E8%A6%81%E6%9D%A1%E4%BB%B6">必要条件</h4>
+</section><section data-notes="" lineNo="124" class="slide " data-line="124" data-h="14" data-v="0">
+<p>既然我们可以在栈上这样布置，那么在堆上也可以同理。向堆上大量写入 <code>nop*n+shellcode</code>，再通过任意地址写的漏洞劫持eip到堆上的地址。因为是大量写入，大部分的堆空间都被写满了<code>nop*n+shellcode</code>，并且，<code>nop*n</code>的长度显著大于shellcode的长度，造成的结果是只要我们跳转到堆上的地址，有很大概率命中nop，这样shellcode就会执行。</p>
+</section><section data-notes="" lineNo="126" class="slide " data-line="126" data-h="15" data-v="0">
+<h3 class="mume-header" id="0x0c0c0c0c">0x0c0c0c0c</h3>
 
-<p>崩溃后的重启不会改变canary的值。</p>
-<h4 class="mume-header" id="%E5%BC%80%E5%90%AFcanary%E4%BF%9D%E6%8A%A4%E6%97%B6%E6%A0%88%E4%B8%8A%E7%9A%84%E5%B8%83%E5%B1%80">开启canary保护时栈上的布局</h4>
-
-<p>Buffer|canary|pre ebp|ret</p>
-</section><section data-notes="" lineNo="62" class="slide " data-line="62" data-h="9" data-v="0">
-<h4 class="mume-header" id="%E8%A6%86%E7%9B%96canary">覆盖canary</h4>
-
-<p>32位系统下canary长度一般为4个字节，64位下则是8个字节。<br>
-进行爆破尝试时，如果仅仅是枚举所有可能的数值，则最多需要尝试4294967296（FFFF+1）次，无疑时非常低效的。</p>
-<h4 class="mume-header" id="%E6%94%B9%E8%BF%9B">改进</h4>
-
-<p>为了提升效率，我们可以采用逐字节爆破的方式，具体见上图。对于逐字节爆破，最大尝试次数仅为4*256=1024<br>
-<img src="stack_reading.jpg" alt=""></p>
-</section><section data-notes="" lineNo="69" class="slide " data-line="69" data-h="10" data-v="0">
-<h3 class="mume-header" id="blind">blind</h3>
-
-<p>这里的blind是指没有本地二进制文件或者源码的情况，即只有位于远程服务器端程序。<br>
-不同于本地二进制文件或源码，我们可以直接扫描本地内存获取gadget，远程服务器端的程序，我们很难找到有效的gadget。此时我们可以换个思路，先远程dump内存，利用write（）或者puts（）这类的输出函数来实现。</p>
-</section><section data-notes="" lineNo="73" class="slide " data-line="73" data-h="11" data-v="0">
-<h3 class="mume-header" id="%E5%AF%BB%E6%89%BE%E8%B5%B7write%E5%92%8Cputs%E5%8F%82%E6%95%B0%E7%9A%84gadgets">寻找起write()和puts()参数的gadgets</h3>
-
-<p>这类gadgets一般形式是pop xxx,ret</p>
-<h4 class="mume-header" id="trap%E5%9C%B0%E5%9D%80">trap地址</h4>
-
-<p>当程序执行到这个地址时，程序会崩溃。这种地址很常见，内存中到处都是这类地址，一个随机跳转的地址总是能引起程序崩溃。</p>
-<h4 class="mume-header" id="stop%E5%9C%B0%E5%9D%80">stop地址</h4>
-
-<p>区别于trap地址，当程序执行到这个地址时，程序会被挂起或者无限循环。</p>
-</section><section data-notes="" lineNo="80" class="slide " data-line="80" data-h="12" data-v="0">
-<h4 class="mume-header" id="brop-gadget">brop gadget</h4>
-
-<p>在libc_csu_init的结尾一段这样的指令<br>
-<img src="brop_gadget.png" alt=""><br>
-可以看到，这段指令的特殊之处在于它是连续6个pop接一个ret。这种结构非常少见，意即我们可以通过寻找这种结构的gadget来找到这段指令。由上图可以看到的是，这段brop gadget虽然只是对rbx，rbx，r12，r13，r14，r15进行pop然后ret，但是通过分析其机器码，若程序从偏移0x7开始执行，指令则变为pop rsi，pop r15，ret。若程序从偏移0x9开始执行，指令则变为pop rdi，ret。所以若找到这段brop gadget，我们便可以通过偏移找到起第一个和第二个函数参数的gadget。</p>
-</section><section data-notes="" lineNo="85" class="slide " data-line="85" data-h="13" data-v="0">
-<h4 class="mume-header" id="%E5%AF%BB%E6%89%BEbrop-gadget%E7%9A%84%E5%9C%B0%E5%9D%80">寻找brop gadget的地址</h4>
-
-<p>下面讲如何用trap地址和stop地址试探brop gadget的地址。我们把payload进行如下构造，buffer+canary+rbp+ret+trap<em>6+stop+trap</em>n。其中，buffer和rbp的值随意填，ret的值从0x400000开始枚举，一般情况下，由于我们是枚举地址，程序会崩溃。当程序并没有崩溃而是挂起，即无限循环时，记下此时的ret的值。枚举结束后，得到若干ret的值，这里需要注意，得到的ret值有可能不是brop gadget的地址而刚好是另一个stop地址。<br>
-如果是stop地址，把ret后所有地址都设为trap地址，若仍然会导致程序挂起，则确认是stop地址。</p>
-</section><section data-notes="" lineNo="90" class="slide " data-line="90" data-h="14" data-v="0">
-<h4 class="mume-header" id="%E8%B5%B7%E7%AC%AC%E4%B8%89%E4%B8%AA%E5%8F%82%E6%95%B0%E7%9A%84gadget">起第三个参数的gadget</h4>
-
-<p>pop rdx,ret<br>
-对于puts()，此时的gadgets其实已经足够，但是对于write(),仍然需要一个起参数的gadget。<br>
-pop rdx,ret难以寻找，用strcmp()代替。</p>
-<blockquote>
-<p>strcmp()可以对rdx进行赋值。</p>
-</blockquote>
-</section><section data-notes="" lineNo="96" class="slide " data-line="96" data-h="15" data-v="0">
-<h3 class="mume-header" id="%E6%9C%80%E5%90%8E">最后</h3>
-
-<p>用puts()或者write()dump内存，寻找更多的gadgets来完成攻击。</p>
-</section><section data-notes="" lineNo="99" class="slide " data-line="99" data-h="16" data-v="0">
-</section><section data-notes="" lineNo="100" class="slide " data-line="100" data-h="17" data-v="0">
-</section><section data-notes="" lineNo="101" class="slide " data-line="101" data-h="18" data-v="0">
-</section><section data-notes="" lineNo="102" class="slide " data-line="102" data-h="19" data-v="0">
+<p>这个地址常用于精准实现堆喷。从汇编上来讲，0C 0C   即OR AL,0C，所以它可以跟nop一样可以作为slidecode。其次0x0c0c0c0c很容易被堆覆盖0x0c0c0c0c = 202116108 ，202116108字节(b)=192.7529411兆字节(mb)<br>
+即大概200m的堆喷就可以保证能覆盖到它。假设用<code>0c*n+shellcode</code>堆喷，很容易就会在0xc0c0c0c0上写到“0xc0c0c0c0“，这时我们用任意地址写的漏洞，覆盖某个函数地址的值为‘0xc0c0c0c0’，eip经过几次跳转，仍然会跳转到0xc0c0c0c0上执行“0xc0c0c0c0“机器码，从而滑到shellcode上。</p>
+</section><section data-notes="" lineNo="131" class="slide " data-line="131" data-h="16" data-v="0">
+</section><section data-notes="" lineNo="132" class="slide " data-line="132" data-h="17" data-v="0">
+</section><section data-notes="" lineNo="133" class="slide " data-line="133" data-h="18" data-v="0">
+</section><section data-notes="" lineNo="134" class="slide " data-line="134" data-h="19" data-v="0">
+</section><section data-notes="" lineNo="135" class="slide " data-line="135" data-h="20" data-v="0">
 </section>
       </div>
     </div>
@@ -2311,7 +2324,7 @@ pop rdx,ret难以寻找，用strcmp()代替。</p>
     </body>
     
       <script>
-        Reveal.initialize({"margin":0.1,"width":1600,"height":900,"slideNumber":"c/t","showSlideNumber":"all","center":true,"enableSpeakerNotes":true,"theme":"none.css","dependencies":[{"src":"/home/lometsj/.vscode/extensions/shd101wyy.markdown-preview-enhanced-0.3.4/node_modules/@shd101wyy/mume/dependencies/reveal/plugin/notes/notes.js","async":true},{"src":"/home/lometsj/.vscode/extensions/shd101wyy.markdown-preview-enhanced-0.3.4/node_modules/@shd101wyy/mume/dependencies/reveal/plugin/notes/notes.js","async":true},{"src":"/home/lometsj/.vscode/extensions/shd101wyy.markdown-preview-enhanced-0.3.4/node_modules/@shd101wyy/mume/dependencies/reveal/plugin/notes/notes.js","async":true}]})
+        Reveal.initialize({"margin":0.1,"width":1600,"height":900,"slideNumber":"c/t","showSlideNumber":"all","center":true,"enableSpeakerNotes":true,"theme":"none.css","dependencies":[{"src":"/home/lometsj/.vscode/extensions/shd101wyy.markdown-preview-enhanced-0.3.4/node_modules/@shd101wyy/mume/dependencies/reveal/plugin/notes/notes.js","async":true},{"src":"/home/lometsj/.vscode/extensions/shd101wyy.markdown-preview-enhanced-0.3.4/node_modules/@shd101wyy/mume/dependencies/reveal/plugin/notes/notes.js","async":true}]})
       </script>
       
     
