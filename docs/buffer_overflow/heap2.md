@@ -70,44 +70,12 @@ return 0;
 - fastbin 的double free检查只检查链表头部的chunk。
 <!-- slide data-notes="" -->
 明显的，直接double free 往往会被系统检测到并且报错。
+free()函数会在链表头检查当前free的chunk和表头的chunk是否是同一个chunk，所以，若直接。
 ```c#
-int main(void)
-{
-    void *chunk1,*chunk2,*chunk3;
-    chunk1=malloc(0x10);
-    chunk2=malloc(0x10);
-
-    free(chunk1);
-    free(chunk1);
-    return 0;
-}
-
-Gcc test.c -o test
-
-*** Error in `./test': double free or corruption (fasttop): 0x00000000021c9010 ***
-======= Backtrace: =========
-/lib/x86_64-linux-gnu/libc.so.6(+0x777e5)[0x7f509f1237e5]
-/lib/x86_64-linux-gnu/libc.so.6(+0x8037a)[0x7f509f12c37a]
-/lib/x86_64-linux-gnu/libc.so.6(cfree+0x4c)[0x7f509f13053c]
-./test[0x4005a2]
-/lib/x86_64-linux-gnu/libc.so.6(__libc_start_main+0xf0)[0x7f509f0cc830]
-./test[0x400499]
-======= Memory map: ========
-00400000-00401000 r-xp 00000000 08:01 448853                             /home/lometsj/Desktop/fastbin/test
-00600000-00601000 r--p 00000000 08:01 448853                             /home/lometsj/Desktop/fastbin/test
-00601000-00602000 rw-p 00001000 08:01 448853                             /home/lometsj/Desktop/fastbin/test
-021c9000-021ea000 rw-p 00000000 00:00 0                                  [heap]     
----
-7f509f69b000-7f509f69c000 r--p 00025000 08:01 413823                     /lib/x86_64-linux-gnu/ld-2.23.so
-7f509f69c000-7f509f69d000 rw-p 00026000 08:01 413823                     /lib/x86_64-linux-gnu/ld-2.23.so
-7f509f69d000-7f509f69e000 rw-p 00000000 00:00 0 
-7ffe5cf64000-7ffe5cf85000 rw-p 00000000 00:00 0                          [stack]
-7ffe5cfe1000-7ffe5cfe4000 r--p 00000000 00:00 0                          [vvar]
-7ffe5cfe4000-7ffe5cfe6000 r-xp 00000000 00:00 0                          [vdso]
-ffffffffff600000-ffffffffff601000 r-xp 00000000 00:00 0                  [vsyscall]
-Aborted (core dumped)
-
+free(chunk1);
+free(chunk1);
 ```
+不会被通过，程序会检测到一场并退出。
 <!-- slide data-notes="" -->
 这里，_int_free 函数检测到了 fastbin 的 double free。上面提到的第二个原因，即free（）时仅验证了表头的chunk，所以要double free一个chunk1，可以先把表头的chunk改为其他chunk，下面我们在double free chun1之前先free 一个chunk2。
 ```c#
