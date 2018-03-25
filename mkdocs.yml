@@ -6,6 +6,7 @@ pages:
     - Index: index.md
     - 缓冲区溢出漏洞: 
       - forward: buffer_overflow/forward.md
+      - func: buffer_overflow/func.md
       - stack: buffer_overflow/stack.md
       - rop: buffer_overflow/rop.md
       - rop2: none.md
