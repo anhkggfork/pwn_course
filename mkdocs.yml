@@ -9,11 +9,11 @@ pages:
       - func: buffer_overflow/func.md
       - stack: buffer_overflow/stack.md
       - rop: buffer_overflow/rop.md
-      - rop2: none.md
-      - rop3: none.md
+      - rop2: buffer_overflow/rop2.md
+      - rop3: buffer_overflow/rop3.md
       - heap: buffer_overflow/heap.md
       - heap2: buffer_overflow/heap2.md
-      - heap3: none.md
+      - heap3: buffer_overflow/heap3.md
     - 其他漏洞:
       - format: none.md
       - format2: none.md

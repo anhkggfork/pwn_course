@@ -52,7 +52,7 @@ return 0;
 ```
 <!-- slide data-notes="" -->
 # fastbin
-管理16bytes-64bytes的chunk的`单向链表`数据结构，由于需要加速程序执行速度的原因，linux对于fastbin的检查较为松散，因此利用起来也较为方便。
+管理16bytes-64bytes（64位下为32bytes~128bytes）的chunk的`单向链表`数据结构，由于需要加速程序执行速度的原因，linux对于fastbin的检查较为松散，因此利用起来也较为方便。
 ## 单向链表
 - 释放后的chunk插入表头
 - 只使用fd指针，bk指针无效

@@ -34,6 +34,12 @@ struct malloc_chunk {
 - 倒数第二位:当前 chunk 是否是通过 mmap 方式产生的
 - 倒数第三位:这个 chunk 是否属于一个线程的 arena 
 <!-- slide data-notes="" -->
+## top chunk
+初次malloc()后，没有被分出去的堆。
+## 堆的两种状态
+- free
+- allocted
+<!-- slide data-notes="" -->
 ## unlink
 unlink时free（）函数实现时所用到的一个宏，用于将当前free的chunk块相邻的chunk连接起来
 ![](unlink.png)
