@@ -3,9 +3,9 @@
 ## 实验概述
 
 ### 【目的】
-1.通过-fno-stack-protector和-m32参数从gcc编译stack0.c文件。
-2.运行编译后的程序，通过缓冲区溢出修改与字符串数组相邻的变量，得到输出"you have changed the 'modified' variable"
-3.运行stack1程序，通过栈溢出得到输出"you have correctly got the variable to the right value"
+1. 通过-fno-stack-protector和-m32参数从gcc编译stack0.c文件。
+2. 运行编译后的程序，通过缓冲区溢出修改与字符串数组相邻的变量，得到输出"you have changed the 'modified' variable"
+3. 运行stack1程序，通过栈溢出得到输出"you have correctly got the variable to the right value"
 ### 【环境】
 Linux
 ### 【工具】
