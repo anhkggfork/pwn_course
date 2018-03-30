@@ -8,7 +8,7 @@
 ### 【环境】
 Linux
 ### 【工具】
-python,pwntools
+python,pwntools,gdb,core dump,IDA pro
 ### 【原理】
 面向返回编程（英语：Return-Oriented Programming，缩写：ROP）是计算机安全漏洞利用技术，该技术允许攻击者在安全防御的情况下执行代码，如不可执行的内存和代码签名。攻击者控制堆栈调用以劫持程序控制流并执行针对性的机器语言指令序列（称为Gadgets）。 每一段gadget通常结束于return指令，并位于共享库代码中的子程序。系列调用这些代码，攻击者可以在拥有更简单攻击防范的程序内执行任意操作。
 ## 实验步骤

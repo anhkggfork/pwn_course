@@ -9,7 +9,7 @@
 ### 【环境】
 Linux
 ### 【工具】
-gcc，python，管道，IDA pro，binwalk
+gcc，python，IDA pro，binwalk
 ### 【原理】
 缓冲区溢出（buffer overflow），是针对程序设计缺陷，向程序输入缓冲区写入使之溢出的内容（通常是超过缓冲区能保存的最大数据量的数据），从而破坏程序运行、趁著中断之际并获取程序乃至系统的控制权。
 ## 实验步骤
@@ -82,6 +82,8 @@ you have correctly got the variable to the right value
 
 本次实验主要体验Linux环境下栈溢出的发生场景，并尝试通过栈溢出覆盖（修改）相邻的变量，达到改变程序执行流的目的。
 可以发现，要使栈溢出发生，要满足以下条件：
+
+
 - 程序允许用户输入
 - 程序对用户的输入长度不加检查
 
