@@ -31,6 +31,8 @@ pages:
       - stack2: prostar/stack2.md
       - stack3: prostar/stack4.md
       - stack4: prostar/stack6.md
+      - format1: prostar/format0.md
+      - format2: prostar/format2.md
 
 
 # Theme
