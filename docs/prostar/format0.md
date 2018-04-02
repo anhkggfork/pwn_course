@@ -4,6 +4,7 @@
 
 ### 【目的】
 1. 运行format0，得到输出`you have hit the target correctly :)`，要求输入的参数不超过十个字节。
+2. 运行format1，得到输出`you have modified the target :)`
 ### 【环境】
 Linux
 ### 【工具】

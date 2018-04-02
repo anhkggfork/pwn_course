@@ -4,6 +4,7 @@
 
 ### 【目的】
 1. 运行format2,得到输出`you have modified the target :)`
+2. 运行format3,得到输出`you have modified the target :)`
 ### 【环境】
 Linux
 ### 【工具】
