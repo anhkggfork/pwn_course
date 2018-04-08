@@ -33,6 +33,11 @@ pages:
       - stack4: prostar/stack6.md
       - format1: prostar/format0.md
       - format2: prostar/format2.md
+      - format3: prostar/format4.md
+      - heap1: prostar/heap0.md
+      - heap2: prostar/heap1.md
+      - heap3: prostar/heap2.md
+      - net1: prostar/net0.md
 
 
 # Theme
