@@ -55,7 +55,13 @@ a = int(a)
 io.sendline(p32(a))
 print io.recv()
 ```
+```
+$ python net0.py
+[+] Starting local process './net0': pid 14698
+[*] Process './net0' stopped with exit code 0 (pid 14698)
+Thank you sir/madam
 
+```
 #### net1
 ```
 void run()
@@ -101,6 +107,15 @@ payload = u32(temp)
 io.sendline(str(payload))
 print io.recv()
 
+
+```
+```
+$ python net1.py
+[+] Opening connection to 127.0.0.1 on port 9997: Done
+��^R
+you correctly sent the data
+
+[*] Closed connection to 127.0.0.1 port 9997
 
 ```
 
