@@ -305,10 +305,8 @@ io.interactive()
 $ python stack5.py
 [+] Starting local process './stack5': pid 4204
 [*] Switching to interactive mode
-$ ls
-peda-session-stack1.txt  stack0    stack1.c  stack22   stack4     stack5.c
-peda-session-stack4.txt  stack0.c  stack2    stack3    stack4.c  stack5.py
-peda-session-stack5.txt  stack1    stack2.c  stack3.c  stack5
+$ echo u got it
+u got it
 $ exit
 [*] Got EOF while reading in interactive
 $ 

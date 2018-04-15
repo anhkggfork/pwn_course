@@ -12,8 +12,8 @@ Linux
 ### 【工具】
 
 gdb-peda
-pwtools
-
+pwntools
+pwndbg
 
 ### 【原理】
 
