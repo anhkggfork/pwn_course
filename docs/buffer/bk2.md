@@ -17,30 +17,26 @@ presentation:
 ## 汇编基础（x86）
 - 内存
 - 寄存器：
-1. 普通:       EAX, EBX, ECX, EDX 
+  1. 普通:       EAX, EBX, ECX, EDX 
                ESI, EDI, EBP, ESP  
-2. 段寄存器:    CS, DS, ES, FS, GS, SS 
-3. 特殊寄存器:  EIP , EFLAGS
+  2. 段寄存器:    CS, DS, ES, FS, GS, SS 
+  3. 特殊寄存器:  EIP , EFLAGS
 - 指令
-1. push,pop
-2. add/sub/mul/div, xor, or 
-3. mov, lea, 
-4.  test, cmp, jmp, call, <font color=red>ret</font>
+  1. push,pop
+  2. add/sub/mul/div, xor, or 
+  3. mov, lea, 
+  4.  test, cmp, jmp, call, <font color=red>ret</font>
 <!-- slide data-notes="" -->
 ## 内存
 ### 物理内存尺寸
 4GB (2^32) for x86, 2^64 bytes for x64
 ### 内存中有什么
-#### 可执行文件本身
-- 代码
-- 静态数据
-#### 相关库
-- 代码
-- 静态数据
-#### 运行时数据
-- heap
-- stack
-#### 操作系统的代码和数据
+- 可执行文件本身（代码+静态数据）
+- 相关库（代码+静态数据）
+- 运行时数据
+  - heap
+  - stack
+- 操作系统的代码和数据
 <!-- slide data-notes="" -->
 ## Linux进程内存布局（32位）
 ![](attach/memlay.png)
@@ -93,32 +89,33 @@ eip存储的是下一条要执行的指令的地址，所以若eip的值被修�
 
 <!-- slide data-notes="" -->
 ## 基本指令
-### 操作栈
-- push
-- pop
-### 运算操作
-- add/sub/mul/div
-- xor/or
-### 内存/寄存器操作
-- mov/lea
-### 条件执行
-- test，cmp，jmp
-- jz，jnz，jg，ja
-### 子程序调用
-- call，ret
+- 操作栈
+  - push
+  - pop
+- 运算操作
+  - add/sub/mul/div
+  - xor/or
+- 内存/寄存器操作
+  - mov/lea
+- 条件执行
+  - test，cmp，jmp
+  - jz，jnz，jg，ja
+- 子程序调用
+  - call，ret
 <!-- slide data-notes="" -->
 ## 重要指令
-call`<function>`:执行目标函数
+### call`<function>`:执行目标函数
 - 把下一条指令（返回地址）压栈
 - 跳转到目标函数
 - 应该在函数调用完之后执行下一条指令
-ret：返回调用
+
+### ret：返回调用
 - 弹出（pop）栈顶，得到`返回地址`
 - 跳转到跳转到`返回地址`（通过改变EIP）
 - 应该跳转到调用方的下一条指令
 <!-- slide data-notes="" -->
 ## 总的来看
-## 函数调用时发生了什么（x86）
+### 函数调用时发生了什么（x86）
 1.  传递参数
 2.	call 函数地址（push eip，jmp 被调函数地址）
 3.	ebp入栈，当前esp复制到ebp，esp减去一个数值，形成该函数的栈空间
@@ -130,25 +127,11 @@ ret：返回调用
 这里没有提到平衡栈帧的操作，实际上根据调用约定的不同，这个操作会在调用者或被调用者两个地方进行。
 <!-- slide data-notes="" -->
 ## INTEL 和 AT&T语法
-<table border="0">
-<tbody>
-<tr>
-<td style="text-align: left"><strong><span style="font-family: courier new, courier; font-size: 13px">Intel Syntax</span></strong></td>
-<td><strong><span style="font-family: courier new, courier; font-size: 13px">AT&amp;T Syntax</span></strong></td>
-</tr>
-<tr>
-<td><span style="color: #3366ff"><strong><span style="font-family: courier new, courier; font-size: 13px">mov&nbsp;&nbsp;&nbsp;&nbsp; eax, 1</span></strong></span></td>
-<td><span style="color: #800080"><strong><span style="font-family: courier new, courier; font-size: 13px">movl&nbsp;&nbsp;&nbsp; $1, %eax</span></strong></span></td>
-</tr>
-<tr>
-<td><span style="color: #3366ff"><strong><span style="font-family: courier new, courier; font-size: 13px">mov&nbsp;&nbsp;&nbsp;&nbsp; ebx, 0ffh</span></strong></span></td>
-<td><span style="color: #800080"><strong><span style="font-family: courier new, courier; font-size: 13px">movl&nbsp;&nbsp;&nbsp; $0xff, %ebx</span></strong></span></td>
-</tr>
-<tr>
-<td><span style="color: #3366ff"><strong><span style="font-family: courier new, courier; font-size: 13px">int&nbsp;&nbsp;&nbsp;&nbsp; 80h</span></strong></span></td>
-<td><span style="color: #800080"><strong><span style="font-family: courier new, courier; font-size: 13px">int&nbsp;&nbsp;&nbsp;&nbsp; $0x80</span></strong></span></td>
-</tr>
-</tbody>
+Intel Syntax | AT&T Syntax
+---- | ---
+mov eax,1 | movl $1,%eax
+mov ebx,0ffh |  movl $0xff,%ebx
+int 80h | int $0x80
 <!-- slide data-notes="" -->
 
 ## 调试
@@ -195,14 +178,16 @@ A：慢下来，一条指令一条指令执行
 ## gdb
 ### 显示
 - print [/f] expr 
-1. x 十六进制
-2. d 有符号十进制 
-3. u 无符号十进制 
-4. o 八进制 
-5. t 二进制 
-6. a 地址 
-7. c character 
-8. f 浮点数 
+  1. x 十六进制
+  2. d 有符号十进制 
+  3. u 无符号十进制 
+  4. o 八进制 
+  5. t 二进制 
+  6. a 地址 
+  7. c character 
+  8. f 浮点数 
+
 - info reg [rn]
+
 <!-- slide data-notes="" -->
 

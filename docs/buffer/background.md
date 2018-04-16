@@ -39,7 +39,6 @@ presentation:
 <!-- slide data-notes="" -->
 ## 二进制漏洞
 漏洞是安全问题的根源
-### 二进制漏洞的分类
 #### 逻辑漏洞：
 - 输入合法性检查
 - 认证
@@ -105,8 +104,6 @@ int main(){
 ## 举个例子
 ### gets()
 从标准输入读取一行字符并将其存进作为参数的字符串数组中，直到遇到换行或EOF。换行符不会被复制进字符串，取而代之的是一个'\x00',以结束字符串。
-
-## 举个例子
 ```c
 void vulnerable(){
     char name[20];
@@ -124,7 +121,7 @@ int main(){
 ```
 <!-- slide data-notes="" -->
 ## 举个例子
-## 如果此时输入的数据大于19
+### 如果此时输入的数据大于19
 栈上的数据结构将被破坏。（临时变量name[20]被溢出）
 栈：栈在程序的运行中有着举足轻重的作用。最重要的是栈保存了一个函数调用时所需要的维护信息，这常常称之为堆栈帧或者活动记录。堆栈帧一般包含如下几方面的信息：
 1．函数的返回地址和参数
@@ -151,11 +148,11 @@ int main(){
             编译（gcc -S）             汇编（as）
 源代码（.cpp）----------->汇编代码（.asm）----------->目标文件（.o）--------> |可执行文件|
                                                         |                  |         |
-                                                                            ---------     二进制/可执行
+                                                        |                   ---------     二进制/可执行
                                                         |ar                |         |
                                                         |                  |         |
-                                                      静态库------------->  | 动态库  |
-                                                              链接（ld）  -----------
+                                                      静态库------------->  | 动态库   |
+                                                              链接（ld）    -----------
 ```
 
 <!-- slide data-notes="" -->
@@ -207,13 +204,16 @@ ret
 ```
 <!-- slide data-notes="" -->
 
-<div id="left">
 ## 可执行文件格式（ELF）
+
+<div id="left">
+
 ### ELF： Executable and Linkable Format 
 ### 三种类型的文件：
 - 可重定位文件：gcc –c test.c => test.o (test.a) 
 - 可执行文件：  gcc –o test test.c => test 
 - 共享库文件：  test.so 
+
 </div>
 
 <div id="right">
@@ -223,7 +223,7 @@ ret
 </div>
 
 <!-- slide data-notes="" -->
-## ELF文件头
+## ELF文件头信息
 ```
 $ readelf -h /bin/ls
 ELF Header:
@@ -249,6 +249,7 @@ ELF Header:
 
 ```
 <!-- slide data-notes="" -->
+## ELF文件段信息
 ```
 $ readelf -S /bin/ls
 There are 29 section headers, starting at offset 0x1e738:
@@ -287,6 +288,7 @@ Section Headers:
   [28] .shstrtab         STRTAB           0000000000000000  0001e634
 ```
 <!-- slide data-notes="" -->
+## 程序头信息
 ```
 $ readelf -l /bin/ls
 
