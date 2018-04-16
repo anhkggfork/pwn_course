@@ -14,6 +14,10 @@ pages:
       - heap: buffer_overflow/heap.md
       - heap2: buffer_overflow/heap2.md
       - heap3: buffer_overflow/heap3.md
+    - buffer:
+      - intro: buffer/intro.md
+      - bk1: buffer/background.md
+      - bk2: buffer/bk2.md
     - 其他漏洞:
       - format: none.md
       - format2: none.md
@@ -38,6 +42,13 @@ pages:
       - heap2: prostar/heap1.md
       - heap3: prostar/heap2.md
       - net1: prostar/net0.md
+      - final1: prostar/final0.md
+      - linux1: nebula/1.md
+      - linux2: nebula/2.md
+      - linux3: nebula/3.md
+      - linux4: nebula/4.md
+      - linux5: nebula/5.md
+      - shellcode: experiment/shellcode.md
     - fuzz: 
       - afl1: afl/afl1.md
       - afl2: afl/afl2.md
