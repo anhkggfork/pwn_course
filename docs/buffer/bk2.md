@@ -132,6 +132,12 @@ Intel Syntax | AT&T Syntax
 mov eax,1 | movl $1,%eax
 mov ebx,0ffh |  movl $0xff,%ebx
 int 80h | int $0x80
+
+- AT&T 语法先写源操作数，再写目标操作数；Intel 语法先写目标操作数，再写源操作数：
+- AT&T 语法将操作数的大小表示在指令的后缀中（b、w、l）；Intel 语法将操作数的大小表示在操作数的前缀中（BYTE PTR、WORD PTR、DWORD PTR）：
+- AT&T 语法总体上是offset(base, index, width)的格式；Intel 语法总体上是[INDEX * WIDTH + BASE + OFFSET]的格式
+- AT&T 语法用前缀表示数制（0x、0、0b）；Intel 语法用后缀表示数制（h、o、b）
+- AT&T 语法要在常数前加 $、在寄存器名前加 % 符号；Intel 语法没有相应的东西要加
 <!-- slide data-notes="" -->
 
 ## 调试
@@ -189,5 +195,8 @@ A：慢下来，一条指令一条指令执行
 
 - info reg [rn]
 
+<!-- slide class="middle"-->
+
+# Thanks for watching!
 <!-- slide data-notes="" -->
 

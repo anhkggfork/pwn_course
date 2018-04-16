@@ -98,3 +98,7 @@ presentation:
 - 训练平台： 
     - https://www.root-me.org/?lang=en
     - http://pwnable.kr/
+
+<!-- slide class="middle"-->
+
+# Thanks for watching!
