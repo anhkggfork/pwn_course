@@ -194,7 +194,48 @@ A：慢下来，一条指令一条指令执行
   8. f 浮点数 
 
 - info reg [rn]
+<!-- slide data-notes="" -->
+## gdb demo
+<div id="left">
 
+- 检查机器码
+- 设置断点
+- 运行
+- 检查执行过程中栈上的情况
+
+</div>
+
+<div id="right">
+
+```
+user@box:~/test/bof$	gdb ./test
+...
+(gdb)	disassemble vulnerable
+Dump	of	assembler	code	for	function	vulnerable:
+0x080483f4	<vulnerable+0>:
+push			%ebp
+0x080483f5	<vulnerable+1>:
+mov %esp,%ebp
+0x080483f7	<vulnerable+3>:
+sub				$0x38,%esp
+...
+0x0804840a	<vulnerable+22>: mov %eax,(%esp)
+0x0804840d	<vulnerable+25>: call			0x8048310	<gets@plt>
+...
+(gdb)	break *0x0804840d
+Breakpoint	1	at	0x804840d
+(gdb)	run <	input
+Starting	program:	/home/user/test/bof/test	<	input
+Breakpoint	1,	0x0804840d	in	vulnerable	()
+(gdb)	x/20x	$esp
+0xbffff730:0xbffff74c 0x08049630 0xbffff748 0x080482ec
+0xbffff740:0xb7ff1040 0x08049630 0xbffff778 0x08048479
+0xbffff750:0xb7fd8304 0xb7fd7ff4 0x08048460 0xbffff778
+0xbffff760:0xb7ec55a5 0xb7ff1040 0xbffff778 0x0804843a
+0xbffff770:0x08048460 0x00000000 0xbffff7f8 0xb7eacc76
+```
+
+</div>
 <!-- slide class="middle"-->
 
 # Thanks for watching!

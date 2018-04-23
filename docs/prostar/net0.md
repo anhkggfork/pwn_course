@@ -21,7 +21,7 @@ socat把程序放到端口上。
 ```
 $ socat tcp-l:9997,fork exec:./net1
 ```
-```
+```c
 __int64 run()
 {
   unsigned int ptr; // [sp+0h] [bp-10h]@1
@@ -63,7 +63,7 @@ Thank you sir/madam
 
 ```
 #### net1
-```
+```c
 void run()
 {
   char buf[12];
@@ -97,7 +97,7 @@ void run()
 ```
 这里与上一题类似，不过使用了write()发送和fgets()接收，这里考察的是使用解包函数处理数据。
 
-```
+```python
 from pwn import *
 
 io = remote("127.0.0.1",9997)
@@ -121,7 +121,7 @@ you correctly sent the data
 
 #### net2
 这里是上面两题的结合。
-```
+```python
 from pwn import *
 
 io = process('127.0.0.1',9997)

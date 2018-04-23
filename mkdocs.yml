@@ -4,6 +4,8 @@ site_name: My Docs
 pages: 
   - 课程:
     - Index: index.md
+    - buffer:
+
     - 缓冲区溢出漏洞: 
       - forward: buffer_overflow/forward.md
       - func: buffer_overflow/func.md
@@ -18,10 +20,16 @@ pages:
       - intro: buffer/intro.md
       - bk1: buffer/background.md
       - bk2: buffer/bk2.md
+      - stack: buffer/stacl1.md
+      - stack2: buffer/stack2.md
+      - aslr: aslr.md
+      - heap: buffer/heap.md
+      - heap2: buffer/heap2.md
+      - heap3: buffer/heap3.md
+      - heap4: buffer/heap4.md
     - 其他漏洞:
-      - format: none.md
-      - format2: none.md
-      - format3: none.md
+      - format1: buffer/format1.md
+      - format2: buffer/format2.md
       - intflow: none.md
       - 业务逻辑: none.md
       - 条件竞争: none.md
@@ -48,10 +56,13 @@ pages:
       - linux3: nebula/3.md
       - linux4: nebula/4.md
       - linux5: nebula/5.md
-      - shellcode: experiment/shellcode.md
-    - fuzz: 
+    - ohters: 
       - afl1: afl/afl1.md
       - afl2: afl/afl2.md
+      - android: experiment/android.md
+      - shellcode: experiment/shellcode.md
+      - arm1: experiment/arm1.md
+
 
 
 # Theme

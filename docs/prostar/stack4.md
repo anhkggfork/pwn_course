@@ -30,7 +30,7 @@ char *pwnthis()
   return gets(&s);
 }
 ```
-```
+```c
 int win()
 {
   return puts("code flow successfully changed");
@@ -280,7 +280,7 @@ gdb-peda$ x/10s $esp-0x50
 ```
 可以看到我们输入数据是从地址`0xffffcf20`开始的，那么ret的值我们就可以覆盖为`'\x20\xcf\xff\xff'`
 最后编写脚本进行溢出攻击。
-```
+```python
 from pwn import *
 
 io = process('./stack5')

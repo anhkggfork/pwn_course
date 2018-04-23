@@ -48,7 +48,7 @@ DECIMAL       HEXADECIMAL     DESCRIPTION
 ```
 发现是32位程序，直接拖进idaq.exe，定位到main函数，按F5生成伪代码。
 
-```c#
+```c
 int __cdecl main(int argc, const char **argv, const char **envp)
 {
   char dest; // [sp+0h] [bp-4Ch]@3

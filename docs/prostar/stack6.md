@@ -23,7 +23,7 @@ DECIMAL       HEXADECIMAL     DESCRIPTION
 0             0x0             ELF, 32-bit LSB executable, Intel 80386, version 1 (SYSV)
 ```
 打开IDA pro,定位到关键函数
-```
+```c
 int getpath()
 {
   char s; // [sp+Ch] [bp-4Ch]@1
@@ -124,7 +124,7 @@ libc : 0xf7f5f02b ("/bin/sh")
 可以看到 `system()`的地址是`0xf7e40940`
         `/bin/sh` 的地址是`0xf7f5f02b`
 
-```
+```python
 from pwn import *
 
 io = process('./stack6')
@@ -157,7 +157,7 @@ DECIMAL       HEXADECIMAL     DESCRIPTION
 
 ```
 IDA pro定位到关键函数。
-```
+```c
 char *getpath()
 {
   char s; // [sp+Ch] [bp-4Ch]@1
@@ -252,7 +252,7 @@ char *getpath()
 .text:08048587 getpath         endp
 ```
 想好构造后就可以开始编写脚本了。
-```
+```python
 from pwn import *
 #context.log_level = 'debug'
 io = process('./stack7')
