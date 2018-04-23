@@ -21,7 +21,7 @@ pages:
       - bk2: buffer/bk2.md
       - stack: buffer/stack1.md
       - stack2: buffer/stack2.md
-      - aslr: aslr.md
+      - aslr: buffer/aslr.md
       - heap: buffer/heap.md
       - heap2: buffer/heap2.md
       - heap3: buffer/heap3.md
