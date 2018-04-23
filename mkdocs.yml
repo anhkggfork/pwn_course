@@ -19,7 +19,7 @@ pages:
       - intro: buffer/intro.md
       - bk1: buffer/background.md
       - bk2: buffer/bk2.md
-      - stack: buffer/stacl1.md
+      - stack: buffer/stack1.md
       - stack2: buffer/stack2.md
       - aslr: aslr.md
       - heap: buffer/heap.md
