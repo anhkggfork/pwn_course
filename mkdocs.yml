@@ -4,7 +4,6 @@ site_name: My Docs
 pages: 
   - 课程:
     - Index: index.md
-    - buffer:
 
     - 缓冲区溢出漏洞: 
       - forward: buffer_overflow/forward.md
