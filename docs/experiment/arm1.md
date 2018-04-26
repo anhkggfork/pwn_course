@@ -64,21 +64,7 @@ Argument      Env-variable      Description
 $ qemu-arm-static -L /usr/arm-linux-gnueabi/ hello
 hello world
 ```
-使用qemu-static-static有相当多的局限，更成熟的方法是使用vmware做一个arm系统虚拟机。
-下载一个raspbian pi desktop的镜像
-[raspbian](https://link.jianshu.com/?t=https://www.raspberrypi.org/downloads/)
-下载vmware
-[vmware](https://www.vmware.com/products/workstation-pro/workstation-pro-evaluation.html)
-安装vmware，新建虚拟机
-![](vm1.png)
-选择 Debian 7.x
-![](vm2.png)
-进行后面的设置并开机,安装系统
-![](vm3.png)
-
-安装成功
-![](vm4.png)
-
+使用qemu-static-static有相当多的局限，比较方便的方案就是购买一个树莓派或者开发板来进行调试arm程序。
 
 ### 【总结】
 
