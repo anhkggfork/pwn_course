@@ -63,10 +63,10 @@ pages:
       - arm1: experiment/arm1.md
       - arm2: experiment/arm2.md
       - arm3: experiment/arm3.md
-      - arm3: experiment/arm4.md
-      - arm3: experiment/arm5.md
-      - arm3: experiment/arm6.md
-      - arm3: experiment/arm7.md
+      - arm4: experiment/arm4.md
+      - arm5: experiment/arm5.md
+      - arm6: experiment/arm6.md
+      - arm7: experiment/arm7.md
 
 
 

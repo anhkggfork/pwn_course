@@ -64,8 +64,11 @@ Argument      Env-variable      Description
 $ qemu-arm-static -L /usr/arm-linux-gnueabi/ hello
 hello world
 ```
-使用qemu-static-static有相当多的局限，比较方便的方案就是购买一个树莓派或者开发板来进行调试arm程序。
+使用qemu-static-static有相当多的局限，比较方便的方案[azeria-labs](azeria-labs.com)提供的vm虚拟机，其中包含了配置好的qemu的树莓派。
+下载地址：[google driver](https://drive.google.com/file/d/1uX9fRUX-IHitQVD43QUsz9Aocy8pJ8XK/view?usp=sharing)
 
+![](vm1.png)
+密码：azerialabs
 ### 【总结】
 
 本次实验主要配置arm的运行环境。
