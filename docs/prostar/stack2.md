@@ -56,7 +56,7 @@ you have correctly modified the variable
 
 ```
 
-#### stack2
+#### stack3
 ```
 $ binwalk stack3
 
@@ -66,7 +66,7 @@ DECIMAL       HEXADECIMAL     DESCRIPTION
 
 ```
 
-```c#
+```c
 int __cdecl main(int argc, const char **argv, const char **envp)
 {
   char s; // [sp+Ch] [bp-4Ch]@1

@@ -60,9 +60,11 @@ pages:
       - afl2: afl/afl2.md
       - android: experiment/android.md
       - shellcode: experiment/shellcode.md
+      - kernel: experiment/kernel.md
       - arm1: experiment/arm1.md
       - arm2: experiment/arm2.md
       - arm3: experiment/arm3.md
+      - arm3-2: experiment/arm3-2.md
       - arm4: experiment/arm4.md
       - arm5: experiment/arm5.md
       - arm6: experiment/arm6.md
