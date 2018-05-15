@@ -1,4 +1,4 @@
-# <center>栈溢出实验3</center>
+# 栈溢出实验3
 
 ## 实验概述
 
@@ -253,7 +253,7 @@ Type "help", "copyright", "credits" or "license" for more information.
 ulimit -c unlimited
 sudo sh -c 'echo "/tmp/core.%t" > /proc/sys/kernel/core_pattern'
 ```
-同时我们需要关闭Linux系统的alsr保护。
+同时我们需要关闭Linux系统的ASLR保护。
 ```
 sudo sh -c "echo 0 > /proc/sys/kernel/randomize_va_space"
 ```

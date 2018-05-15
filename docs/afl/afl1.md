@@ -1,4 +1,4 @@
-# <center>afl-fuzz实验1</center>
+# AFL-Fuzz入门
 
 ## 实验概述
 
@@ -52,7 +52,7 @@ Makefile  vulnerable.c
 ```
 这里先查看Makefile
 ```
-$ cat Makefile 
+$ cat Makefile
 # Enable debugging and suppress pesky warnings
 CFLAGS ?= -g -w
 
@@ -118,7 +118,7 @@ id:000000,sig:06,src:000003,op:havoc,rep:128
 id:000001,sig:06,src:000000,op:havoc,rep:32
 id:000002,sig:11,src:000001,op:havoc,rep:2
 README.txt
-$ cat id\:000002\,sig\:11\,src\:000001\,op\:havoc\,rep\:2 
+$ cat id\:000002\,sig\:11\,src\:000001\,op\:havoc\,rep\:2
 ec%s
 ```
 说明在输入ec%s时会触发异常，切回程序源代码查看。
@@ -137,7 +137,7 @@ int main(int argc, char *argv[])
 	if (read(STDIN_FILENO, input, 100) < 0) {
 		fprintf(stderr, "Couldn't read stdin.\n");
 	}
-	if(input[0] == 'c') { 
+	if(input[0] == 'c') {
 		// count characters
 		out = malloc(sizeof(input) - 1 + 3); // enough space for 2 digits + a space + input-1 chars
 		sprintf(out, "%lu ", strlen(input) - 1);

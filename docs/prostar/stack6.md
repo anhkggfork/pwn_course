@@ -1,4 +1,4 @@
-# <center>栈溢出实验4</center>
+# 栈溢出实验4
 
 ## 实验概述
 
@@ -53,7 +53,7 @@ int getpath()
 ["aaaa"....][system_address]["bbbb"]['/bin/sh'.address]
 ```
 这样就可以得到shell了，在此之前，需要先找到`system()`的地址和`/bin/sh`的地址。"bbbb"是调用`system("/bin/sh")`后的函数返回地址，但是在这之前我们就已经完成了目标，所以就可以随便填写了。
-跟上一次实验一样，为了地址不产生变动，需要先关闭alsr保护。
+跟上一次实验一样，为了地址不产生变动，需要先关闭ASLR保护。
 ```
 sudo sh -c "echo 0 > /proc/sys/kernel/randomize_va_space"
 ```

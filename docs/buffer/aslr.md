@@ -11,14 +11,15 @@ presentation:
 
 
 <!-- slide data-notes="" -->
-# alsr保护
+# 二进制漏洞挖掘与利用
+### ASLR保护
 <!-- slide data-notes="" -->
-## alsr
-位址空间配置随机载入（英语：Address space layout randomization，缩写ASLR，又称位址空间配置随机化、位址空间布局随机化）是一种防范内存损坏漏洞被利用的计算机安全技术。位址空间配置随机载入利用随机方式配置资料定址空间，使某些敏感资料（例如作业系统内核）配置到一个恶意程式无法事先获知的位址，令攻击者难以进行攻击。（维基百科）
+## ASLR
+位址空间配置随机载入（英语：Address Space Layout Randomization，缩写ASLR，又称位址空间配置随机化、位址空间布局随机化）是一种防范内存损坏漏洞被利用的计算机安全技术。位址空间配置随机载入利用随机方式配置资料定址空间，使某些敏感资料（例如作业系统内核）配置到一个恶意程式无法事先获知的位址，令攻击者难以进行攻击。（维基百科）
 
 <!-- slide data-notes="" -->
-## alsr
-```c#
+## ASLR
+```c
 lometsj@ubuntu:~$ ldd test
 	linux-gate.so.1 =>  (0xf7f1a000)
 	libc.so.6 => /lib/i386-linux-gnu/libc.so.6 (0xf7d40000)
@@ -37,14 +38,14 @@ lometsj@ubuntu:~$ ldd test
 	/lib/ld-linux.so.2 (0xf7f2e000)
 ```
 <!-- slide data-notes="" -->
-## alsr
+## ASLR
 传统攻击需要精确的地址
 - 基础栈溢出：需要定位shellcode
 - return-to-libc： 需要libc地址
 问题：程序的内存布局是固定的
 解决方案：随机化每个区域的地址
 <!-- slide data-notes="" -->
-## alsr
+## ASLR
 Aspect|aslr
 ----|----
 表现|优异-每次加载都会随机
@@ -52,16 +53,16 @@ Aspect|aslr
 兼容性|对安全应用程序透明（位置独立）
 保护效果|64位下效果显著
 <!-- slide data-notes="" -->
-## alsr
-### unbuntu-alsr默认开启
+## ASLR
+### unbuntu-ASLR默认开启
 ```
 $ cat /proc/sys/kernel/randomize_va_space
 2
 ```
 该值为：
-- 1:随机化对战，VDSO，共享内存区域的位置
-- 2:同上，并添加数据段的随机
-- 0:禁用alsr
+- `1`: 随机化对战，VDSO，共享内存区域的位置
+- `2`: 同上，并添加数据段的随机
+- `0`: 禁用ASLR
 
 <!-- slide data-notes="" -->
 ## 暴力绕过
@@ -71,7 +72,7 @@ payload： nop*n + shellcode
 
 <!-- slide data-notes="" -->
 ## ret2text
-text段有可以执行的程序代码，并且地址不会被除pie之外的aslr随机化
+text段有可以执行的程序代码，并且地址不会被除PIE之外的ASLR随机化
 可以将程序执行流劫持到意外的（但已经存在）的程序函数
 <!-- slide data-notes="" -->
 ## 函数指针劫持
@@ -106,8 +107,8 @@ void msglog(char *input) {
 int main(int argc, char *argv[]) {
     if(argc != 2) {
         printf("exploitme <msg>\n");
-        return -1; 
-    }   
+        return -1;
+    }
 
     msglog(argv[1]);
 
@@ -115,10 +116,10 @@ int main(int argc, char *argv[]) {
 }
 ```
 随后，调用*eax就会把程序控制流劫持到buf上
+
 <!-- slide data-notes="" -->
 ## ret2ret
-如果栈上有一个函数指针需要被执行，可以考虑这个技巧
-ret = pop eip；jmp eip；
+如果栈上有一个函数指针需要被执行，可以考虑这个`ret = pop eip；jmp eip`；
 ```
 &shellcode
 &ret
@@ -145,13 +146,13 @@ int main(int argc, char *argv[]) {
 <!-- slide data-notes="" -->
 ## 其他不会被随机化的段
 lazy binding：动态链接库在加载时才被链接
-### 两个重要的数据结构
-- 全局偏移表（GOT）
-- plt表
-一般在编译时就确定了位置
+*  两个重要的数据结构
+    - 全局偏移表（GOT）
+    - plt表
+    - 一般在编译时就确定了位置
 <!-- slide data-notes="" -->
 ## 动态链接
-### 第一次运行函数
+* 第一次运行函数
 函数先跳转到plt表，从plt表跳转到got表，got表中存储的是该函数在plt表中的地址+4偏移，于是又跳转到plt下，执行push xx，jmp <got [0]>，其中push是给检索函数提供参数，jmp到got表的检索函数，此时got表中就会填充函数的准确地址
 ```c
 #include <stdio.h>
@@ -163,7 +164,9 @@ int main()
 }
 
 ```
-```
+<!-- slide data-notes="" -->
+## 动态链接
+```c
 pwndbg> disass main
 Dump of assembler code for function main:
    0x0000000000400526 <+0>:	push   rbp
@@ -172,7 +175,7 @@ Dump of assembler code for function main:
    0x000000000040052f <+9>:	call   0x400400 <puts@plt>
    0x0000000000400534 <+14>:	mov    eax,0x0
    0x0000000000400539 <+19>:	pop    rbp
-   0x000000000040053a <+20>:	ret    
+   0x000000000040053a <+20>:	ret
 End of assembler dump.
 pwndbg> disass *0x400400
 No function contains specified address.
@@ -189,10 +192,9 @@ pwndbg> x 0x601018
 <!-- slide data-notes="" -->
 ## 攻击链接过程
 - GOT中存储的是函数在内存中的真实地址
-### 利用方法
-覆盖got表中的地址，当程序运行某一个函数，实际执行的是另一个我们覆盖的函数。
-
-e.g.:覆盖printf()为system()
+- 利用方法
+    - 覆盖got表中的地址，当程序运行某一个函数，实际执行的是另一个我们覆盖的函数。
+    - e.g.:覆盖printf()为system()
 <!-- slide class="middle"-->
 
 # Thanks for watching!

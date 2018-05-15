@@ -10,24 +10,37 @@ presentation:
 ---
 
 <!-- slide data-notes="" -->
-# 背景知识
+# 二进制漏洞挖掘与利用
+### 背景知识
 
 <!-- slide data-notes="" -->
 ## 什么是软件安全？
 - 软件安全是为保护软件免受恶意攻击和其他黑客攻击而实施的一种想法，一遍让软件在潜在危险的情况下继续正常运行。--Technopedia
-- 提供机密性，完整性和可用性是安全所必要的。--CIA
+- 提供**机密性、完整性、可用性**是安全所必要的（CIA三要素）
+
 <!-- slide data-notes="" -->
 ## 软件安全
-### 主题：二进制软件
-- 源代码
-- 字节码
-- 本地代码
-- 。。。
-### 目标：保护软件免受攻击
-- 通过安全的软件开发流程
-- 通过发现二进制漏洞并修补
-- 通过强化软件中的安全增强功能
+
+<div id="left">
+
+* 主题：二进制软件
+    - 源代码
+    - 字节码
+    - 本地代码
+</div>
+
+<div id="right">
+
+* 目标：保护软件免受攻击
+    - 通过安全的软件开发流程
+    - 通过发现二进制漏洞并修补
+    - 通过强化软件中的安全增强功能
+</div>
+
+<div class="middle">
+
 ![](attach/sec.png)
+</div>
 <!-- slide data-notes="" -->
 ## 软件安全专题
 - 逆向工程
@@ -35,33 +48,35 @@ presentation:
 - 漏洞挖掘
 - 程序强化
 - 漏洞利用
-- 。。。
+- ...
 <!-- slide data-notes="" -->
 ## 二进制漏洞
-漏洞是安全问题的根源
-#### 逻辑漏洞：
-- 输入合法性检查
-- 认证
-- 授权
-- 访问控制
-- 。。。
-#### 内存破坏漏洞
-- 栈溢出
-- 堆溢出
-- 整数溢出
-- 格式化字符串
-- UAF（ Use-after-free ）
-- 。。。
+漏洞是软件安全问题的根源
+
+* 逻辑漏洞：
+    - 输入合法性检查
+    - 认证
+    - 授权
+    - 访问控制
+
+* 内存破坏漏洞
+    - 栈溢出
+    - 堆溢出
+    - 整数溢出
+    - 格式化字符串
+    - UAF（ Use-after-free ）
+
 <!-- slide data-notes="" -->
 ## 二进制漏洞的影响
 <div id="left">
 
-- ios 应用/内核 漏洞
-- linux内核漏洞
-- openssl 心脏出血
-- 浏览器漏洞
-- 代理服务器漏洞
-- 路由器漏洞
+- ios 应用/内核 漏洞 -->
+- linux内核漏洞 -->
+- openssl 心脏出血 -->
+- 浏览器漏洞 -->
+-
+- 代理服务器漏洞 -->
+- 路由器漏洞 -->
 
 </div>
 
@@ -70,10 +85,8 @@ presentation:
 - iphone越狱
 - linux提权，Android root
 - 密钥泄露
-- 远程代码执行
-virus/worm/Trojan/backdoor/botnet 
-- 远程代码执行
-数据库损坏
+- 远程代码执行 virus/worm/Trojan/backdoor/botnet
+- 远程代码执行/数据库损坏
 - 网络流量劫持，中间人攻击
 </div>
 
@@ -82,7 +95,10 @@ virus/worm/Trojan/backdoor/botnet
 利用漏洞，向服务器发送精心构造的数据，从而控制程序执行流，得到远程shell。
 
 shell：一个接收和处理用户命令的程序
+<div class="middle">
+
 ![](attach/remoteex.png)
+</div>
 <!-- slide data-notes="" -->
 ## 举个例子
 ```c
@@ -102,7 +118,14 @@ int main(){
 ```
 <!-- slide data-notes="" -->
 ## 举个例子
-### gets()
+```c
+function
+gets                                                                                                          <cstdio>
+----------------------------------------------------------------------------------------------------------------------
+char * gets ( char * str );
+Get string from stdin
+Reads characters from the standard input (stdin) and stores them as a C string into str until a newline character or the end-of-file is reached.
+```
 从标准输入读取一行字符并将其存进作为参数的字符串数组中，直到遇到换行或EOF。换行符不会被复制进字符串，取而代之的是一个'\x00',以结束字符串。
 ```c
 void vulnerable(){
@@ -119,9 +142,10 @@ int main(){
 }
 
 ```
+
 <!-- slide data-notes="" -->
 ## 举个例子
-### 如果此时输入的数据大于19
+**如果此时输入的数据大于19**
 栈上的数据结构将被破坏。（临时变量name[20]被溢出）
 栈：栈在程序的运行中有着举足轻重的作用。最重要的是栈保存了一个函数调用时所需要的维护信息，这常常称之为堆栈帧或者活动记录。堆栈帧一般包含如下几方面的信息：
 1．函数的返回地址和参数
@@ -130,19 +154,19 @@ int main(){
 <!-- slide data-notes="ABI（Application Binary Interface）: 应用程序二进制接口 描述了应用程序和操作系统之间，一个应用和它的库之间，或者应用的组成部分之间的低接口。" -->
 ## 如何理解漏洞
 ### 了解ABI（应用程序二进制接口）
-#### 可执行代码生成
-- 编译
-- 链接
-#### 可执行文件结构
-- PE(Windows)
-- ELF(Linux)
-#### 可执行文件的加载，动态加载
-#### 可执行文件的运行时
-- 内存布局
-- 本地/汇编指令
-- 调用约定
+* 可执行代码生成
+    - 编译
+    - 链接
+* 可执行文件结构
+    - PE(Windows)
+    - ELF(Linux)
+* 可执行文件的加载，动态加载
+* 可执行文件的运行时
+    - 内存布局
+    - 本地/汇编指令
+    - 调用约定
 <!-- slide data-notes="" -->
-## 从源代码到执行
+## 从源代码到可执行文件
 ```
                                                                            -----------
             编译（gcc -S）             汇编（as）
@@ -151,55 +175,68 @@ int main(){
                                                         |                   ---------     二进制/可执行
                                                         |ar                |         |
                                                         |                  |         |
-                                                      静态库------------->  | 动态库   |
-                                                              链接（ld）    -----------
+                                                      静态库(.a)--------->  | 动态库   |
+                                                              链接（ld）     -----------
 ```
 
 <!-- slide data-notes="" -->
 ## 编译和链接
 - 编译（gcc）：
-把源代码翻译成汇编语言
+    把源代码翻译成汇编语言
 - 汇编（as）：
-1. 将汇编代码编码成本地指令
-2. 对每个编译单元生成目标文件（目标文件之间的依赖关系丢失）
+    1. 将汇编代码编码成本地指令
+    2. 对每个编译单元生成目标文件（目标文件之间的依赖关系丢失）
 - 归档（ar）：
-将一些目标文件整合成一个静态库（.a）
+    将一些目标文件整合成一个静态库（.a）
 - 链接（ld）：
-1. 解析目标文件之间的引用，并在必要时从静态库中提取对象
-2. 生成可执行文件或共享库
+    1. 解析目标文件之间的引用，并在必要时从静态库中提取对象
+    2. 生成可执行文件或共享库
 - 加载/解释：
-将可执行文件加载到内存中，并修复引用
+    将可执行文件加载到内存中，并修复引用
+
 <!-- slide data-notes="" -->
 ## 编译：从源码到汇编
-```
-int sum(int x, int y) 
-{ 
-    int t = x + y; 
-    return t; 
+
+<div id="left">
+
+```c
+int sum(int x, int y)
+{
+    int t = x + y;
+    return t;
 }
+
+
+
 ```
-```
-sum: 
-push ebp 
-mov ebp, esp 
-mov eax, [ebp+12] 
-add eax, [ebp+8] 
-pop ebp 
+</div>
+
+<div id="right">
+
+```assembly
+sum:
+push ebp
+mov ebp, esp
+mov eax, [ebp+12]
+add eax, [ebp+8]
+pop ebp
 ret
 ```
-```
+</div>
+
+```asm
 00000000004004d6 <sum>:
-  4004d6:	55                   	
-  4004d7:	48 89 e5             	
-  4004da:	89 7d ec             	
-  4004dd:	89 75 e8             	
-  4004e0:	8b 55 ec             	
-  4004e3:	8b 45 e8             	
-  4004e6:	01 d0                	
-  4004e8:	89 45 fc             	
-  4004eb:	8b 45 fc             	
-  4004ee:	5d                   	
-  4004ef:	c3                   	
+  4004d6:	55
+  4004d7:	48 89 e5
+  4004da:	89 7d ec
+  4004dd:	89 75 e8
+  4004e0:	8b 55 ec
+  4004e3:	8b 45 e8
+  4004e6:	01 d0
+  4004e8:	89 45 fc
+  4004eb:	8b 45 fc
+  4004ee:	5d
+  4004ef:	c3
 
 ```
 <!-- slide data-notes="" -->
@@ -208,11 +245,11 @@ ret
 
 <div id="left">
 
-### ELF： Executable and Linkable Format 
-### 三种类型的文件：
-- 可重定位文件：gcc –c test.c => test.o (test.a) 
-- 可执行文件：  gcc –o test test.c => test 
-- 共享库文件：  test.so 
+**ELF： Executable and Linkable Format**
+* 三种类型的文件：
+    - 可重定位文件：gcc –c test.c => test.o (test.a)
+    - 可执行文件：  gcc –o test test.c => test
+    - 共享库文件：  test.so
 
 </div>
 
@@ -224,10 +261,10 @@ ret
 
 <!-- slide data-notes="" -->
 ## ELF文件头信息
-```
+```python
 $ readelf -h /bin/ls
 ELF Header:
-  Magic:   7f 45 4c 46 02 01 01 00 00 00 00 00 00 00 00 00 
+  Magic:   7f 45 4c 46 02 01 01 00 00 00 00 00 00 00 00 00
   Class:                             ELF64
   Data:                              2's complement, little endian
   Version:                           1 (current)
@@ -250,7 +287,7 @@ ELF Header:
 ```
 <!-- slide data-notes="" -->
 ## ELF文件段信息
-```
+```python
 $ readelf -S /bin/ls
 There are 29 section headers, starting at offset 0x1e738:
 
@@ -289,7 +326,7 @@ Section Headers:
 ```
 <!-- slide data-notes="" -->
 ## 程序头信息
-```
+```python
 $ readelf -l /bin/ls
 
 Elf file type is EXEC (Executable file)
@@ -321,19 +358,21 @@ Program Headers:
 
  Section to Segment mapping:
   Segment Sections...
-   00     
-   01     .interp 
-   02     .interp .note.ABI-tag .note.gnu.build-id .gnu.hash .dynsym .dynstr .gnu.version .gnu.version_r .rela.dyn .rela.plt .init .plt .plt.got .text .fini .rodata .eh_frame_hdr .eh_frame 
-   03     .init_array .fini_array .jcr .dynamic .got .got.plt .data .bss 
-   04     .dynamic 
-   05     .note.ABI-tag .note.gnu.build-id 
-   06     .eh_frame_hdr 
-   07     
-   08     .init_array .fini_array .jcr .dynamic .got 
+   00
+   01     .interp
+   02     .interp .note.ABI-tag .note.gnu.build-id .gnu.hash .dynsym .dynstr .gnu.version .gnu.version_r .rela.dyn .rela.plt .init .plt .plt.got .text .fini .rodata .eh_frame_hdr .eh_frame
+   03     .init_array .fini_array .jcr .dynamic .got .got.plt .data .bss
+   04     .dynamic
+   05     .note.ABI-tag .note.gnu.build-id
+   06     .eh_frame_hdr
+   07
+   08     .init_array .fini_array .jcr .dynamic .got
 
 ```
 <!-- slide data-notes="" -->
 ## 冯·诺伊曼模型
+<div id="left">
+
 存储程序计算机在体系结构上主要特点有：
 
 - 以运算单元为中心
@@ -342,9 +381,12 @@ Program Headers:
 - 控制流由指令流产生
 - 指令由操作码和地址码组成
 - 数据以二进制编码
+</div>
+
+<div id="right">
+
+![](assets/markdown-img-paste-20180514201926973.png)
+</div>
 <!-- slide class="middle"-->
 
 # Thanks for watching!
-<!-- slide data-notes="" -->
-
-<!-- slide data-notes="" -->

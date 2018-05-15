@@ -105,7 +105,7 @@ LONG, LONGLONG, LONG32, LONG64
 ![](attach/type.png)
 <!-- slide data-notes="" -->
 ## 问题
-当运算超出范围时。。。。
+当运算超出范围时...。
 
 无符号数：“溢出后的数会以2^(8*sizeof(type))作模运算”
 有符号数：“undefined behavior”

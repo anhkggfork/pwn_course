@@ -1,4 +1,4 @@
-# <center>arm栈溢出实验2</center>
+# arm栈溢出实验2
 
 ## 实验概述
 

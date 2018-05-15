@@ -1,4 +1,4 @@
-# <center>Android栈溢出攻击</center>
+# Android栈溢出攻击
 
 ## 实验概述
 
@@ -44,11 +44,11 @@ This program built for x86_64-pc-linux-gnu
 #include <stdlib.h>
 #include <string.h>
 #include <malloc.h>
-#include<unistd.h> 
+#include<unistd.h>
 int main(int argc,char *argv[])
 {
     int *p1 , *p2 , *p3 , *p4 , *p5;
-    write(STDOUT_FILENO, "Hello, World\n", 13);     
+    write(STDOUT_FILENO, "Hello, World\n", 13);
     char buf[128];
     read(STDIN_FILENO, buf, 256);
     p1 = (int *)malloc(sizeof(int) * 3);
@@ -89,7 +89,7 @@ LOCAL_LDFLAGS += -pie -fPIE
 打开终端，切换到当前目录下，使用ndk构建。
 ```
 $ ndk-build NDK_DEBUG=1
-Android NDK: APP_PLATFORM not set. Defaulting to minimum supported version android-14.    
+Android NDK: APP_PLATFORM not set. Defaulting to minimum supported version android-14.
 [arm64-v8a] Gdbserver      : [aarch64-linux-android] libs/arm64-v8a/gdbserver
 [arm64-v8a] Gdbsetup       : libs/arm64-v8a/gdb.setup
 [armeabi-v7a] Gdbserver      : [arm-linux-androideabi] libs/armeabi-v7a/gdbserver
@@ -119,7 +119,7 @@ arm64-v8a  armeabi-v7a  x86  x86_64
 连接手机，打开usb调试，使用adb。
 ```
 $ adb devices
-List of devices attached 
+List of devices attached
 1844b0900904	device
 ```
 使用adb push把程序传送到手机上
@@ -131,9 +131,9 @@ List of devices attached
 ```
 $ adb shell
 mido:/ $ cd /data/local/tmp
-mido:/data/local/tmp $ ls                                                      
-DlmallocTest flatland flatland64 
-mido:/data/local/tmp $ ./DlmallocTest                                          
+mido:/data/local/tmp $ ls
+DlmallocTest flatland flatland64
+mido:/data/local/tmp $ ./DlmallocTest
 Hello, World
 ^C
 130|mido:/data/local/tmp $ exit
@@ -147,7 +147,7 @@ $ adb push socat /data/local/tmp
 1544 KB/s (849832 bytes in 0.537s)
 lometsj@ubuntu:~/Downloads$ adb shell
 mido:/ $ cd /data/local/tmp
-1|mido:/data/local/tmp $ ./socat TCP4-LISTEN:10001, EXEC:./DlmallocTest 
+1|mido:/data/local/tmp $ ./socat TCP4-LISTEN:10001, EXEC:./DlmallocTest
 
 ```
 切回电脑终端进行远程访问
