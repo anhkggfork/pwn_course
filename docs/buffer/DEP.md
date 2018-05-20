@@ -11,29 +11,28 @@ presentation:
 
 <!-- slide data-notes="" -->
 # 二进制漏洞挖掘与利用
-### DEP与ROP
-
-<!-- slide data-notes="" -->
-## ROP
-面向返回编程（英语：Return-Oriented Programming，缩写：ROP）是计算机安全漏洞利用技术，该技术允许攻击者在安全防御的情况下执行代码，如不可执行的内存和代码签名。攻击者控制堆栈调用以劫持程序控制流并执行针对性的机器语言指令序列（称为Gadgets）。 每一段gadget通常结束于return指令，并位于共享库代码中的子程序。系列调用这些代码，攻击者可以在拥有更简单攻击防范的程序内执行任意操作。（维基百科）
+### DEP与DEP Bypass
 <!-- slide data-notes="" -->
 ## NX/DEP
 NX/DEP保护，即数据段不可执行保护，是针对栈溢出攻击而产生的一项防护措施。简单的来说，当开启这种保护时，堆栈上的指令将没有执行权限。所以，将shellcode写到栈上的简单的栈溢出攻击将会失效。
+
+
+
 <!-- slide data-notes="" -->
-## ret2libc
+## DEP绕过之ret2libc
 不利用自己注入的代码，而用系统已有的代码来构造攻击
 > system("/bin/sh")
 * 特点
     - 通常指向系统共享库的代码 -> 执行不受NX/DEP影响
-<!-- slide data-notes="" -->
-## 溢出形式
-- buffer + system()的地址 + ret + binsh_addr
-system()的地址即系统共享库中system()的地址。
-这里ret的值是执行玩system()后的返回地址，并不重要，可以为任意值。
-binsh_addr（）作为system()的参数，调用后拉起shell。
+
+* 溢出形式
+`buffer + system()的地址 + ret + binsh_addr`
+`system()的地址`即系统共享库中system()的地址。
+这里`ret`的值是执行玩system()后的返回地址，并不重要，可以为任意值。
+`binsh_addr()`作为system()的参数，调用后拉起shell。
 
 <!-- slide data-notes="" -->
-## ASLR保护
+## 如果有ASLR保护？
 地址空间配置随机载入（英语：Address space layout randomization，缩写ASLR，又称位址空间配置随机化、位址空间布局随机化）是一种防范内存损坏漏洞被利用的计算机安全技术。位址空间配置随机载入利用随机方式配置资料定址空间，使某些敏感资料（例如作业系统内核）配置到一个恶意程式无法事先获知的位址，令攻击者难以进行攻击。（维基百科）
 
 即使开启地址随机化，也不是全随机的。对于linux来说，开启ASLR，libc的基地址在每一次启动时都会变化，但是libc本身是整块存入内存的。即libc中指令相对于其基地址的偏移是不会变化的。而libc本身的指令是足够getshell的，所以要对抗ASLR，可以从泄露libc基地址下手。
@@ -57,7 +56,7 @@ ldd <binary>查看libc地址，发现每一次都有变动。
 
 ```
 <!-- slide data-notes="" -->
-## 应对方法
+## ASLR应对方法
 * 泄露libc地址
 * for example
     - 用write(1,got.write(),4)打印write()函数的实际地址，通过偏移来算libc.so的基地址，进而算出system()的真实地址。
@@ -79,6 +78,19 @@ def leak(address):
 ```
 * 还有"/bin/sh"
 需要注意的是，DynElF无法搜索到"/bin/sh"的地址，这里可以用一个read()把"/bin/sh"写到bss段上。
+
+<!-- slide data-notes="" -->
+## DEP绕过之ROP
+面向返回编程（Return-Oriented Programming，ROP）是计算机安全漏洞利用技术，该技术允许攻击者在安全防御的情况下执行代码，如不可执行的内存和代码签名。
+![ROP-eg](./assets/markdown-img-ROP.png)
+
+<!-- slide data-notes="" -->
+
+## 关于gadget
+攻击者控制堆栈调用以劫持程序控制流并执行针对性的机器语言指令序列称为gadget。 
+每一段gadget通常是结束于return指令，并位于共享库代码中的子程序。系列调用这些代码，攻击者可以在拥有更简单攻击防范的程序内执行任意操作。
+![gadget](./assets/markdown-img-gadget.png)
+
 <!-- slide data-notes="" -->
 ## 32位栈溢出和64位的区别
 - 内存地址范围从32位增加到64位
@@ -91,6 +103,7 @@ def leak(address):
 * 主要的gadget
     - 传参（pop xxx,ret）
     - 系统调用函数（`system()`，`exce()`）
+
 <!-- slide data-notes="" -->
 ## 寻找gadget的工具
 ROPgadeget
@@ -123,12 +136,12 @@ Unique gadgets found: 1226
 ```
 
 <!-- slide data-notes="" -->
-## ret2__libc_scu_init
+## ret2__libc_csu_init
 
-`__libc_scu_init()`用于对libc进行初始化操作的函数，只要使用了libc函数就一定会有此函数出现，而绝大多数的程序都会调用libc的函数，即`__libc_scu_init()`广泛存在于linux程序中。
-`__libc_scu_init()`中的gadget也可以作为通用gadget。
+`__libc_csu_init()`用于对libc进行初始化操作的函数，只要使用了libc函数就一定会有此函数出现，而绝大多数的程序都会调用libc的函数，即`__libc_csu_init()`广泛存在于linux程序中。
+`__libc_csu_init()`中的gadget也可以作为通用gadget。
 <!-- slide data-notes="" -->
-## ret2__libc_scu_init
+## ret2__libc_csu_init
 ```c
 .text:00000000004005C0 ; void _libc_csu_init(void)
 .text:00000000004005C0                 public __libc_csu_init
@@ -162,6 +175,12 @@ Unique gadgets found: 1226
 .text:0000000000400611                 cmp     rbx, rbp
 .text:0000000000400614                 jnz     short loc_400600
 .text:0000000000400616
+
+```
+
+<!-- slide data-notes="" -->
+## ret2__libc_csu_init
+```c
 .text:0000000000400616 loc_400616:                             ; CODE XREF: __libc_csu_init+34j
 .text:0000000000400616                 add     rsp, 8
 .text:000000000040061A                 pop     rbx
