@@ -41,8 +41,7 @@ lometsj@ubuntu:~$ ldd test
 	/lib/ld-linux.so.2 (0xf7f2e000)
 ```
 
-`libc`基址不再固定，`shellcode`的地址（栈、bss等地址）在每一次运行时也相应地发生改变。
-传统的地址硬编码的攻击基本失效。
+`libc`基址不再固定，`shellcode`的地址（栈、bss等地址）在每一次运行时也相应地发生改变，传统的地址硬编码的攻击基本失效。
 <!-- slide data-notes="" -->
 ## ASLR
 Aspect|aslr
@@ -209,8 +208,6 @@ typedef struct
   Elf32_Addr    r_offset;       /* Address */
   Elf32_Word    r_info;         /* Relocation type and symbol index */
 } Elf32_Rel;
-
-
 typedef struct
 {
   Elf32_Word    st_name;        /* Symbol name (string tbl index) */
@@ -254,7 +251,7 @@ buf += rop.fill(100, buf)
 p.write(buf)
 p.interact(0)
 ```
-当不能直接利用roputils时需要手动伪造两个数据结构、计算偏移、填充大小。
+当不能直接利用roputils时需要手动伪造两个数据结构、计算偏移和填充大小。
 
 <!-- slide data-notes="" -->
 ## ASLR Bypass之ret2eax
