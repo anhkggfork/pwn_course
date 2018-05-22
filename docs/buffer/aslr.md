@@ -219,8 +219,7 @@ typedef struct
 } Elf32_Sym;
 
 ```
-并控制`reloc_offset`的数值，使`const char *symname`指向我们伪造的数据结构中的函数名。
-最后在`function@got`即`&GOT+reloc_offset`中填入我们伪造的`symname`（如`system`）函数的真实地址。
+控制`reloc_offset`的数值，使`const char *symname`指向伪造的数据结构中的函数名。最后在`function@got`即`&GOT+reloc_offset`中填入我们伪造的`symname`（如`system`）函数的真实地址。
 
 <!-- slide data-notes="" -->
 ## ASLR Bypass之GOT劫持（二）
