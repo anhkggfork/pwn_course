@@ -12,8 +12,8 @@ pages:
     - 格式化字符串: buffer/format.md
     - Glibc堆分配机制: buffer/heap.md
     - 堆溢出的利用: buffer/heap-exp.md
-    - 地址空间随机化保护: buffer/aslr.md
-    - DEP与ROP: buffer/rop.md
+    - ASLR与ASLR Bypass: buffer/aslr.md
+    - DEP与DEP Bypass: buffer/DEP.md
   - 练习:
     - Linux安全基础:
       - linux1: nebula/1.md
