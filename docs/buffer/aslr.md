@@ -68,6 +68,7 @@ linux关闭ASLR:
 ```
 <!-- slide data-notes="" -->
 ## ASLR Bypass
+- leak address
 
 - 暴力破解
 
@@ -77,11 +78,25 @@ linux关闭ASLR:
 - GOT表劫持（不依赖libc空间）
     - rewrite GOT[]
     - ret2dl-resolve
+<!-- slide data-notes="" -->
+## ASLR Bypass
 - 栈juggling
     - ret2ret
     - ret2pop
     - ret2eax
 
+<!-- slide data-notes="" -->
+## ASLR Bypass之leak address
+开启ASLR后无法通过控制`eip`来直接输出地址。
+但是可以通过覆盖相关数据来间接地泄露地址。
+
+如：
+- 输出内容中是否有地址信息
+    - 如：精心设计的输出、未初始化的变量等
+- 覆盖输出函数的指针
+    - 如：覆盖`printf()`的参数
+- 覆盖输出的缓冲区大小
+    - 如：覆盖`write()`,`memcpy()`的参数
 
 <!-- slide data-notes="" -->
 ## ASLR Bypass之暴力绕过
