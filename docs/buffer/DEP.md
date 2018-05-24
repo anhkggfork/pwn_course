@@ -197,6 +197,13 @@ Unique gadgets found: 1226
 - 之后从400600开始可以控制到`rdi`（通过`edi`），`rsi`，`rdx`的值，并`call[r12+rbx*8]`。
 通过上面的调用可以控制到三个传递参数的寄存器，并且执行一次call，完成ret2libc。
 <!-- slide data-notes="" -->
+## JOP
+```
+$ ROPgadget --binary BIN --only "pop|jmp"
+```
+以`jmp`结束的一系列指令，原理与普通ROP类似。
+
+<!-- slide data-notes="" -->
 ## SROP
 SROP (Sigreturn Oriented Programming)
 ![](attach/signal.jpg)
