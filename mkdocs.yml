@@ -14,6 +14,10 @@ pages:
     - 堆溢出的利用: buffer/heap-exp.md
     - ASLR与ASLR Bypass: buffer/aslr.md
     - DEP与DEP Bypass: buffer/DEP.md
+    - 拓展篇:
+      - LLVM的调用帧: extension/CFI-LLVM.md
+      - 内存检测工具AddressSanitizer: extension/AddressSanitizer.md
+      - 基于静态分析的漏洞挖掘方法: extension/VulDiscovery-SA.md
   - 练习:
     - Linux安全基础:
       - linux1: nebula/1.md

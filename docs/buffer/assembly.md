@@ -335,4 +335,3 @@ Breakpoint    1,    0x0804840d    in    vulnerable    ()
 
 <!-- slide class="middle"-->
 # Thanks for watching!
-<!-- slide data-notes="" -->
