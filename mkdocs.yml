@@ -15,7 +15,7 @@ pages:
     - ASLR与ASLR Bypass: buffer/aslr.md
     - DEP与DEP Bypass: buffer/DEP.md
     - 拓展篇:
-      - LLVM的调用帧: extension/CFI-LLVM.md
+      - 控制流完整性及实现: extension/CFI-LLVM.md
       - 内存检测工具AddressSanitizer: extension/AddressSanitizer.md
       - 基于静态分析的漏洞挖掘方法: extension/VulDiscovery-SA.md
   - 练习:
